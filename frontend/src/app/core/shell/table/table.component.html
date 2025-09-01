@@ -1,0 +1,223 @@
+<div class="container-fluid m-1">
+  <div class="row align-items-center mb-2 header">
+    <div
+      class="col-sm-7 d-flex"
+      [class.justify-content-evenly]="title() === 'Caixa'"
+    >
+      <h2 class="text-primary">{{ title() }}</h2>
+      @if(title()==='Caixa') {
+
+      <div class="month-selector" (click)="onSetMonth($event)">
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 0"
+        >
+          Jan
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 1"
+        >
+          Fev
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 2"
+        >
+          Mar
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 3"
+        >
+          Abr
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 4"
+        >
+          Mai
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 5"
+        >
+          Jun
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 6"
+        >
+          Jul
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 7"
+        >
+          Ago
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 8"
+        >
+          Set</span
+        >
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 9"
+        >
+          Out
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 10"
+        >
+          Nov
+        </span>
+        <span
+          class="btn btn-sm btn-outline-primary p-1 ms-1"
+          [class.active]="month() === 11"
+        >
+          Dez
+        </span>
+      </div>
+      <div class="filters ml-1">
+        <div class="total-amount">
+          <h6>
+            Total:<span class="total-amount">{{ totalAmount }}</span>
+          </h6>
+        </div>
+        <div class="cash-flow-filter">
+          <select (change)="onChangeCashFlowFilter($event)">
+            <option value="all">Entrada e Saida</option>
+            <option value="in">Entrada</option>
+            <option value="out">Saida</option>
+          </select>
+        </div>
+        <div class="transaction-filter">
+          <select (change)="onChangTransactionFilter($event)">
+            @for( transaction of transactions;track transaction.nameId){
+            <option [value]="transaction.value">{{ transaction.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      } @if(title()==='Protocolo'&&permission()){
+      <div class="col-sm-5 d-flex justify-content-end mx-3">
+        <input
+          type="number"
+          class="form-control input-spot"
+          id="quantity"
+          min="1"
+          #quantity
+        />
+        <button
+          class="btn btn-primary btn-spot mx-1"
+          (click)="addProtocolSpot()"
+        >
+          <i class="fa-solid fa-plus"></i><span>Vagas</span>
+        </button>
+      </div>
+      }
+    </div>
+    <div class="col-sm-5 d-flex justify-content-end">
+      @if(newRecord()&&permission()){
+      <button
+        class="btn btn-primary me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#modal"
+        (click)="onAddData()"
+      >
+        <i class="bi bi-plus-circle"></i> {{ newRecord() }}
+      </button>
+      }
+      <input
+        (input)="onFilterSearch($event)"
+        class="form-control search"
+        type="search"
+        placeholder="Pesquisar..."
+      />
+    </div>
+  </div>
+  <div class="row">
+    @if(datum().length>0) {
+    <table class="table table-bordered table-hover table-responsive">
+      <thead class="sticky-header">
+        <tr>
+          @for(tableName of header();track tableName){
+          <th scope="col">{{ tableName }}</th>
+          } @if(permission()|| actions().length>0){
+          <th>Ação</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for(data of paginatedDatum;track $index){
+        <tr>
+          @for(d of toArray(data);track $index){ @if(isObject(d)){
+          <td>{{ d }}</td>
+          } } @if(permission() || actions().length>0){
+          <td>
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-primary dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Ação
+              </button>
+              <ul class="dropdown-menu">
+                @if(permission()){
+                <li>
+                  <a
+                    (click)="onEditData(data)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
+                    >Editar</a
+                  >
+                </li>
+                }
+                <!-- @if(actions.length>0){ -->
+                @for(action of actions();track $index){
+                <li>
+                  <a
+                    class="dropdown-item"
+                    (click)="action.func(data)"
+                    [class]="{
+                      'disabled-link':
+                        action.validator !== null &&
+                        data.details[action.validator] === null
+                    }"
+                  >
+                    {{ action.buttonName }}
+                  </a>
+                </li>
+                }
+                <!-- } -->
+              </ul>
+            </div>
+          </td>
+          }
+        </tr>
+        }
+      </tbody>
+    </table>
+    } @else {
+    <h1 class="no-data">Sem dados no banco de dados</h1>
+    }
+  </div>
+</div>
+<app-pagination
+  [totalData]="filteredDatum"
+  (paginatedData)="onUpdatePagination($event)"
+/>
+
+<app-modal
+  [modalTitle]="title()"
+  [modalForm]="modalForm()"
+  [formGroup]="form()"
+  (formEmitter)="onModalSave($event)"
+/>

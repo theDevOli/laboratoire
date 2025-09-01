@@ -1,2 +1,1 @@
-# laboratoire
 # lab

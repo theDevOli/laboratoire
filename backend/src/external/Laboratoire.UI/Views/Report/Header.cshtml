@@ -1,0 +1,34 @@
+﻿@using System.Globalization
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="@("http://" + Context.Request.Host.ToString() + "/styles.css")" />
+    <title>Report</title>
+</head>
+<body>
+<header class="header">
+        <img alt="Logo" src="@Url.Content("~/labsolo.png")" class="logo" />
+            <div class="header-text">
+                <div>
+                    <span>Rua Boanerges Pinheiro, 448/Centro</span>
+                    <span>CEP 49.500-000</span>
+                </div>
+                <div>
+                    <span>Itabaiana-SE-Brasil</span>
+                    <span>CNPJ. 02.895.771/0001-10</span>
+                </div>
+                <div>
+                    <span>e-mail:labsolo01@gmail.com</span>
+                    <span>CEL: (79) 9 9933-0515</span>
+                </div>
+            </div>
+    </header>
+    
+</body>
+</html>

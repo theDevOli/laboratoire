@@ -1,0 +1,13 @@
+{
+  "name": "laboratoire-orchestrator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend/src/external/Laboratoire.UI && DOTNET_ENVIRONMENT=Development dotnet run",
+    "dev:frontend": "cd frontend && ng serve",
+    "dev": "concurrently \"yarn dev:backend\" \"yarn dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,171 @@
+﻿@using System.Globalization;
+@using System.Text
+@model Laboratoire.Domain.Entity.ReportPDF;
+
+@{
+    Layout = "_layout";
+    var outputs = Model.Outputs;
+    var isMicrobiology = Model?.ReportType?.ToLower().Contains("microbiologia")??false;
+    var isIrrigation = Model?.ReportType?.ToLower().Contains("irrigação")??false;
+    var isPotability = Model?.ReportType?.ToLower().Contains("potabilidade")??false;
+    var isCattle = Model?.ReportType?.ToLower().Contains("rebanho bovino")??false;
+    var isWastewater = Model?.ReportType?.ToLower().Contains("monitoramento ambiental")??false;
+    var isNotSoil = !Model?.SampleType?.ToLower().Contains("solo")??false;
+     var resultBuilder = new StringBuilder();
+}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ensaio</th>
+                        <th>Resultado</th>
+                        <th>Unidade</th>
+                        @if(isNotSoil)
+                        {
+                            <th>VMP</th>
+                            <th>Portaria</th>
+                        }
+                        @if(!isNotSoil)
+                        {
+                            <th>Método</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var output in outputs!)
+                    {
+                        <tr>
+                            <td>@output?.ParameterName</td>
+                            <td>@output?.GetResult() </td>
+                            <td>@Html.Raw(output?.GetUnit())</td>
+                            @if(isNotSoil)
+                            {
+                                <td>@output?.GetVmp()</td>
+                            }
+                            <td>@output?.GetOfficialDoc()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="legend">
+                <p class="center underline">Legenda</p>
+                <table class="md">
+                    <tbody>
+                       @for (var i = 0; i < Model?.Legends?.Length; i++)
+                        {
+                            var currentLegend = Model?.Legends[i];
+                            @* var nextLegend = (i + 1 < Model?.Legends.Length) ? Model?.Legends[i + 1] : null; *@
+                            <tr>
+                                <td><strong>@Html.Raw(currentLegend?.Unit): </strong>@currentLegend?.Description</td>
+                                    @* @if (nextLegend != null)
+                                    {
+                                    <td>
+                                        <strong>@Html.Raw(nextLegend.Unit): </strong>@nextLegend.Description
+                                    </td>
+                                    } *@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="observation">
+                <span class="underline">Observações:</span> 
+                @if(Model?.IsCollectedByClient ==true){
+                <span>Coleta efetuada pelo
+                cliente. A descrição do material para ensaio é de inteira
+                responsabilidade do cliente.</span>
+                }
+                @if(Model?.IsCollectedByClient ==false){
+                <span>Coleta efetuada pelo
+                Laboratorio no dia @Model.EntryDate.</span>
+                }
+            </p>
+            @{
+                @* var resultStr = String.Empty; *@
+                var officialDoc = String.Empty;
+                if(isNotSoil && (isPotability||isWastewater||isMicrobiology||isCattle))
+                {
+
+                    var isOk = true;
+                    var outOfRange = new List<string>();
+
+                    foreach(var output in outputs)
+                    {
+
+                        if(output?.OfficialDoc is not null 
+                        && output.OfficialDoc !="-")
+                        {
+                            officialDoc = output.OfficialDoc;
+                        }
+                        if(output!.IsParameterOutVmp())
+                        {
+                            isOk = false;
+                            outOfRange.Add(output?.ParameterName!);
+                        } 
+                    }
+
+                    var isSingular = outOfRange.Count()==1;
+                    var areAllParametersOutOfRange = outOfRange.Count()==outputs.Count();
+
+                        if(isOk)
+                        resultBuilder.Append($@"Os valores apresentados estão de acordo com o padrão da {officialDoc}.");
+
+                        if(!isOk && areAllParametersOutOfRange)
+                            resultBuilder.Append($@"Todos os valores apresentados ({String.Join(", ",outOfRange)}) não estão de acordo com o padrão da {officialDoc}.");
+
+                        if(!isOk && !areAllParametersOutOfRange)
+                            resultBuilder.Append($@"Os valores apresentados estão de acordo com o padrão da {officialDoc}, com exceção para {(isSingular?"o":"os")} {(isSingular?"parâmetro":"parâmetros")} ({String.Join(", ",outOfRange)}) em relação aos padrões permitidos.");
+
+                        resultBuilder.Append($@" Os demais valores não detectados são devido à ausência destes elementos na amostragem ou a baixa concentração dos mesmos, de maneira que não possam ser detectados pela metodologia analítica. ");
+                }
+
+                if(isNotSoil && isIrrigation)
+                {
+                    var salinidade = outputs
+                    .FirstOrDefault(result=>result!.ParameterName!.ToLower().Equals("salinidade"))?.ResultStr;
+                    var sodicidade = outputs
+                    .FirstOrDefault(result=>result!.ParameterName!.ToLower().Equals("sodicidade"))?.ResultStr;
+
+
+                    resultBuilder.Append("A amostra ");
+
+                    resultBuilder.Append(salinidade!.Equals("C1")?"analisada pode ser utilizada para irrigação na maioria das culturas e em diversos tipos de solo, apresentando baixa probabilidade de causar problemas de salinização.":
+                    salinidade.Equals("C2")?"é adequada para irrigação desde que haja um grau moderado de lixiviação do solo. Cultivos com resistência moderada ao sal podem ser irrigados sem a necessidade de práticas especiais de controle da salinidade na maioria dos casos.":
+                    salinidade.Equals("C3")?"não deve ser usada em solos com drenagem insuficiente. Mesmo em solos bem drenados, são necessárias práticas específicas de manejo da salinidade. É indicada apenas para plantas com alta tolerância ao sal.":
+                    "não é recomendada para uso em condições normais de irrigação. Seu uso é restrito a situações excepcionais, como solos altamente permeáveis e cultivos que apresentam grande resistência aos sais.");
+
+                    resultBuilder.Append(salinidade.Equals("S1")?"Esta água é adequada para irrigação em quase todos os tipos de solo, apresentando baixo risco de provocar problemas de salinização ou sodificação.":
+                    salinidade.Equals("S2")?"Recomenda-se o uso dessa água apenas em solos de textura arenosa ou orgânica, que possuem boa drenagem. Nos solos de textura mais fina (como os argilosos), o sódio pode ser prejudicial, podendo causar danos à estrutura do solo.":
+                    salinidade.Equals("S3")?"O uso desta água pode aumentar os níveis de sódio trocável na maioria dos solos, o que pode ser tóxico para as plantas. Para mitigar esse risco, são necessárias práticas especiais de manejo, como drenagem eficaz, facilidade de lavagem do solo e aplicação de matéria orgânica.":
+                    "Essa água não é indicada para irrigação, a menos que a salinidade seja baixa ou moderada, ou que sejam utilizados tratamentos corretivos, como a aplicação de gesso, para tornar o uso dessa água viável.");
+                } 
+                <div class="references">
+                    <p class="underline">Bibliografia de Consulta:</p>
+                    <ol>
+                        @if(isNotSoil)
+                        {
+                            <li>CHAMBERS, Phoenix. Standard methods for the examination of water and wastewater. Scientific e-Resources, 2019.</li>
+                            <li>MDE ÁGUA, Manual Prático de Análise. Fundação Nacional de Saúde. Ministério da Saúde, 2006.</li>
+                        }
+                        @if(isNotSoil&& officialDoc!=String.Empty)
+                        {
+                            <li>@officialDoc<span>.</span></li>
+                        }
+                        @if(!isNotSoil)
+                        {
+                            <li>EMBRAPA, S. Manual de métodos de análise de solo 3<sup> a</sup> edn. Centro Nacional de Pesquisa de Solos, 2017.</li>
+                            <li>MAPA-IN Nº. 02, de 09/10/2008.</li>
+                            <li>Recomendações para o uso de corretivos e fertilizantes no Estado de Sergipe. Embrapa tabuleiros Costeiros, Aracaju/SE, 2007.</li>
+                            <li>MALAVOLTA, E. Manual de Química Agrícola: Adubos e Adubação. Ed. Agronômica Ceres, 1981, São Paulo, Brasil.</li>
+                        }
+                    </ol>
+                </div>
+                if(isNotSoil)
+                {
+                    <div class="result">
+                        <p class="center underline">Resultado</p>
+                        <p>
+                            @resultBuilder.ToString()
+                        </p>
+                    </div>
+                }
+            }            

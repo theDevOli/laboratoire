@@ -1,0 +1,211 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <img class="navbar-brand logo" src="labsolo.png" />
+    @if(isLogin) {
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        @if(auth().permission?.protocol !== null){
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/protocolo"
+            routerLinkActive="active"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-expanded="false"
+            ><i class="fa-solid fa-table-list"></i>Protocolo</a
+          >
+        </li>
+        } @if(auth().permission?.client !==null
+        ||auth().permission?.property!==null){
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-regular fa-clipboard"></i>Cadastro
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @if(auth().permission?.client !==null){
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/clientes"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i class="fa-solid fa-people-group"></i>Clientes</a
+              >
+            </li>
+            }@if(auth().permission?.property!==null){
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/propriedades"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i class="fa-solid fa-house-chimney-window"></i>Propriedades</a
+              >
+            </li>
+            }
+          </ul>
+        </li>
+        } @if(auth().permission?.cashFlow!==null){
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/caixa"
+            routerLinkActive="active"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-expanded="false"
+            ><i class="fa-solid fa-sack-dollar"></i>Caixa</a
+          >
+        </li>
+        } @if(auth().permission?.partner!==null){
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/parceiros"
+            routerLinkActive="active"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-expanded="false"
+            ><i class="fa-regular fa-handshake"></i>Parceiros</a
+          >
+        </li>
+        <!-- } @if(auth().permission?.chemical!== null){ -->
+        } @if(false){
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/regentes"
+            routerLinkActive="active"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-expanded="false"
+            ><i class="fa-solid fa-flask-vial"></i>Reagentes</a
+          >
+        </li>
+        } @if(auth().permission?.users!==null){
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-users-gear"></i>Gestão de Usuários
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @if(auth().permission?.users !==null){
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/usuarios"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i class="fa-solid fa-users"></i>Usuários</a
+              >
+            </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/permissoes"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i class="fa-regular fa-id-card"></i>Permissão</a
+              >
+            </li>
+            }
+          </ul>
+        </li>
+        }
+      </ul>
+
+      <div class="d-flex justify-content-between">
+        <div class="theme mx-2" (click)="toggleTheme()">
+          @if(colorTheme==='dark'){
+          <i class="fa-solid fa-sun fa-2x"></i>
+          } @if(colorTheme==='light'){
+          <i class="fa-solid fa-moon fa-2x"></i>
+          }
+        </div>
+
+        @if(toSelectYear){
+        <form class="d-flex me-3">
+          <select
+            (change)="onChangeYear($event)"
+            class="form-select form-select-sm"
+          >
+            <option value="">Selecione o ano</option>
+            @for(year of years;track $index){
+            <option [value]="year">{{ year }}</option>
+            }
+          </select>
+        </form>
+        }
+
+        <div class="nav-item dropdown user-info">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="true"
+          >
+            <i class="fa-solid fa-user-tie"></i>{{ name }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#password-modal"
+                ><i class="fa-solid fa-unlock"></i>Mudar senha</a
+              >
+            </li>
+            <li (click)="onLogout()">
+              <a class="dropdown-item"
+                ><i class="fa-solid fa-right-from-bracket"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    }
+  </nav>
+  <!-- <app-toast /> -->
+</header>
+<app-password-modal
+  [modalTitle]="title()"
+  [modalForm]="modalForm()"
+  [formGroup]="form()"
+  (formEmitter)="onModalSave($event)"
+  (input)="toggleIcon($event)"
+/>

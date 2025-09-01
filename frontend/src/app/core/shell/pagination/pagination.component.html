@@ -1,0 +1,68 @@
+<div class="paginator d-flex justify-content-between mb-2">
+  <div class="page-selector ms-2">
+    <button
+      class="btn btn-sm btn-outline-primary p-0 ms-1"
+      [disabled]="currentPage() === 1"
+      aria-label="Primeira Página"
+      (click)="goToFirstPage()"
+    >
+      <i class="fa-solid fa-backward-fast"></i>
+    </button>
+
+    <button
+      class="btn btn-sm btn-outline-primary p-0 ms-1"
+      [disabled]="currentPage() === 1"
+      aria-label="Página Anterior"
+      (click)="goToPrevPage()"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <span class="mx-2">Página {{ currentPage() }} de {{ totalPages() }}</span>
+
+    <button
+      class="btn btn-sm btn-outline-primary p-0 ms-1"
+      [disabled]="currentPage() === totalPages()"
+      aria-label="Próxima Página"
+      (click)="goToNextPage()"
+    >
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+    <button
+      class="btn btn-sm btn-outline-primary p-0 ms-1"
+      [disabled]="currentPage() === totalPages()"
+      aria-label="Ultima Página"
+      (click)="goToLastPage()"
+    >
+      <i class="fa-solid fa-forward-fast"></i>
+    </button>
+  </div>
+
+  <div class="info">
+    <span
+      >Mostrando de {{ currentRecord }} até {{ lastRecord }} de
+      {{ totalData().length.toLocaleString("pt-BR") }} registros
+    </span>
+  </div>
+
+  <div (click)="onToggleQuantity($event)" class="quantity-selector me-2">
+    <span
+      class="number-btn btn btn-sm btn-outline-primary ms-1"
+      [class.active]="dataPerPage === 25"
+    >
+      25
+    </span>
+    <span
+      class="number-btn btn btn-sm btn-outline-primary ms-1"
+      [class.active]="dataPerPage === 50"
+    >
+      50
+    </span>
+    <span
+      class="number-btn btn btn-sm btn-outline-primary ms-1"
+      [class.active]="dataPerPage === 100"
+    >
+      100
+    </span>
+  </div>
+</div>

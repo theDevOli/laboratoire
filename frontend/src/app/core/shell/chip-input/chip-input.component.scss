@@ -1,0 +1,180 @@
+:host {
+  .container {
+    background-color: var(--bs-body-bg);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.438rem;
+    box-shadow: 0 0.375rem 0.75rem var(--bs-border-color-translucent); // Sombra adaptável
+
+    .input-container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border: 1px solid var(--bs-border-color); // Borda adaptável
+      border-radius: 0.438rem;
+
+      .chip-bar {
+        cursor: text;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        overflow: hidden;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.375rem 0.75rem;
+        width: 100%;
+
+        .chip {
+          cursor: default;
+          list-style: none;
+          padding: 0.375rem 0.75rem;
+          margin: 0.125rem;
+          display: inline-flex;
+          align-items: center;
+          flex: 0 0 auto;
+          border-radius: 1.25rem;
+          color: var(--bs-success-text-emphasis); // Cor adaptável
+          border: 0.125rem solid var(--bs-success-border-subtle);
+          background-color: var(--bs-success-bg-subtle);
+
+          .remove {
+            margin-left: 0.313rem;
+          }
+
+          .material-icons {
+            &.md-18 {
+              cursor: pointer;
+              font-size: 0.8rem;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .input-field {
+          cursor: default;
+          list-style: none;
+          flex: 1 1 auto;
+          display: inline-flex;
+          margin: 0.125rem;
+          padding: 0.375rem 0.75rem;
+          border: 0.125rem solid transparent;
+          position: relative;
+          width: 100%;
+
+          .input {
+            background: inherit;
+            box-shadow: none;
+            outline: 0;
+            border: 0;
+            border-radius: 0;
+            min-width: 2.5rem;
+            flex: 1;
+            font-size: 1rem;
+            color: var(--bs-body-color); // Cor adaptável
+          }
+        }
+      }
+
+      .action-btn {
+        padding: 0.375rem 0;
+
+        .clear {
+          cursor: pointer;
+          padding: 0.438rem;
+          border-radius: 0.438rem;
+        }
+      }
+    }
+
+    .chip-footer {
+      letter-spacing: 0.011rem;
+      font-size: 0.75rem;
+      margin: 0.188rem 0;
+      color: var(--bs-secondary-color); // Cor adaptável
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+.ripple {
+  background-position: center;
+  background-color: inherit;
+  transition: background 0.6s;
+}
+
+.ripple:hover,
+.ripple:focus {
+  background: var(--bs-body-bg)
+    radial-gradient(circle, transparent 1%, var(--bs-body-bg) 1%) center/1500%;
+}
+
+.ripple:active {
+  background-color: var(--bs-border-color);
+  background-size: 100%;
+  transition: background 0s;
+}
+
+.options-dropdown {
+  // max-width: 5rem;
+  margin: 1rem;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 4px;
+  max-height: 5rem;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin-top: 2px;
+  box-shadow: 0 2px 4px var(--bs-border-color-translucent);
+  z-index: 10;
+  transform: scale(1.2);
+
+  .option-list {
+    cursor: pointer;
+    list-style: none;
+    color: var(--bs-body-color);
+  }
+
+  .option-list:hover {
+    background: var(--bs-tertiary-bg);
+  }
+}
+
+// .options-dropdown {
+//   position: absolute;
+//   top: 100%; // Faz a dropdown aparecer logo abaixo do input
+//   left: 0; // Garante que fique alinhado à esquerda do campo de entrada
+//   width: 100%; // Mantém o tamanho consistente com o input
+//   background: var(--bs-body-bg);
+//   border: 1px solid var(--bs-border-color);
+//   border-radius: 4px;
+//   max-height: 150px;
+//   overflow-y: auto;
+//   list-style: none;
+//   padding: 0;
+//   margin-top: 4px; // Dá um espaçamento melhor
+//   box-shadow: 0 2px 4px var(--bs-border-color-translucent);
+//   z-index: 1000; // Garante que fique acima de outros elementos
+
+//   .option-list {
+//     cursor: pointer;
+//     padding: 8px 12px; // Melhor espaçamento interno
+//     color: var(--bs-body-color);
+//   }
+
+//   .option-list:hover {
+//     background: var(--bs-tertiary-bg);
+//   }
+// }
+
+.disabled,
+.disabled:focus {
+  background-color: var(--toast-error) !important;
+  color: var(--white);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hide {
+  display: none;
+}

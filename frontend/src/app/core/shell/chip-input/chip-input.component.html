@@ -1,0 +1,47 @@
+<div class="container" [class.disabled]="isDisabled()">
+  <div class="input-container">
+    <ul class="chip-bar" (click)="onChipBarClick()">
+      @for(item of items;track $index){
+      <li class="chip">
+        <span class="chip-label">
+          {{ item.label }}
+        </span>
+        <!-- @if(removable()){ -->
+        <span class="material-icons md-18 remove" (click)="onRemoveItem($index)"
+          ><i class="fa-solid fa-x"></i
+        ></span>
+        <!-- } -->
+      </li>
+      }
+      <li class="input-field">
+        <input
+          #inputField
+          type="search"
+          name=""
+          id=""
+          class="input"
+          [placeholder]="chipInput().placeholder"
+          (input)="onFilteredOption($event)"
+        />
+      </li>
+    </ul>
+
+    @if(removable){
+    <div class="action-btn">
+      <span class="material-icons clear ripple" (click)="onRemoveAll()">
+        <i class="fa-solid fa-x"></i>
+      </span>
+    </div>
+    }
+  </div>
+  <div class="chip-footer d-flex">
+    <span>Selecione as culturas:</span>
+    <ul class="options-dropdown" [class.hide]="options.length === 0">
+      @for(option of options;track $index){
+      <li (click)="onOptionClick(option)" class="option-list">
+        {{ option.label }}
+      </li>
+      }
+    </ul>
+  </div>
+</div>

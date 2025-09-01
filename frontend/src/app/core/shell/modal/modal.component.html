@@ -1,0 +1,260 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modal"
+  aria-labelledby="modalLabel"
+  #myBootstrapModal
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle() }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          @for(form of modalForm();track $index){
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="$index === 0"
+              [id]="form.tabId + '-tab'"
+              data-bs-toggle="tab"
+              [href]="'#' + form.tabId"
+              role="tab"
+              aria-controls="home"
+              >{{ form.tabName }}</a
+            >
+          </li>
+          }
+        </ul>
+        <!-- <div class="tab-content mt-2"> -->
+        <form
+          [id]="modalForm()"
+          class="tab-content mt-2"
+          [formGroup]="formGroup()"
+        >
+          @for(form of modalForm();track $index){
+          <div
+            class="tab-pane"
+            [class.active]="$index === 0"
+            [id]="form.tabId"
+            role="tabpanel"
+          >
+            @for(input of form.data;track input.nameId){
+            @if(!input.nameIdB&&!input.nameIdC&& (input.type
+            ==='text'||input.type ==='email'||input.type ==='number'||input.type
+            ==='date')){
+            <div class="mb-3">
+              <label [for]="input.nameId" class="form-label"
+                >{{ input.label }}:</label
+              >
+              <input
+                [type]="input.type"
+                class="form-control"
+                [id]="input.nameId"
+                [placeholder]="input.placeholder"
+                [min]="input.min"
+                [formControlName]="input.nameId"
+                (change)="getUser($event)"
+              />
+            </div>
+            } @if(input.nameIdB&&!input.nameIdC && (input.type
+            ==='text'||input.type ==='email'||input.type ==='number'||input.type
+            ==='date')){
+            <div class="mb-3">
+              <label class="form-label">{{ input.label }}:</label>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label [for]="input.nameId" class="form-label"
+                    >Valor inicial:</label
+                  >
+                  <input
+                    [type]="input.type"
+                    class="form-control"
+                    [id]="input.nameId"
+                    [placeholder]="input.placeholder"
+                    [formControlName]="input.nameId"
+                    [min]="input.min"
+                  />
+                </div>
+
+                <!-- Valor Final -->
+                <div class="col-md-6 mb-3">
+                  <label [for]="input.nameIdB" class="form-label"
+                    >Valor final:</label
+                  >
+                  <input
+                    [type]="input.type"
+                    class="form-control"
+                    [id]="input.nameIdB"
+                    [placeholder]="input.placeholder"
+                    [formControlName]="input.nameIdB"
+                    [min]="input.min"
+                  />
+                </div>
+              </div>
+            </div>
+            } @if(input.nameIdB&&input.nameIdC && (input.type
+            ==='text'||input.type ==='email'||input.type
+            ==='password'||input.type ==='number'||input.type ==='date')){
+            <div class="mb-3">
+              <label class="form-label">{{ input.label }}:</label>
+              <div class="row align-items-end">
+                <div class="col-md-3 mb-3">
+                  <label [for]="input.nameId" class="form-label"
+                    >Valor inicial:</label
+                  >
+                  <input
+                    [type]="input.type"
+                    class="form-control"
+                    [id]="input.nameId"
+                    [placeholder]="input.placeholder"
+                    [formControlName]="input.nameId"
+                    [min]="input.min"
+                  />
+                </div>
+
+                <!-- Valor Final -->
+                <div class="col-md-3 mb-3">
+                  <label [for]="input.nameIdB" class="form-label"
+                    >Valor final:</label
+                  >
+                  <input
+                    [type]="input.type"
+                    class="form-control"
+                    [id]="input.nameIdB"
+                    [placeholder]="input.placeholder"
+                    [formControlName]="input.nameIdB"
+                    [min]="input.min"
+                  />
+                </div>
+
+                <!-- Volume de amostra -->
+                <div class="col-md-3 mb-3">
+                  <label [for]="input.nameIdB" class="form-label"
+                    >Volume da amostra:</label
+                  >
+                  <input
+                    [type]="input.type"
+                    class="form-control"
+                    [id]="input.nameIdB"
+                    [placeholder]="input.placeholder"
+                    [formControlName]="input.nameIdC"
+                    [min]="input.min"
+                  />
+                </div>
+              </div>
+            </div>
+            } @if(input.type==='textArea'){
+            <div class="mb-3">
+              <label [for]="input.nameId" class="form-label"
+                >{{ input.label }}:</label
+              >
+              <textarea
+                class="form-control"
+                [id]="input.nameId"
+                [rows]="input.rows"
+                [placeholder]="input.placeholder"
+                [formControlName]="input.nameId"
+              ></textarea>
+            </div>
+            } @if(input.type==='checkbox'){
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="input.nameId"
+                [formControlName]="input.nameId"
+              />
+              <label class="form-check-label" [for]="input.nameId">{{
+                input.label
+              }}</label>
+            </div>
+            } @if(input.type==='radio'){
+            <div class="mb-3" [class.span]="input.label === 'Propriedades'">
+              <label class="form-label">{{ input.label }}</label
+              ><br />
+              @for(option of input.options;track $index){
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [name]="input.nameId"
+                  [id]="option.value"
+                  [value]="option.value"
+                  [formControlName]="input.nameId"
+                />
+                <label class="form-check-label" [for]="option.value">{{
+                  option.label
+                }}</label>
+              </div>
+              }
+            </div>
+            } @if(input.type==='dropdown'){
+            <div class="mb-3">
+              <label [for]="input.nameId" class="form-label"
+                >{{ input.label }}:</label
+              >
+              <select
+                class="form-select"
+                [id]="input.nameId"
+                [formControlName]="input.nameId"
+              >
+                <option [ngValue]="null">Selecione uma opção!</option>
+                @for(option of input.options;track $index){
+                <option [ngValue]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+            } @if(input.type==='chips' &&
+            (formGroup().get('catalogId')?.value<=3)){
+            <div class="mb-3">
+              <label [for]="input.nameId" class="form-label"
+                >{{ input.label }}:</label
+              >
+              <app-chip-input
+                (value)="onSetCrops($event)"
+                [formGroup]="formGroup()"
+                [chipInput]="input"
+              />
+            </div>
+            } }
+          </div>
+          }
+        </form>
+        @if(setError().length>0) {
+        <div class="error-messages">
+          @for(error of setError();track $index){
+          <span>{{ error }}</span>
+          }
+        </div>
+        }
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Fechar
+          </button>
+          <button
+            [disabled]="formGroup().invalid"
+            (click)="saveData()"
+            type="button"
+            data-bs-dismiss="modal"
+            class="btn btn-primary"
+          >
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

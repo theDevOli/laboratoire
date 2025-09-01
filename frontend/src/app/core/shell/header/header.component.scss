@@ -1,0 +1,28 @@
+nav {
+  padding: 1rem;
+  z-index: 11;
+}
+
+.active {
+  border-bottom: 0.1rem solid var(--secondary);
+}
+
+.dropdown-item,
+.nav-item {
+  cursor: pointer;
+}
+.user-info {
+  margin-right: 2.5rem;
+}
+
+.logo {
+  max-width: 7rem;
+}
+
+.theme {
+  cursor: pointer;
+}
+
+.nav-item.dropdown:has(.dropdown-menu a.active) > a {
+  border-bottom: 0.1rem solid var(--secondary);
+}

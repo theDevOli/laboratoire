@@ -1,0 +1,61 @@
+.toast {
+  position: fixed;
+  top: 6rem;
+  right: -8rem;
+  transform: translateX(-50%);
+  background-color: var(--dark-2);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  box-shadow: var(--box-shadow);
+  transition: opacity 0.5s ease, visibility 0s 0.5s;
+  z-index: 1000;
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+
+  &.success {
+    background-color: var(--toast-success);
+  }
+
+  &.error {
+    background-color: var(--toast-error);
+  }
+
+  &.info {
+    background-color: var(--toast-info);
+  }
+
+  & p {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.1rem solid var(--white);
+  margin-bottom: 1rem;
+
+  .title {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .close-btn {
+    border: none;
+    background-color: inherit;
+  }
+
+  .fa-solid.fa-xmark {
+    color: var(--white);
+  }
+}

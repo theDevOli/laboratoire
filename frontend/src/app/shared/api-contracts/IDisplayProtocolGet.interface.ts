@@ -1,0 +1,30 @@
+export interface IDisplayProtocolGet {
+  protocolId: string;
+  cashFlowId: number;
+  entryDate: string;
+  reportDate: string;
+  isCollectedByClient: boolean;
+  catalogId: number;
+  reportType: string;
+  price: number;
+  clientName: string;
+  clientTaxId: string;
+  area: string;
+  ccir: string;
+  itrNirf: string;
+  propertyName: string;
+  city: string;
+  postalCode: string;
+  stateId: number;
+  stateCode: string;
+  totalPaid: number | null;
+  partnerId: string | null;
+  partnerName: string | null;
+  paymentDate: string;
+  reportId: string;
+  results: object[];
+  crops?: number[];
+  clientId: number;
+  propertyId: number;
+  transactionId: number;
+}

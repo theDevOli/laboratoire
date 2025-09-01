@@ -1,0 +1,99 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$laboratoire-primary: mat.define-palette(mat.$indigo-palette);
+$laboratoire-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$laboratoire-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$laboratoire-theme: mat.define-light-theme((
+  color: (
+    primary: $laboratoire-primary,
+    accent: $laboratoire-accent,
+    warn: $laboratoire-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($laboratoire-theme);
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+// Global Reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%; /* Sets 1rem = 16px by default */
+  line-height: 1.5;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: "Roboto", sans-serif;
+}
+
+:root {
+  --primary: #a3d65c;
+  --secondary: #215d33;
+  --shadow-1: #7a9a4a;
+  --shadow-2: #6b8c3e;
+  --teal-1: #66a06d;
+  --teal-2: #4c7a4f;
+  --gray-1: #b7c9a8;
+  --gray-2: #a0b28d;
+  --dark-1: #000000;
+  --dark-2: #333;
+  --white: #fff;
+  --toast-success: #4caf50;
+  --toast-error: #f44336;
+  --toast-info: #2196f3;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+$theme-colors: (
+  "primary": #a3d65c,
+  "danger": #ff4136,
+  "secondary": #215d33,
+  "light": #a0b28d,
+);
+
+[data-bs-theme="dark"] {
+  $theme-colors: (
+    "primary": #81c784,
+    "danger": #d32f2f,
+    "secondary": #1b5e20,
+    "light": #424242,
+  );
+}
+
+i {
+  margin-right: 0.5rem;
+}
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

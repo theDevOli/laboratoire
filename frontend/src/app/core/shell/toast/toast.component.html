@@ -1,0 +1,17 @@
+<div
+  [class.show]="toast().showNotification"
+  [class]="{
+  'success':toast().toastType==='success',
+  'error':toast().toastType==='error',
+  'info':toast().toastType==='info',
+}"
+  class="toast"
+>
+  <div class="header">
+    <p class="title">{{ toast().notification.title }}</p>
+    <button class="close-btn" (click)="closeToast()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <p>{{ toast().notification.message }}</p>
+</div>

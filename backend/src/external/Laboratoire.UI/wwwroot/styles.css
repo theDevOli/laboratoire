@@ -1,0 +1,142 @@
+:root {
+    --primary: #a3d65c;
+    --secondary: #215d33;
+    --shadow-1: #7a9a4a;
+    --shadow-2: #6b8c3e;
+    --teal-1: #66a06d;
+    --teal-2: #4c7a4f;
+    --gray-1: #b7c9a8;
+    --gray-2: #a0b28d;
+    --dark-1: #000000;
+    --dark-2: #333333;
+    --font-family: "Roboto", sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+}
+
+.header {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: center;
+    -webkit-box-pack: justify;
+    margin: 5rem;
+}
+
+.logo {
+    max-width: 12rem;
+}
+
+.header-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+    width: 28rem;
+
+    & div {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.container {
+    margin: 4rem;
+}
+
+.identification {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+table {
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    margin: 0 auto;
+    width: 100%;
+}
+
+[colspan] {
+    width: 2rem;
+}
+
+/* Style table headers */
+th {
+    background-color: #215d33;
+    border: 1px solid #333333;
+    padding: 0.6rem;
+    text-align: center;
+    color: #b7c9a8;
+}
+
+/* Style table cells */
+td {
+    border: 1px solid #215d33;
+    padding: 0.4rem;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #a0b28d;
+}
+
+.underline {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 1rem;
+}
+.center {
+    text-align: center;
+}
+
+.md {
+    width: 85% !important;
+}
+
+.flex-justify {
+    display: -webkit-box;
+    -webkit-box-pack: justify;
+    -webkit-box-orient: horizontal;
+    margin: 1rem 11rem;
+}
+
+.flex {
+    display: block;
+}
+
+.references,
+.result,
+.legend,
+.observation {
+    line-height: 16px;
+    margin-bottom: 16px;
+}
+
+.result .references {
+    text-align: justify;
+    text-justify: inter-word;
+}
+.page-break {
+    page-break-before: always;
+}
+
+.content-center {
+    margin-left: 20rem;
+}
+
+.suggestion {
+    margin-bottom: 1rem;
+}
+
+.qr-code {
+    max-width: 8rem;
+}
+
+.signature {
+    max-width: 11rem;
+}
+
+.footer {
+    color: #b7c9a8;
+}

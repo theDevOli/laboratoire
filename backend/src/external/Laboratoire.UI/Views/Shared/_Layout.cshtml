@@ -1,0 +1,244 @@
+﻿@using System.Globalization
+@using Laboratoire.Application.Utils;
+@model Laboratoire.Domain.Entity.ReportPDF;
+@{
+    bool noPreposition= new string[]{"Física","Físico-Química","Química","Microbiologia"}.Contains(Model.ReportType);
+    string subHeader = $"Análise {(noPreposition?"":"de ")}{Model.ReportType} em {Model.SampleType}.";
+    var isSoil = Model?.SampleType?.ToLower().Contains("solo".ToLower()) ?? false;
+    var culture = new CultureInfo("pt-BR");
+    string signatureData = $"Itabaiana-SE, {Model?.ReportDate!.Value.ToString("dd 'de' MMMM 'de' yyyy", culture)}.";
+    string emptyData = string.Concat(Enumerable.Repeat("*",6));
+    var suggestions = Model?.Suggestions?.ToArray();
+    var outputs = Model?.Outputs;
+    var c = Model?.ToCcir();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="@("http://" + Context.Request.Host.ToString() + "/styles.css")" />
+    <title>Relatório nº @Model?.ProtocolId</title>
+</head>
+<body>
+        <div class="container">
+            <div class="identification">
+                Relatório de ensaios LABSOLO nº<span>@Model?.ProtocolId</span> para <span>@subHeader</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <td>@Model?.ClientName</td>
+                        <th colspan="2">CNPJ/CPF</th>
+                        <td>@Model?.ToTaxId()</td>
+                    </tr>
+                    <tr>
+                        <th>Endereço</th>
+                        <td >@Model?.Location</td>
+                        <th colspan="2">Contatos(s)</th>
+                        <td>@Model?.ToPhone()</td>
+                    </tr>
+                    @if (isSoil &&(Model?.Ccir is not null || Model?.ItrNirf is not null))
+                    {
+                        <tr>
+                            <th>CCIR</th>
+                            <td >
+                                @(Model.ToCcir())
+                            </td>
+                            <th colspan="2">ITR / NIRF</th>
+                            <td>
+                                @(Model.ToItrNirf())
+                            </td>
+                        </tr>
+                    }
+                    @if (isSoil)
+                    {
+                        <tr>
+                            <th>Area</th>
+                            <td>
+                                @(Model?.Area is not null?Model.Area:emptyData)
+                            </td>
+                            <th colspan="2">Matrícula</th>
+                            <td>
+                                @(Model?.Registration is not null?Model.Registration:emptyData)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>Amostra(s)</th>
+                        <td>@subHeader</td>
+                        <th colspan="2">Data de Ensaio</th>
+                        <td>
+                            @(Model!.EntryDate.HasValue ? Model.EntryDate.Value.ToString("dd/MM/yyyy", culture) : emptyData)
+                        </td>
+                    </tr>
+                    @if(suggestions?.Count()>0)
+                    {
+                        <tr>
+                            <th>Culturas</th>
+                            <td colspan="4">
+                                @for(var i=0;i<suggestions.Length;i++)
+                                {
+                                    var cropName = suggestions[i].CropName;
+                                    @cropName
+                                    if(i<suggestions.Length-1)
+                                    {
+                                        <span>, </span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </thead>
+            </table>
+        @RenderBody()
+        </div>
+        <div class="flex-justify">
+            @if (Model?.QRCode is not null && Model?.ReportDate is not null)
+            {
+                 <div>
+                    <p>Valide o laudo pelo QR Code.</p>
+                    <img class="qr-code" src="@Model.QRCode" alt="QR Code de validade." />
+                </div> 
+                
+                <div>
+                    <p>@signatureData</p>
+                    <img class="signature" src="@Url.Content("~/signature.jpg")"/>
+                </div>
+            }
+        </div>
+        @{
+            if(isSoil&& suggestions?.Length>0)
+            {
+                <div class="suggestion">
+                    <div class="page-break"></div>
+                    <h2 class="center">Relatório de Uso de Insumos</h2>
+                    @for(var i=0;i<suggestions.Length;i++)
+                    {
+                         var suggestion = suggestions[i];
+                        <table class="suggestion">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <td>@Model?.ClientName</td>
+                                    <th colspan="2">CNPJ/CPF</th>
+                                    <td>@Model?.ToTaxId()</td>
+                                </tr>
+                                <tr>
+                                    <th>Endereço</th>
+                                    <td >
+                                        <span>@Model?.Location</span>
+                                    </td>
+                                    <th colspan="2">Contatos(s)</th>
+                                    <td>@Model?.ToPhone()</td>
+                                </tr>
+                                @if (Model?.Ccir is not null || Model?.ItrNirf is not null)
+                                {
+                                    <tr>
+                                        <th>CCIR</th>
+                                        <td >
+                                            @(Model.ToCcir())
+                                        </td>
+                                        <th colspan="2">ITR / NIRF</th>
+                                        <td>@(Model.ToItrNirf())</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <th>Area</th>
+                                    <td>@(Model?.Area is not null?Model.Area:emptyData)</td>
+                                    <th colspan="2">Matrícula</th>
+                                    <td>
+                                        @(Model?.Registration is not null?Model.Registration:emptyData)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Cultura</th>
+                                    <td>@suggestion.CropName</td>
+                                    <th colspan="2">Data de Ensaio</th>
+                                    <td>@(Model!.EntryDate.HasValue ? Model.EntryDate.Value.ToString("dd/MM/yyyy", culture) : emptyData)</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th colspan="6">CALAGEM</th>
+                                </tr>
+                                <tr>
+                                    <td>Uso de Calagem</td>
+                                    <td>Insumo</td>
+                                    <td>PRNT(%)</td>
+                                    <td>ton/ha</td>
+                                    <td>kg/tarefa</td>
+                                </tr>
+                                <tr>
+                                    <td>@(suggestion.CalagemTon is not null?"Recomendado":"Não Recomendado")</td>
+                                    <td>Calcário Dolomitico</td>
+                                    <td>&#8805; 80</td>
+                                    <td>@(suggestion.CalagemTon is not null?suggestion.CalagemTon?.ToString("F2",culture):emptyData)</td>
+                                    <td>@(suggestion.CalagemKg is not null?suggestion.CalagemKg?.ToString("F2",culture):emptyData)</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">NECESSIDADE DE NUTRIENTES</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">N (Ureia)</td>
+                                    <td colspan="2">P (MAP)</td>
+                                    <td colspan="2">K (Cloreto de Potássio)</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">-----------------------------------------------------------------------kg/ha----------------------------------------------------------------------</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">@(suggestion.NitrogenNecessity is not null?suggestion.NitrogenNecessity?.ToString("F2",culture):emptyData)</td>
+                                    <td colspan="2">@(suggestion.PhosphorusNecessity is not null?suggestion.PhosphorusNecessity?.ToString("F2",culture):emptyData)</td>
+                                    <td colspan="2">@(suggestion.PotassiumNecessity is not null?suggestion.PotassiumNecessity?.ToString("F2",culture):emptyData)</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">ADUBAÇÃO DE PLANTIO</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Fórmula NPK</td>
+                                    <td colspan="2">Correção (kg/ha)</td>
+                                    <td colspan="2">Correção (kg/tarefa)</td>
+                                </tr>
+                                @* <tr>
+                                    <td colspan="6">---------------------------------------------------------------------kg/ha--------------------------------------------------------------------</td>
+                                </tr> *@
+                                <tr>
+                                    <td colspan="2">@suggestion.Base.Formulation</td>
+                                    <td colspan="2">@(suggestion.Base.QuantityInHa is not null?suggestion.Base.QuantityInHa?.ToString("F2",culture):emptyData)</td>
+                                    <td colspan="2">@(suggestion.Base.QuantityInTarefa is not null?suggestion.Base.QuantityInTarefa?.ToString("F2",culture):emptyData)</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">ADUBAÇÃO DE COBERTURA</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Fórmula NPK</td>
+                                    <td colspan="2">Correção (kg/ha)</td>
+                                    <td colspan="2">Correção (kg/tarefa)</td>
+                                </tr>
+                                @* <tr>
+                                    <td colspan="6">---------------------------------------------------------------------kg/ha--------------------------------------------------------------------</td>
+                                </tr> *@
+                                <tr>
+                                    <td colspan="2">@(suggestion.Cover.Formulation is not null?suggestion.Cover.Formulation:emptyData)</td>
+                                    <td colspan="2">@(suggestion.Cover.QuantityInHa is not null?suggestion.Cover.QuantityInHa?.ToString("F2",culture):emptyData)</td>
+                                    <td colspan="2">@(suggestion.Cover.QuantityInTarefa is not null?suggestion.Cover.QuantityInTarefa?.ToString("F2",culture):emptyData)</td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                        <div class="content-center">
+                            <p>@signatureData</p>
+                            <img class="signature" src="@Url.Content("~/signature-1.png")"/>
+                        </div>
+                        if(i<suggestions.Length-1)
+                        {
+                            <div class="page-break"></div>
+                        }
+                    }
+                </div>
+            }
+        }
+    </body>
+</html> 

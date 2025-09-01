@@ -1,0 +1,11 @@
+<div [class.blur]="isLoading" class="content" [class.background]="isBackground">
+  @if(isLogin) {
+  <app-header />
+  }
+  <app-toast />
+  <router-outlet />
+  <app-footer />
+</div>
+@if (isLoading) {
+<app-loader />
+}

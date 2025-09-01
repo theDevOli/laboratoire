@@ -1,0 +1,37 @@
+<div class="background">
+  <form [formGroup]="form" (submit)="onLogin()">
+    <!-- <h2>Autenticação</h2> -->
+    <img src="/img-logo.png" alt="Logo da LabSolo" />
+    <div class="mb-3">
+      <label for="username" class="form-label">Nome de usuário</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        formControlName="username"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Senha</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        formControlName="userPassword"
+      />
+    </div>
+    <button [disabled]="form.invalid" type="submit" class="btn btn-secondary">
+      Entrar
+    </button>
+    <div class="input-error">
+      @if(form.get('username')?.dirty && form.get('username')?.invalid){
+      <p>O nome do usuário é um campo obrigatório.</p>
+      } @if(form.get('userPassword')?.dirty &&
+      form.get('userPassword')?.invalid){
+      <p>A senha é um campo obrigatório.</p>
+      }
+    </div>
+  </form>
+</div>
