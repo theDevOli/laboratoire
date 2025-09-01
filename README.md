@@ -1,8 +1,29 @@
 # Laboratoire 🧪🔬
+Laboratoire is a full-stack web application designed for managing laboratory operations, experiments, and research data.
 
 [![Language Stats](https://github-readme-stats.vercel.app/api/top-langs/?username=theDevOli\&repo=laboratoire\&layout=compact\&theme=radical\&hide_border=true\&bg_color=00000000\&title_color=58a6ff\&text_color=8b949e\&hide=html,css,scss)](https://github.com/theDevOli/laboratoire)
 
-Laboratoire is a full-stack web application designed for managing laboratory operations, experiments, and research data.
+## 📖 Table of Contents
+
+1. [📊 Technology Stack](#📊-technology-stack)
+2. [🚀 Features](#🚀-features)
+3. [📁 Project Structure](#📁-project-structure)
+4. [🛠️ Prerequisites](#🛠️-prerequisites)
+5. [⚡ Quick Start](#⚡-quick-start)
+    - [Option 1: Run Both Services Simultaneously (Recommended)](#option-1-run-both-services-simultaneously-recommended)
+    - [Option 2: Run Services Separately](#option-2-run-services-separately)
+6. [🔧 Development](#🔧-development)
+    - [Environment Configuration](#environment-configuration)
+    - [Database Setup](#database-setup)
+    - [Building for Production](#building-for-production)
+7. [📋 Available Scripts](#📋-available-scripts)
+8. [🌐 API Documentation](#🌐-api-documentation)
+9. [🐛 Troubleshooting](#🐛-troubleshooting)
+    - [Common Issues](#common-issues)
+    - [Version Compatibility](#version-compatibility)
+10. [📝 License](#📝-license)
+11. [🆘 Support](#🆘-support)
+
 
 ## 📊 Technology Stack
 
@@ -17,7 +38,7 @@ Laboratoire is a full-stack web application designed for managing laboratory ope
 
 * **Frontend**: Angular-based user interface with responsive design
 * **Backend**: .NET 8.0 API with Entity Framework Core
-* **Database**: SQL Server with advanced data modeling
+* **Database**: PostgreSQL with advanced data modeling
 * **Development**: Hot reload support for both frontend and backend
 * **Environment Configuration**: Multi-environment support (Development/Production)
 
@@ -40,7 +61,7 @@ laboratoire/
 * **.NET 8.0 SDK**
 * **Node.js** (v18 or higher)
 * **Angular CLI** (v18 or higher)
-* **SQL Server** (or SQL Server Express)
+* **PostgreSQL** (14.18 or higher)
 * **Git**
 
 ## ⚡ Quick Start
@@ -139,19 +160,26 @@ The API provides RESTful endpoints for:
 * .NET SDK: 8.0.x
 * Node.js: 18.x or higher
 
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+**Copyright (c) 2025 Daniel Muniz Oliveira. All rights reserved.**
+
+This repository is public for **portfolio and viewing purposes only**.
+
+### Permitted:
+- ✅ Viewing and reading the code
+
+### Prohibited without express written permission:
+- ❌ Modifying the code
+- ❌ Copying or redistributing
+- ❌ Using the code outside Labsolo
+- ❌ Creating derivative works
+- ❌ Commercial use
+
+### Legal Notice:
+THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. The author is not responsible for any damages resulting from its use.
+
+**This is not an open source license.** All rights are reserved.
 
 ## 🆘 Support
 
@@ -161,11 +189,6 @@ If you encounter any issues:
 * Create a new issue with detailed description
 * Contact the development team
 
-Happy Coding! 🎉
 
-
-[![Stars](https://img.shields.io/github/stars/theDevOli/laboratoire?style=social)](https://github.com/theDevOli/laboratoire/stargazers)
-[![Forks](https://img.shields.io/github/forks/theDevOli/laboratoire?style=social)](https://github.com/theDevOli/laboratoire/network/members)
 [![Issues](https://img.shields.io/github/issues/theDevOli/laboratoire)](https://github.com/theDevOli/laboratoire/issues)
 [![License](https://img.shields.io/github/license/theDevOli/laboratoire)](https://github.com/theDevOli/laboratoire/blob/main/LICENSE)
-
