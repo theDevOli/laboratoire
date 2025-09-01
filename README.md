@@ -163,9 +163,9 @@ If you encounter any issues:
 
 Happy Coding! 🎉
 
-<div align="center">
+
 [![Stars](https://img.shields.io/github/stars/theDevOli/laboratoire?style=social)](https://github.com/theDevOli/laboratoire/stargazers)
 [![Forks](https://img.shields.io/github/forks/theDevOli/laboratoire?style=social)](https://github.com/theDevOli/laboratoire/network/members)
 [![Issues](https://img.shields.io/github/issues/theDevOli/laboratoire)](https://github.com/theDevOli/laboratoire/issues)
 [![License](https://img.shields.io/github/license/theDevOli/laboratoire)](https://github.com/theDevOli/laboratoire/blob/main/LICENSE)
-</div>
+
