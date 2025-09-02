@@ -4,7 +4,7 @@ using Laboratoire.Application.Utils;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services;
+namespace Laboratoire.Application.Services.AuthServices;
 
 public class AuthResetPasswordService
 (

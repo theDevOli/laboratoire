@@ -1,15 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using Laboratoire.Application.DTO;
+using Laboratoire.Application.IUtils;
 using Laboratoire.Application.ServicesContracts;
-using Laboratoire.Application.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services;
+namespace Laboratoire.Application.Services.AuthServices;
 
 public class AuthTokenRefresherService
 (
     ILogger<AuthTokenRefresherService> logger,
-    Token token
+    IToken token
 )
 : IAuthTokenRefresherService
 {

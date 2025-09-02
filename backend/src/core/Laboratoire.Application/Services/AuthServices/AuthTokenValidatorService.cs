@@ -1,15 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using Laboratoire.Application.DTO;
+using Laboratoire.Application.IUtils;
 using Laboratoire.Application.ServicesContracts;
-using Laboratoire.Application.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services;
+namespace Laboratoire.Application.Services.AuthServices;
 
 public class AuthTokenValidatorService
 (
     ILogger<AuthTokenValidatorService> logger,
-    Token token
+    IToken token
 )
 : IAuthTokenValidatorService
 {
@@ -40,6 +40,6 @@ public class AuthTokenValidatorService
         }
 
         logger.LogInformation("Refreshing token is successfully completed.");
-        return  token.ValidateToken(dto.Token);
+        return token.ValidateToken(dto.Token);
     }
 }

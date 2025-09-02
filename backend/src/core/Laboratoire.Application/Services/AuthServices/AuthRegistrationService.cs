@@ -5,7 +5,7 @@ using Laboratoire.Domain.Entity;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services;
+namespace Laboratoire.Application.Services.AuthServices;
 
 public class AuthRegistrationService
 (
