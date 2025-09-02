@@ -13,7 +13,7 @@ public class AuthTokenRefresherService
 )
 : IAuthTokenRefresherService
 {
-    public async Task<string?> RefreshToken(AuthDtoRefreshToken authDto)
+    public string? RefreshToken(AuthDtoRefreshToken authDto)
     {
         logger.LogInformation("Refreshing token is initialized.");
         if (string.IsNullOrEmpty(authDto.RefreshToken))

@@ -184,6 +184,9 @@ FROM
 WHERE
     cc.client_tax_id = u.username;
 
+ALTER TABLE document.report
+DROP COLUMN protocol_id;
+
 CREATE OR REPLACE FUNCTION document.set_protocol_id()
 RETURNS TRIGGER AS $$
 DECLARE

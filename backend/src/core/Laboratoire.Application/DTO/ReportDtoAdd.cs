@@ -3,9 +3,8 @@ using Laboratoire.Domain.Entity;
 
 namespace Laboratoire.Application.DTO;
 
-public sealed class ReportDtoAdd
+public class ReportDtoAdd
 {
-
     [Required]
     public string? ProtocolId { get; set; }
     [Required]

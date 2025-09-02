@@ -7,10 +7,23 @@ public class Report
     [Required]
     public Guid? ReportId { get; set; }
     [Required]
-    public string? ProtocolId { get; set; }
-    [Required]
     public ReportResult[]? Results { get; set; }
-
+    public static ReportResult[]? AddEquations(ReportResult[]? Results, IEnumerable<Parameter>? parameter)
+    {
+        var newReportResults = Results?.Select(r =>
+        {
+            var equation = parameter?.FirstOrDefault(p => p.ParameterId == r.ParameterId)?.Equation;
+            return new ReportResult()
+            {
+                ParameterId = r.ParameterId,
+                ValueA = r.ValueA,
+                ValueB = r.ValueB,
+                ValueC = r.ValueC,
+                Equation = equation,
+            };
+        });
+        return newReportResults?.ToArray();
+    }
     public void AddEquations(IEnumerable<Parameter>? parameter)
     {
         var newReportResults = Results?.Select(r =>
@@ -35,9 +48,9 @@ public class Report
 
         Report other = (Report)obj;
 
-        return this.ProtocolId == other.ProtocolId;
+        return this.ReportId == other.ReportId;
     }
 
     public override int GetHashCode()
-    => HashCode.Combine(this.ProtocolId);
+    => HashCode.Combine(this.ReportId);
 }

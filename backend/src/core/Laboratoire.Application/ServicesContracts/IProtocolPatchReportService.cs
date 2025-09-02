@@ -5,5 +5,5 @@ namespace Laboratoire.Application.ServicesContracts;
 
 public interface IProtocolPatchReportService
 {
-    Task<Error> PatchReportIdAsync(Report report);
+    Task<Error> PatchReportIdAsync(ReportPatch reportPatch);
 }

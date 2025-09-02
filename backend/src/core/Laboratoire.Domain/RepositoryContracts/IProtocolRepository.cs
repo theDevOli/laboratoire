@@ -10,6 +10,7 @@ public interface IProtocolRepository
     Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year,bool isEmployee);
     Task<IEnumerable<T>> GetProtocolYearsAsync<T>();
     Task<Protocol?> GetProtocolByProtocolIdAsync(string? protocolId);
+    Task<bool> DoesProtocolExistByReportIdAsync(Guid? reportId);
     Task<Protocol?> GetProtocolByReportIdAsync(Guid? reportId);
     Task<Protocol?> GetUniqueProtocolAsync(Protocol protocol);
     Task<bool> DoesProtocolExistByUniqueAsync(Protocol protocol);
@@ -21,5 +22,5 @@ public interface IProtocolRepository
     Task<bool> UpdateProtocolAsync(Protocol protocol);
     Task<bool> UpdateCatalogAsync(Protocol protocol);
     Task<bool> UpdateCashFlowIdAsync(Protocol protocol);
-    Task<bool> PatchReportIdAsync(Report report);
+    Task<bool> PatchReportIdAsync(ReportPatch reportPatch);
 }

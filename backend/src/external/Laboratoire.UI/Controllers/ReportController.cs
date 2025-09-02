@@ -46,9 +46,9 @@ public class ReportController
     [Authorize(Policy =Policy.Workers)]
     public async Task<IActionResult> AddReportAsync([FromBody] ReportDtoAdd reportDto)
     {
-        var report = reportDto.ToReport();
+        // var report = reportDto.ToReport();
 
-        var addError = await reportAdderService.AddReportAsync(report);
+        var addError = await reportAdderService.AddReportAsync(reportDto);
         if (addError.IsNotSuccess())
             return StatusCode(addError.StatusCode, ApiResponse<object>.Failure(addError.Message!, addError.StatusCode));
 
@@ -57,9 +57,9 @@ public class ReportController
 
     [HttpPatch("{reportId}")]
     [Authorize(Policy =Policy.Workers)]
-    public async Task<IActionResult> PatchReportAsync([FromRoute] Guid reportId, [FromBody] ReportDtoPatch reportDto)
+    public async Task<IActionResult> PatchReportAsync([FromRoute] Guid reportId, [FromBody] ReportPatch reportPatch)
     {
-        var report = reportDto.ToReport();
+        var report = reportPatch.ToReport();
         if (reportId != report.ReportId)
             return BadRequest(ApiResponse<object>.Failure("The ID from route do not match within ID from body request", 400));
 

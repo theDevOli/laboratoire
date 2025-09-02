@@ -1,8 +1,10 @@
 using Laboratoire.Domain.RepositoryContracts;
-using Laboratoire.Domain.Entity;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.Utils;
 using Microsoft.Extensions.Logging;
+using Laboratoire.Domain.Entity;
+using Laboratoire.Application.DTO;
+using Laboratoire.Application.Mapper;
 
 namespace Laboratoire.Application.Services;
 
@@ -15,32 +17,28 @@ public class ReportAdderService
 )
 : IReportAdderService
 {
-    public async Task<Error> AddReportAsync(Report report)
+    public async Task<Error> AddReportAsync(ReportDtoAdd reportDto)
     {
-        logger.LogInformation("Starting to add report for protocol ID: {ProtocolId}", report.ProtocolId);
-        var isDoubled = await reportRepository.IsProtocolDoubled(report);
-        if (isDoubled)
-        {
-            logger.LogWarning("A report already exists for protocol ID: {ProtocolId}. Conflict detected.", report.ProtocolId);
-            return Error.SetError(ErrorMessage.ConflictPost, 409);
-        }
 
         logger.LogInformation("Fetching parameters to generate report equations.");
+
         var parameters = await parameterGetterService.GetAllParametersAsync();
+        var report = reportDto.ToReport();
         report.AddEquations(parameters);
+
         logger.LogDebug("Equations added to report: {@Report}", report);
 
         var reportId = await reportRepository.AddReportAsync(report);
         if (reportId is null)
             if (reportId is null)
             {
-                logger.LogError("Failed to insert report into the database for protocol ID: {ProtocolId}", report.ProtocolId);
+                logger.LogError("Failed to insert report into the database for report ID: {ReportId}", report.ReportId);
                 return Error.SetError("The report was not found in the database", 404);
             }
 
-        report.ReportId = reportId;
+        var reportDtoPatch= reportDto.ToReportPatch(reportId);
         logger.LogInformation("Report added successfully with ID: {ReportId}. Proceeding to patch protocol.", reportId);
 
-        return await protocolPatchReportService.PatchReportIdAsync(report);
+        return await protocolPatchReportService.PatchReportIdAsync(reportDtoPatch);
     }
 }

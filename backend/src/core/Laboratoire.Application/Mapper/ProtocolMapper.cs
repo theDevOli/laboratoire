@@ -160,13 +160,24 @@ public static class ProtocolMapper
         IsCollectedByClient = default,
     };
 
-    public static Report ToReport(this ProtocolDtoUpdate dto)
-    => new Report()
+    // public static Report ToReport(this ProtocolDtoUpdate dto)
+    // =>
+    //  new Report()
+    //  {
+    //      ReportId = dto.ReportId,
+    //      Results = dto.Results
+    //  };
+    public static (ReportDtoAdd, Report) ToReport(this ProtocolDtoUpdate dto)
+    => (new ReportDtoAdd()
     {
-        ProtocolId = dto.ProtocolId,
-        ReportId = dto.ReportId,
-        Results = dto.Results
-    };
+        ProtocolId = dto?.ProtocolId,
+        Results = dto?.Results
+    },
+     new Report()
+     {
+         ReportId = dto?.ReportId,
+         Results = dto?.Results
+     });
 
     public static Protocol ToProtocol(this ProtocolDtoUpdateCashFlow dto)
     => new Protocol()

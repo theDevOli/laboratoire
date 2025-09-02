@@ -44,11 +44,11 @@ public class ProtocolUpdatableService
             tasks.Add(protocolPatchCatalogService.UpdateCatalogAsync(protocol));
         }
 
-        var report = protocolDto.ToReport();
+        var (reportDto,report) = protocolDto.ToReport();
         if (report.ReportId is null && !toResetResults)
         {
             logger.LogInformation("No Report ID found and catalog not reset. Scheduling report creation.");
-            tasks.Add(reportAdderService.AddReportAsync(report));
+            tasks.Add(reportAdderService.AddReportAsync(reportDto));
         }
 
         if (report.ReportId is not null && !toResetResults)

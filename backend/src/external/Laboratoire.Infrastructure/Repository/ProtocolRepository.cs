@@ -253,6 +253,8 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     => await GetProtocolByProtocolIdAsync(protocol.ProtocolId) is not null;
     public async Task<bool> DoesProtocolExistByProtocolIdAsync(string? protocolId)
     => await GetProtocolByProtocolIdAsync(protocolId) is not null;
+    public async Task<bool> DoesProtocolExistByReportIdAsync(Guid? reportId)
+    => await GetProtocolByReportIdAsync(reportId) is not null;
     public async Task<bool> DoesProtocolExistByUniqueAsync(Protocol protocol)
     => await GetUniqueProtocolAsync(protocol) is not null;
     public async Task<IEnumerable<Protocol>> GetAllProtocolsAsync()
@@ -281,6 +283,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
 
         return await dapper.LoadDataSingleAsync<Protocol>(_getProtocolByIdSql, parameters);
     }
+
     public async Task<Protocol?> GetProtocolByReportIdAsync(Guid? reportId)
     {
         DynamicParameters parameters = new DynamicParameters();
@@ -306,13 +309,11 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
 
         return await dapper.LoadDataSingleAsync<int>(_countProtocol, parameters) > 1;
     }
-    public async Task<bool> PatchReportIdAsync(Report report)
+    public async Task<bool> PatchReportIdAsync(ReportPatch reportPatch)
     {
-        var reportId = report.ReportId;
-        var protocolId = report.ProtocolId;
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@ReportIdParameter", reportId, DbType.Guid);
-        parameters.Add("@ProtocolIdParameter", protocolId, DbType.String);
+        parameters.Add("@ReportIdParameter", reportPatch?.ReportId, DbType.Guid);
+        parameters.Add("@ProtocolIdParameter", reportPatch?.ProtocolId, DbType.String);
 
         return await dapper.ExecuteSqlAsync(_patchReportIdSql, parameters);
     }

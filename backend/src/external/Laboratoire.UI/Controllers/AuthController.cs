@@ -46,9 +46,9 @@ public class AuthController
     }
 
     [HttpPost("RefreshToken")]
-    public async Task<IActionResult> RefreshTokenAsync([FromBody] AuthDtoRefreshToken authDto)
+    public IActionResult RefreshTokenAsync([FromBody] AuthDtoRefreshToken authDto)
     {
-        var token = await authTokenRefresherService.RefreshToken(authDto);
+        var token = authTokenRefresherService.RefreshToken(authDto);
         if (token is null)
             return Unauthorized(ApiResponse<object>.Failure(ErrorMessage.Unauthorized, 401));
         // var jwtTokenHandler = new JwtSecurityTokenHandler();

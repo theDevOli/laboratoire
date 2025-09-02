@@ -16,7 +16,6 @@ namespace Laboratoire.Infrastructure.Repository;
     $"""
     SELECT
         report_id AS {nameof(Report.ReportId)},
-        protocol_id AS {nameof(Report.ProtocolId)},
         results AS {nameof(Report.Results)}
     FROM 
         document.report;
@@ -25,7 +24,6 @@ namespace Laboratoire.Infrastructure.Repository;
     $"""
     SELECT
         report_id AS {nameof(Report.ReportId)},
-        protocol_id AS {nameof(Report.ProtocolId)},
         results AS {nameof(Report.Results)}
     FROM 
         document.report
@@ -34,15 +32,10 @@ namespace Laboratoire.Infrastructure.Repository;
     """;
     private readonly string _addReportSql =
     $"""
-    INSERT INTO document.report (
-        protocol_id,
-        results
-    )
+    INSERT INTO document.report 
+    (results)
     VALUES 
-    (
-        @ProtocolIdParameter,
-        @ResultsParameter ::JSONB[]
-    )
+    (@ResultsParameter ::JSONB[])
     RETURNING 
         report_id;
     """;
@@ -60,8 +53,8 @@ namespace Laboratoire.Infrastructure.Repository;
         pr.entry_date AS {nameof(Protocol.EntryDate)},
         pr.report_date AS {nameof(Protocol.ReportDate)},
         pr.is_collected_by_client AS {nameof(Protocol.IsCollectedByClient)},
+        pr.protocol_id AS {nameof(Protocol.ProtocolId)},
 
-        r.protocol_id AS {nameof(Report.ProtocolId)},
         r.results AS {nameof(Report.Results)},
 
         c.client_name AS {nameof(Client.ClientName)},
@@ -102,15 +95,6 @@ namespace Laboratoire.Infrastructure.Repository;
         WHERE 
             r.report_id = @ReportIdParameter;
     """;
-    private readonly string _countProtocol =
-    $"""
-    SELECT 
-        COUNT(*)
-    FROM
-        document.report
-    WHERE
-        protocol_id = @ProtocolIdParameter;
-    """;
     private readonly string _resetReportSql =
     $"""
     UPDATE document.report
@@ -125,7 +109,6 @@ namespace Laboratoire.Infrastructure.Repository;
         var reportDto = report.ToDb();
 
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@ProtocolIdParameter", reportDto.ProtocolId, DbType.String);
         parameters.Add("@ResultsParameter", reportDto.Results, DbType.Object);
 
         return await dapper.LoadDataSingleAsync<Guid>(_addReportSql, parameters);
@@ -159,13 +142,6 @@ namespace Laboratoire.Infrastructure.Repository;
 
         var reportDto = await dapper.LoadDataSingleAsync<ReportDtoPDFDb>(_getPDFReportSql, parameters);
         return reportDto?.FromDb();
-    }
-    public async Task<bool> IsProtocolDoubled(Report report)
-    {
-        DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@ProtocolIdParameter", report.ProtocolId, DbType.String);
-
-        return await dapper.LoadDataSingleAsync<int>(_countProtocol, parameters) > 1;
     }
     public async Task<bool> PatchReportAsync(Report report)
     {

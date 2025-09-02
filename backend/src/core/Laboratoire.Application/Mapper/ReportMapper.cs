@@ -10,14 +10,20 @@ public static class ReportMapper
     => new Report()
     {
         ReportId = default,
-        ProtocolId = dto.ProtocolId,
         Results = dto?.Results
     };
+    public static ReportPatch ToReportPatch(this ReportDtoAdd dto,Guid? reportId)
+    => new ReportPatch()
+    {
+        ReportId = reportId,
+        ProtocolId = dto?.ProtocolId,
+        Results = dto?.Results
+    };
+
     public static Report FromDb(this ReportDtoDb dto)
     => new Report()
     {
         ReportId = dto.ReportId,
-        ProtocolId = dto.ProtocolId,
         Results = dto.Results?
         .Select(res => JsonSerializer.Deserialize<ReportResult>(res))
         .ToArray()!
@@ -26,17 +32,11 @@ public static class ReportMapper
     => new ReportDtoDb()
     {
         ReportId = report.ReportId,
-        ProtocolId = report.ProtocolId,
         Results = report.Results?
         .Select(res => JsonSerializer.Serialize(res))
         .ToArray()
     };
-    /// <summary>
-    /// Converts a ReportDtoDbPDF instance to a ReportDtoPDF instance.
-    /// </summary>
-    /// <param name="dto">The ReportDtoDbPDF instance to convert.</param>
-    /// <param name="crops">The list of crops associated with the report.</param>
-    /// <returns>A new ReportDtoPDF instance with the converted data.</returns>
+
     public static ReportPDF FromDb(this ReportDtoPDFDb dto)
     {
         var pdf = new ReportPDF()
@@ -71,11 +71,10 @@ public static class ReportMapper
 
         return pdf;
     }
-    public static Report ToReport(this ReportDtoPatch dto)
+    public static Report ToReport(this ReportPatch dto)
     => new Report()
     {
         ReportId = dto.ReportId,
-        ProtocolId = default,
         Results = dto?.Results
     };
 }
