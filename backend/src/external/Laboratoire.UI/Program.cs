@@ -54,6 +54,7 @@ builder.Services.AddScoped<PasswordHasher>();
 builder.Services.AddSingleton<Token>();
 builder.Services.AddServices();
 builder.Services.AddRepositories();
+builder.Services.AddUtils();
 
 builder.Services.AddAuthorization(options =>
 {

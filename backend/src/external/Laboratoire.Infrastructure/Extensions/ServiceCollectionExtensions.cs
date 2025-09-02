@@ -4,12 +4,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Laboratoire.Infrastructure.Repository;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.Services;
+using Laboratoire.Application.Services.AuthServices;
 using Laboratoire.Domain.RepositoryContracts;
+using Laboratoire.Application.IUtils;
+using Laboratoire.Application.Utils;
 
 namespace Laboratoire.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public static IServiceCollection AddUtils(this IServiceCollection services)
+    {
+        services.AddScoped<IToken, Token>();
+        return services;
+    }
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IAuthRepository, AuthRepository>();

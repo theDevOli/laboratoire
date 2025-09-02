@@ -2,15 +2,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Laboratoire.Application.DTO;
+using Laboratoire.Application.IUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Laboratoire.Application.Utils;
 
-public class Token
-(
-    IConfiguration config
-)
+public class Token(IConfiguration config):IToken
 {
     // private readonly IConfiguration _config = config;
     private readonly SymmetricSecurityKey _tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
