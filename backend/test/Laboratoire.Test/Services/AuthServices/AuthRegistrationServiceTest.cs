@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Tests.Services.AuthServices
+namespace Laboratoire.Test.Services.AuthServices
 {
     public class AuthRegistrationServiceTest
     {
