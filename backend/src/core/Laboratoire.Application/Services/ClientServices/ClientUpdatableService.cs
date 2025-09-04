@@ -30,17 +30,12 @@ public class ClientUpdatableService
         if (client.ClientTaxId != clientDb.ClientTaxId)
         {
             logger.LogInformation("Client TaxId change detected: {Old} → {New}", clientDb.ClientTaxId, client.ClientTaxId);
-            // var exists = await clientRepository.DoesClientExistByTaxIdAsync(client);
-            // if (exists)
-            // {
-            //     logger.LogWarning("Client with TaxId {TaxId} already exists. Conflict on update.", client.ClientTaxId);
-            //     return Error.SetError(ErrorMessage.ConflictPut, 409);
-            // }
 
             var user = await userGetterByUsernameService.GetUserByUsernameAsync(clientDb.ClientTaxId);
 
             var dto = user?.ToUserRename()!;
-            await userRenameService.UserRenameAsync(dto);
+            var error = await userRenameService.UserRenameAsync(dto);
+            if (error.IsNotSuccess()) return error;
         }
 
         var ok = await clientRepository.UpdateClientAsync(client);
