@@ -20,7 +20,7 @@ public class CropUpdatableService
         if (isConflict)
         {
             logger.LogWarning("Conflict: Another crop with name '{CropName}' already exists.", crop.CropName);
-            return Error.SetError(ErrorMessage.ConflictPost, 409);
+            return Error.SetError(ErrorMessage.ConflictPut, 409);
         }
 
         var exist = await cropRepository.DoesCropExistByCropIdAsync(crop);
