@@ -153,6 +153,12 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     WHERE 
         username LIKE @UsernameParameter;
     """;
+    private readonly string _deleteSql =
+    """
+    DELETE FROM users.user
+    WHERE 
+        UserId = @UserIdParameter;
+    """;
     #endregion
     public async Task<Guid?> AddUserAsync(User user)
     {
@@ -223,5 +229,15 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         var count = await dapper.LoadDataSingleAsync<int>(_countUsernameSql, parameters);
 
         return $"{username}0{count + 1}";
+    }
+
+    public async Task<bool> DeleteUserAsync(Guid? userId)
+    {
+        if (userId is null) return false;
+
+        DynamicParameters parameters = new();
+        parameters.Add("@UserIdParameter", userId, DbType.Guid);
+
+        return await dapper.ExecuteSqlAsync(_deleteSql, parameters);
     }
 }

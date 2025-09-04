@@ -13,6 +13,7 @@ public class ClientAdderService
 (
     IClientRepository clientRepository,
     IUserAdderService userAdderService,
+    IUserDeletionService userDeletionService,
     ILogger<ClientAdderService> logger
 )
 : IClientAdderService
@@ -21,7 +22,7 @@ public class ClientAdderService
     {
         logger.LogInformation("Starting client addition process with ClientTaxId: {ClientTaxId}", clientDto.ClientTaxId);
         var client = clientDto.ToClient();
-        var user = clientDto.ToUser();
+        var userDto = clientDto.ToUser();
 
         var exists = await clientRepository.DoesClientExistByTaxIdAsync(client);
         if (exists)
@@ -33,7 +34,7 @@ public class ClientAdderService
 
         logger.LogInformation("Client with ClientTaxId {ClientTaxId} added successfully. Starting addition of associated user.", clientDto.ClientTaxId);
 
-        var userId = await userAdderService.AddUserAsync(user);
+        var userId = await userAdderService.AddUserAsync(userDto);
         if (userId is null)
         {
             logger.LogError("Failed to add user associated with client ClientTaxId {ClientTaxId}.", clientDto.ClientTaxId);
@@ -44,6 +45,7 @@ public class ClientAdderService
         if (!ok)
         {
             logger.LogError("Failed to add client with ClientTaxId {ClientTaxId} to the database.", clientDto.ClientTaxId);
+            await userDeletionService.DeletionUserAsync(userDto.ToUser(userId));
             return Error.SetError(ErrorMessage.DbError, 500);
         }
         return Error.SetSuccess();

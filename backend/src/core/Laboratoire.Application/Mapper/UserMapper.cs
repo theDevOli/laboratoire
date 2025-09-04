@@ -13,6 +13,14 @@ public static class UserMapper
         Username = dto.Username?.Trim(),
         IsActive = dto.IsActive,
     };
+    public static User ToUser(this UserDtoAdd dto,Guid?userId)
+    => new User()
+    {
+        UserId = userId,
+        RoleId = dto.RoleId,
+        Username = dto.Username?.Trim(),
+        IsActive = dto.IsActive,
+    };
 
     public static User ToUser(this UserDtoRename dto)
     => new User()
