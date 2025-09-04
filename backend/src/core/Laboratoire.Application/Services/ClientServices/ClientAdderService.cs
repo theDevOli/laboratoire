@@ -38,7 +38,7 @@ public class ClientAdderService
         if (userId is null)
         {
             logger.LogError("Failed to add user associated with client ClientTaxId {ClientTaxId}.", clientDto.ClientTaxId);
-            return Error.SetError(ErrorMessage.NotFound, 404);
+            return Error.SetError(ErrorMessage.DbError, 500);
         }
 
         var ok = await clientRepository.AddClientAsync(client, userId);
