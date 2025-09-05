@@ -11,6 +11,7 @@ public class PartnerAdderService
 (
     IPartnerRepository partnerRepository,
     IUserAdderService userAdderService,
+    IUserDeletionService userDeletionService,
     ILogger<PartnerAdderService> logger
 )
 : IPartnerAdderService
@@ -20,7 +21,7 @@ public class PartnerAdderService
         logger.LogInformation("Starting to add a new partner with email: {PartnerEmail} and name: {PartnerName}", partnerDto.PartnerEmail, partnerDto.PartnerName);
 
         var partner = partnerDto.ToPartner();
-        var user = partnerDto.ToUser();
+        var userDto = partnerDto.ToUser();
 
         var exists = await partnerRepository.DoesPartnerExistByEmailAndNameAsync(partner);
         if (exists)
@@ -29,7 +30,7 @@ public class PartnerAdderService
             return Error.SetError(ErrorMessage.ConflictPost, 409);
         }
 
-        var userId = await userAdderService.AddUserAsync(user);
+        var userId = await userAdderService.AddUserAsync(userDto);
         if (userId is null)
         {
             logger.LogError("Failed to add user for partner.");
@@ -40,6 +41,9 @@ public class PartnerAdderService
         if (!ok)
         {
             logger.LogError("Failed to add partner.");
+            var error = await userDeletionService.DeletionUserAsync(userDto.ToUser(userId));
+            if (error.IsNotSuccess())
+                logger.LogError("Rollback failed: could not delete user {UserId} after partner insertion failure.", userId);
             return Error.SetError(ErrorMessage.DbError, 500);
         }
 
