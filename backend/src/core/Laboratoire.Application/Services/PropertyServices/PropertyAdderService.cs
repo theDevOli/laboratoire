@@ -5,7 +5,7 @@ using Laboratoire.Application.Utils;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services.PermissionServices;
+namespace Laboratoire.Application.Services.PropertyServices;
 
 public class PropertyAdderService
 (
