@@ -15,7 +15,13 @@ public class ReportGetterByIdService
     public Task<Report?> GetReportByIdAsync(Guid? reportId)
     {
         logger.LogInformation("Fetching report by ID: {ReportId}", reportId);
-        
+
+        if (reportId is null)
+        {
+            logger.LogWarning("GetReportByIdAsync called with null reportId.");
+            return Task.FromResult<Report?>(null);
+        }
+
         return reportRepository.GetReportByIdAsync(reportId);
     }
 }
