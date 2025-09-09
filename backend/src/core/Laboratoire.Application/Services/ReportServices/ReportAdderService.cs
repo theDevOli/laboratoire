@@ -26,16 +26,15 @@ public class ReportAdderService
         report.AddEquations(parameters);
 
         logger.LogDebug("Equations added to report: {@Report}", report);
-
+        //TODO:Create a transaction
         var reportId = await reportRepository.AddReportAsync(report);
         if (reportId is null)
-            if (reportId is null)
-            {
-                logger.LogError("Failed to insert report into the database for report ID: {ReportId}", report.ReportId);
-                return Error.SetError("The report was not found in the database", 404);
-            }
+        {
+            logger.LogError("Failed to insert report into the database for report");
+            return Error.SetError(ErrorMessage.DbError, 404);
+        }
 
-        var reportDtoPatch= reportDto.ToReportPatch(reportId);
+        var reportDtoPatch = reportDto.ToReportPatch(reportId);
         logger.LogInformation("Report added successfully with ID: {ReportId}. Proceeding to patch protocol.", reportId);
 
         return await protocolPatchReportService.PatchReportIdAsync(reportDtoPatch);
