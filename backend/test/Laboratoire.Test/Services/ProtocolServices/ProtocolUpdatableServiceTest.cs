@@ -9,7 +9,7 @@ using Moq;
 
 namespace Laboratoire.Test.Services.ProtocolServices;
 
-public class ProtocolUpdatableServiceTests
+public class ProtocolUpdatableServiceTest
 {
     private readonly Mock<IProtocolRepository> _protocolRepoMock;
     private readonly Mock<IProtocolPatchCatalogService> _catalogServiceMock;
@@ -22,7 +22,7 @@ public class ProtocolUpdatableServiceTests
 
     private readonly ProtocolUpdatableService _service;
 
-    public ProtocolUpdatableServiceTests()
+    public ProtocolUpdatableServiceTest()
     {
         _protocolRepoMock = new Mock<IProtocolRepository>();
         _catalogServiceMock = new Mock<IProtocolPatchCatalogService>();

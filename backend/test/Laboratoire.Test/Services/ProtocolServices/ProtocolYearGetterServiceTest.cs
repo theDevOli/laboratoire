@@ -6,13 +6,13 @@ using Moq;
 
 namespace Laboratoire.Test.Services.ProtocolServices;
 
-public class ProtocolYearGetterServiceTests
+public class ProtocolYearGetterServiceTest
 {
     private readonly Mock<IProtocolRepository> _repoMock;
     private readonly Mock<ILogger<ProtocolYearGetterService>> _loggerMock;
     private readonly ProtocolYearGetterService _service;
 
-    public ProtocolYearGetterServiceTests()
+    public ProtocolYearGetterServiceTest()
     {
         _repoMock = new Mock<IProtocolRepository>();
         _loggerMock = new Mock<ILogger<ProtocolYearGetterService>>();
