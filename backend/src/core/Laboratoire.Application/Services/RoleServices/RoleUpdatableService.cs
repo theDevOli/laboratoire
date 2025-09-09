@@ -24,6 +24,7 @@ public class RoleUpdatableService
             return Error.SetError(ErrorMessage.NotFound, 404);
         }
 
+        // TODO:Check this doesn't make sense
         var isConflict = await roleRepository.DoesRoleExistByNameAsync(role);
         if (isConflict)
         {

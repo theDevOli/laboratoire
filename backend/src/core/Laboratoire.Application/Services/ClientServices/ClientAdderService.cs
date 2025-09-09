@@ -33,7 +33,7 @@ public class ClientAdderService
 
 
         logger.LogInformation("Client with ClientTaxId {ClientTaxId} added successfully. Starting addition of associated user.", clientDto.ClientTaxId);
-
+        // TODO:Atomicity
         var userId = await userAdderService.AddUserAsync(userDto);
         if (userId is null)
         {

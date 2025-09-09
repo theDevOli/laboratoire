@@ -29,7 +29,7 @@ public class PartnerAdderService
             logger.LogWarning("Partner with email {PartnerEmail} and name {PartnerName} already exists.", partner.PartnerEmail, partner.PartnerName);
             return Error.SetError(ErrorMessage.ConflictPost, 409);
         }
-
+        // TODO:Atomicity
         var userId = await userAdderService.AddUserAsync(userDto);
         if (userId is null)
         {
