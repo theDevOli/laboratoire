@@ -4,7 +4,7 @@ using Laboratoire.Domain.Entity;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 
-namespace Laboratoire.Application.Services;
+namespace Laboratoire.Application.Services.UtilServices;
 
 public class StateGetterService
 (

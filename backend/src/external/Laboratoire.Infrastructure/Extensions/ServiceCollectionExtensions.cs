@@ -23,6 +23,7 @@ using Laboratoire.Application.Services.UserServices;
 using Laboratoire.Domain.RepositoryContracts;
 using Laboratoire.Application.IUtils;
 using Laboratoire.Application.Utils;
+using Laboratoire.Application.Services.UtilServices;
 
 namespace Laboratoire.Infrastructure.Extensions;
 
