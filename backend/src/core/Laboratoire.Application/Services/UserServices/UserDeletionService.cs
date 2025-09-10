@@ -23,6 +23,10 @@ public class UserDeletionService
             return Error.SetError(ErrorMessage.NotFound, 404);
         }
 
+        var isDeleted = await userRepository.DeleteUserAsync(user.UserId);
+        if (!isDeleted)
+            return Error.SetError(ErrorMessage.DbError, 500);
+
         logger.LogInformation("User with ID: {UserId} was deleted from database!", user.UserId);
         return Error.SetSuccess();
     }
