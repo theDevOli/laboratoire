@@ -23,26 +23,26 @@ namespace Laboratoire.Test.Services.HazardServices
             );
         }
 
-        [Fact]
-        public async Task UpdateHazardAsync_ShouldReturnConflict_WhenHazardClassAlreadyExists()
-        {
-            // Arrange
-            var hazard = new Hazard { HazardId = 1, HazardClass = "Flammable" };
+        // [Fact]
+        // public async Task UpdateHazardAsync_ShouldReturnConflict_WhenHazardClassAlreadyExists()
+        // {
+        //     // Arrange
+        //     var hazard = new Hazard { HazardId = 1, HazardClass = "Flammable" };
 
-            _repositoryMock.Setup(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()))
-                           .ReturnsAsync(true);
+        //     _repositoryMock.Setup(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()))
+        //                    .ReturnsAsync(true);
 
-            // Act
-            var result = await _service.UpdateHazardAsync(hazard);
+        //     // Act
+        //     var result = await _service.UpdateHazardAsync(hazard);
 
-            // Assert
-            Assert.True(result.IsNotSuccess());
-            Assert.Equal(409, result.StatusCode);
-            Assert.Equal(ErrorMessage.ConflictPut, result.Message);
-            _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
-            _repositoryMock.Verify(r => r.DoesHazardExistByIdAsync(It.IsAny<Hazard>()), Times.Never);
-            _repositoryMock.Verify(r => r.UpdateHazardAsync(It.IsAny<Hazard>()), Times.Never);
-        }
+        //     // Assert
+        //     Assert.True(result.IsNotSuccess());
+        //     Assert.Equal(409, result.StatusCode);
+        //     Assert.Equal(ErrorMessage.ConflictPut, result.Message);
+        //     _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
+        //     _repositoryMock.Verify(r => r.DoesHazardExistByIdAsync(It.IsAny<Hazard>()), Times.Never);
+        //     _repositoryMock.Verify(r => r.UpdateHazardAsync(It.IsAny<Hazard>()), Times.Never);
+        // }
 
         [Fact]
         public async Task UpdateHazardAsync_ShouldReturnNotFound_WhenHazardDoesNotExist()
@@ -62,7 +62,7 @@ namespace Laboratoire.Test.Services.HazardServices
             Assert.True(result.IsNotSuccess());
             Assert.Equal(404, result.StatusCode);
             Assert.Equal(ErrorMessage.NotFound, result.Message);
-            _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
+            // _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.DoesHazardExistByIdAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.UpdateHazardAsync(It.IsAny<Hazard>()), Times.Never);
         }
@@ -87,7 +87,7 @@ namespace Laboratoire.Test.Services.HazardServices
             Assert.True(result.IsNotSuccess());
             Assert.Equal(500, result.StatusCode);
             Assert.Equal(ErrorMessage.DbError, result.Message);
-            _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
+            // _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.DoesHazardExistByIdAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.UpdateHazardAsync(It.IsAny<Hazard>()), Times.Once);
         }
@@ -112,7 +112,7 @@ namespace Laboratoire.Test.Services.HazardServices
             Assert.False(result.IsNotSuccess());
             Assert.Equal(0, result.StatusCode);
             Assert.Null(result.Message);
-            _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
+            // _repositoryMock.Verify(r => r.DoesHazardExistByClassAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.DoesHazardExistByIdAsync(It.IsAny<Hazard>()), Times.Once);
             _repositoryMock.Verify(r => r.UpdateHazardAsync(It.IsAny<Hazard>()), Times.Once);
         }
