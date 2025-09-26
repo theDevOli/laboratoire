@@ -14,6 +14,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT
         partner_id AS {nameof(Partner.PartnerId)},
+        user_id AS {nameof(Partner.UserId)},
         partner_name AS {nameof(Partner.PartnerName)},
         office_name AS {nameof(Partner.OfficeName)},
         partner_phone AS {nameof(Partner.PartnerPhone)},
@@ -27,6 +28,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT
         cp.partner_id AS {nameof(Partner.PartnerId)},
+        user_id AS {nameof(Partner.UserId)},
         cp.partner_name AS {nameof(Partner.PartnerName)},
         cp.office_name AS {nameof(Partner.OfficeName)},
         cp.partner_phone AS {nameof(Partner.PartnerPhone)},
@@ -45,6 +47,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT 
         partner_id AS {nameof(Partner.PartnerId)},
+        user_id AS {nameof(Partner.UserId)},
         partner_name AS {nameof(Partner.PartnerName)},
         office_name AS {nameof(Partner.OfficeName)},
         partner_phone AS {nameof(Partner.PartnerPhone)},
@@ -58,6 +61,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT 
         partner_id AS {nameof(Partner.PartnerId)},
+        user_id AS {nameof(Partner.UserId)},
         partner_name AS {nameof(Partner.PartnerName)},
         office_name AS {nameof(Partner.OfficeName)},
         partner_phone AS {nameof(Partner.PartnerPhone)},

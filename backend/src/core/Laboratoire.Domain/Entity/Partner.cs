@@ -7,6 +7,8 @@ public class Partner
     [Required]
     public Guid? PartnerId { get; set; }
     [Required]
+    public Guid? UserId { get; set; }
+    [Required]
     public string? PartnerName { get; set; }
     [Required]
     public string? OfficeName { get; set; }
