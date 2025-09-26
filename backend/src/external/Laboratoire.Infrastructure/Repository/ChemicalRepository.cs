@@ -99,6 +99,9 @@ public sealed class ChemicalRepository(DataContext dapper) : IChemicalRepository
     WHERE 
         chemical_id = @ChemicalIdParameter;
     """;
+
+    private readonly string _deletionSql =
+    "DELETE FROM inventory.chemical WHERE chemical_id = @ChemicalIdParameter;";
     #endregion
     public async Task<int?> AddChemicalAsync(Chemical chemical)
     {
@@ -113,6 +116,14 @@ public sealed class ChemicalRepository(DataContext dapper) : IChemicalRepository
         parameters.Add("@ExpireDateParameter", chemical.ExpireDate, DbType.Date);
 
         return await dapper.LoadDataSingleAsync<int>(_addChemicalSql, parameters);
+    }
+
+    public async Task<bool> DeleteChemicalAsync(Chemical chemical)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@ChemicalIdParameter", chemical.ChemicalId, DbType.Int32);
+
+        return await dapper.ExecuteSqlAsync(_deletionSql, parameters);
     }
 
     public async Task<bool> DoesChemicalExistByIdAsync(Chemical chemical)

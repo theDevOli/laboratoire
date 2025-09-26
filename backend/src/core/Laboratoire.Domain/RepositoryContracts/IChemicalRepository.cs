@@ -11,4 +11,5 @@ public interface IChemicalRepository
     Task<bool> DoesChemicalExistByNameAndConcentrationAsync(Chemical chemical);
     Task<int?> AddChemicalAsync(Chemical chemical);
     Task<bool> UpdateChemicalAsync(Chemical chemical);
+    Task<bool> DeleteChemicalAsync(Chemical chemical);
 }
