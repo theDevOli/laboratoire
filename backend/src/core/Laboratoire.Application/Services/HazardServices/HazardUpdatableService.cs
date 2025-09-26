@@ -16,13 +16,13 @@ public class HazardUpdatableService
     public async Task<Error> UpdateHazardAsync(Hazard hazard)
     {
         logger.LogInformation("Starting update for hazard ID: {HazardId}, Class: {HazardClass}", hazard.HazardId, hazard.HazardClass);
-
-        var isConflict = await hazardRepository.DoesHazardExistByClassAsync(hazard);
-        if (isConflict)
-        {
-            logger.LogWarning("Conflict detected: Hazard with class '{HazardClass}' already exists.", hazard.HazardClass);
-            return Error.SetError(ErrorMessage.ConflictPut, 409);
-        }
+        // TODO:Check the business logic
+        // var isConflict = await hazardRepository.DoesHazardExistByClassAsync(hazard);
+        // if (isConflict)
+        // {
+        //     logger.LogWarning("Conflict detected: Hazard with class '{HazardClass}' already exists.", hazard.HazardClass);
+        //     return Error.SetError(ErrorMessage.ConflictPut, 409);
+        // }
 
         var exists = await hazardRepository.DoesHazardExistByIdAsync(hazard);
         if (!exists)
