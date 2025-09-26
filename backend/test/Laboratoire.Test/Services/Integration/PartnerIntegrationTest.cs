@@ -96,7 +96,8 @@ public class PartnerIntegrationTest
         Assert.NotNull(updated);
         Assert.Equal(updated.PartnerName, toUpdate.PartnerName);
 
-        // await connection.ExecuteAsync("DELETE FROM ");
+        await connection.ExecuteAsync("DELETE FROM customers.partner WHERE partner_id = @partnerId",new{partnerId=updated.PartnerId});
+        await connection.ExecuteAsync("DELETE FROM users.\"user\" WHERE user_id = @userId",new{userId=updated.UserId});
     }
 
 }
