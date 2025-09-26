@@ -10,6 +10,7 @@ public interface ICashFlowRepository
     Task<int> AddCashFlowAsync(CashFlow cashFlow);
     Task<bool> DoesCashFlowExistsAsync(CashFlow cashFlow);
     Task<bool> UpdateCashFlowAsync(CashFlow cashFlow);
+    Task<bool> DeleteCashFlowAsync(CashFlow cashFlow);
     Task<bool> PatchDescriptionAsync(CashFlow cashFlow);
     Task<decimal?> GetAmountAsync(int? year, int? month, string? cashFlow, int? transaction);
 }

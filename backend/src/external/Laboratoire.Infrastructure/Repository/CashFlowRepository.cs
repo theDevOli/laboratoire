@@ -109,6 +109,14 @@ public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
     )
     RETURNING cash_Flow_id;
     """;
+
+    private readonly string _deleteSql =
+    """
+    DELETE FROM
+        cash_flow.cash_flow 
+    WHERE
+        cash_flow_id = @CashFlowIdParameter;
+    """;
     #endregion
     public async Task<int> AddCashFlowAsync(CashFlow cashFlow)
     {
@@ -176,5 +184,13 @@ public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
         parameters.Add("@CashFlowIdParameter", cashFlow.CashFlowId, DbType.Int32);
 
         return await dapper.ExecuteSqlAsync(_patchDescriptionSql, parameters);
+    }
+
+    public async Task<bool> DeleteCashFlowAsync(CashFlow cashFlow)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@CashFlowIdParameter", cashFlow.CashFlowId, DbType.Int32);
+
+        return await dapper.ExecuteSqlAsync(_deleteSql, parameters);
     }
 }
