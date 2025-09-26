@@ -14,6 +14,7 @@ public sealed class ClientRepository(DataContext dapper) : IClientRepository
     $"""
     SELECT 
         client_id AS {nameof(Client.ClientId)},
+        user_id AS {nameof(Client.UserId)},
         client_name AS {nameof(Client.ClientName)},
         client_tax_id AS {nameof(Client.ClientTaxId)},
         client_email AS {nameof(Client.ClientEmail)},
@@ -25,6 +26,7 @@ public sealed class ClientRepository(DataContext dapper) : IClientRepository
     $"""
     SELECT 
         client_id AS {nameof(Client.ClientId)},
+        user_id AS {nameof(Client.UserId)},
         client_name AS {nameof(Client.ClientName)},
         client_tax_id AS {nameof(Client.ClientTaxId)},
         client_email AS {nameof(Client.ClientEmail)},
@@ -38,6 +40,7 @@ public sealed class ClientRepository(DataContext dapper) : IClientRepository
     $"""
     SELECT 
         client_id AS {nameof(Client.ClientId)},
+        user_id AS {nameof(Client.UserId)},
         client_name AS {nameof(Client.ClientName)},
         client_tax_id AS {nameof(Client.ClientTaxId)},
         client_email AS {nameof(Client.ClientEmail)},
@@ -53,6 +56,7 @@ public sealed class ClientRepository(DataContext dapper) : IClientRepository
     $"""
     SELECT 
         client_id AS {nameof(Client.ClientId)},
+        user_id AS {nameof(Client.UserId)},
         client_name AS {nameof(Client.ClientName)},
         client_tax_id AS {nameof(Client.ClientTaxId)},
         client_email AS {nameof(Client.ClientEmail)},

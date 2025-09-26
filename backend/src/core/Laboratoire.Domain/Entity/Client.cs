@@ -7,6 +7,8 @@ public class Client
     [Required]
     public Guid? ClientId { get; set; }
     [Required]
+    public Guid? UserId { get; set; }
+    [Required]
     public string? ClientName { get; set; }
     [Required]
     public string? ClientTaxId { get; set; }
