@@ -1,5 +1,6 @@
 using Dapper;
 using Laboratoire.Application.Services.PermissionServices;
+using Laboratoire.Domain.Entity;
 using Laboratoire.Infrastructure.DbContext;
 using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +46,7 @@ public class PermissionIntegrationTest
             WITH new_role AS(
                 INSERT INTO users.role(role_name)
                 VALUES(@RoleName)
-                RETURNING role_id;
+                RETURNING role_id
             )
             INSERT INTO users.permission(
                 role_id,
@@ -68,12 +69,36 @@ public class PermissionIntegrationTest
                 @Chemical
             FROM
                 new_role
-            );
+            RETURNING permission_id;
             """,
             new
             {
-                RoleName="Test"
+                RoleName = "Test",
+                Protocol = false,
+                Client = false,
+                Property = false,
+                CashFlow = false,
+                Partner = false,
+                Users = false,
+                Chemical = false,
             }
         );
+
+        var toUpdatePermission = await repository.GetPermissionByPermissionIdAsync(permissionId);
+        toUpdatePermission!.Protocol = false;
+
+        // Act
+        var result = await service.UpdatePermissionAsync(toUpdatePermission);
+
+        var updatedPermission = await repository.GetPermissionByPermissionIdAsync(permissionId);
+
+        // Assert
+        Assert.False(result.IsNotSuccess());
+        Assert.NotNull(updatedPermission);
+        Assert.Equal(toUpdatePermission.Protocol, updatedPermission.Protocol);
+
+        // Clean up
+        await connection.ExecuteAsync("DELETE FROM users.permission WHERE permission_id = @permissionId", new { permissionId });
+        await connection.ExecuteAsync("DELETE FROM users.role WHERE role_id = @roleId", new { roleId = toUpdatePermission.RoleId });
     }
 }
