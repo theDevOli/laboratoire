@@ -9,7 +9,7 @@ using Laboratoire.Application.Mapper;
 
 namespace Laboratoire.Infrastructure.Repository;
 
- sealed class ReportRepository(DataContext dapper) : IReportRepository
+public sealed class ReportRepository(DataContext dapper) : IReportRepository
 {
     #region SQL queries
     private readonly string _getAllReports =
@@ -103,6 +103,13 @@ namespace Laboratoire.Infrastructure.Repository;
     WHERE 
         report_id = @ReportIdParameter;
     """;
+
+    private readonly string _deleteReportSql =
+    $"""
+    DELETE FROM document.report
+    WHERE
+        report_id = @ReportIdParameter;
+    """;
     #endregion
     public async Task<Guid?> AddReportAsync(Report report)
     {
@@ -113,6 +120,15 @@ namespace Laboratoire.Infrastructure.Repository;
 
         return await dapper.LoadDataSingleAsync<Guid>(_addReportSql, parameters);
     }
+
+    public Task<bool> DeleteReportAsync(Guid? reportId)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@ReportIdParameter", reportId, DbType.Guid);
+
+        return dapper.ExecuteSqlAsync(_deleteReportSql, parameters);
+    }
+
     public async Task<bool> DoesReportExistsAsync(Report report)
     => await GetReportByIdAsync(report.ReportId) is not null;
     public async Task<IEnumerable<Report>> GetAllReportsAsync()

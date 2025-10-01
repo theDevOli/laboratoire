@@ -9,6 +9,7 @@ public interface IReportRepository
     Task<ReportPDF?> GetReportPDFAsync(Guid? reportId);
     Task<bool> DoesReportExistsAsync(Report report);
     Task<Guid?> AddReportAsync(Report report);
+    Task<bool> DeleteReportAsync(Guid? reportId);
     Task<bool> PatchReportAsync(Report report);
     Task<bool> ResetReportAsync(Guid? reportId);
 }
