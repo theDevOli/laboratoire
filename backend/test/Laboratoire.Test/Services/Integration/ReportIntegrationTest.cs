@@ -59,5 +59,8 @@ public class ReportIntegrationTest
         Assert.Collection(toUpdateReport.Results,
             item => Assert.Equal(item.Equation, updatedReport.Results[0].Equation)
         );
+
+        // Clean up
+        await repository.DeleteReportAsync(reportId);
     }
 }
