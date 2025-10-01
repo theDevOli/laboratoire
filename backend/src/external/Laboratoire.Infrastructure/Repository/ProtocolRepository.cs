@@ -233,6 +233,13 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     WHERE 
         protocol_id = @ProtocolIdParameter;
     """;
+    private readonly string _deleteProtocolSql =
+    $"""
+    DELETE FROM 
+        document.protocol
+    WHERE 
+        protocol_id = @ProtocolIdParameter;
+    """;
     #endregion
     public async Task<string?> AddProtocolAsync(Protocol protocol)
     {
@@ -371,5 +378,13 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         var (sql, parameters) = Utils.Utils.BulkSqlStatement(protocol, "protocol", "document");
 
         return await dapper.ExecuteSqlAsync(sql, parameters);
+    }
+
+    public async Task<bool> DeleteProtocolAsync(string? protocolId)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@ProtocolIdParameter", protocolId, DbType.String);
+
+        return await dapper.ExecuteSqlAsync(_deleteProtocolSql, parameters);
     }
 }

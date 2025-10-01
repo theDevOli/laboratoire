@@ -18,6 +18,7 @@ public interface IProtocolRepository
     Task<bool> DoesProtocolExistByProtocolIdAsync(string? protocolId);
     Task<bool> IsProtocolDoubled(string? protocolId);
     Task<string?> AddProtocolAsync(Protocol protocol);
+    Task<bool> DeleteProtocolAsync(string? protocolId);
     Task<bool> SaveProtocolSpotAsync(int? quantity, Guid? clientId, int protocolId);
     Task<bool> UpdateProtocolAsync(Protocol protocol);
     Task<bool> UpdateCatalogAsync(Protocol protocol);
