@@ -121,11 +121,11 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     $"""
     UPDATE users.user
     SET
-        user_id = @RoleIdParameter,
+        role_id = @RoleIdParameter,
         username = @UsernameParameter,
         is_active = @IsActiveParameter
     WHERE 
-        username = @UsernameParameter;
+        user_id = @UserIdParameter;
     """;
 
     private readonly string _renameUserSql =
@@ -157,7 +157,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     """
     DELETE FROM users.user
     WHERE 
-        UserId = @UserIdParameter;
+        user_id = @UserIdParameter;
     """;
     #endregion
     public async Task<Guid?> AddUserAsync(User user)
@@ -202,6 +202,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         parameters.Add("@RoleIdParameter", user.RoleId, DbType.Int32);
         parameters.Add("@UsernameParameter", user.Username, DbType.String);
         parameters.Add("@IsActiveParameter", user.IsActive, DbType.Boolean);
+        parameters.Add("@UserIdParameter", user.UserId, DbType.Guid);
 
         return await dapper.ExecuteSqlAsync(_updateUserSql, parameters);
     }
