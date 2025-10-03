@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.20" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.4.2" />
@@ -28,6 +29,11 @@
     <ProjectReference Include="../../src/core/Laboratoire.Domain/Laboratoire.Domain.csproj" />
     <ProjectReference Include="../../src/external/Laboratoire.Infrastructure/Laboratoire.Infrastructure.csproj" />
     <ProjectReference Include="../../src/external/Laboratoire.UI/Laboratoire.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration/" />
+    <Folder Include="Unit/" />
   </ItemGroup>
 
 </Project>
