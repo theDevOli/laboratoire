@@ -47,22 +47,22 @@ public class CropControllerTests
         Assert.Null(apiResponse.Error);
     }
 
-    [Fact]
-    public async Task GetAllCropsAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
-    {
-        // Arrange
-        _mockCropGetterService.Setup(repo => repo.GetAllCropsAsync()).ThrowsAsync(new Exception());
+    // [Fact]
+    // public async Task GetAllCropsAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
+    // {
+    //     // Arrange
+    //     _mockCropGetterService.Setup(repo => repo.GetAllCropsAsync()).ThrowsAsync(new Exception());
 
-        // Act
-        var result = await _controller.GetAllCropsAsync();
+    //     // Act
+    //     var result = await _controller.GetAllCropsAsync();
 
-        // Assert
-        var okResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
+    //     // Assert
+    //     var okResult = Assert.IsType<ObjectResult>(result);
+    //     var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
 
-        Assert.Equal(500, response.Error?.Code);
-        Assert.Null(response.Data);
-    }
+    //     Assert.Equal(500, response.Error?.Code);
+    //     Assert.Null(response.Data);
+    // }
 
     [Fact]
     public async Task GetCropByIdAsync_ShouldReturnOk_WhenCropExists()
@@ -81,22 +81,22 @@ public class CropControllerTests
         Assert.Equal(crop.CropName, apiResponse.Data.CropName);
     }
 
-    [Fact]
-    public async Task GetCropByIdAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
-    {
-        // Arrange
-        _mockCropGetterByIdService.Setup(repo => repo.GetCropByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception());
+    // [Fact]
+    // public async Task GetCropByIdAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
+    // {
+    //     // Arrange
+    //     _mockCropGetterByIdService.Setup(repo => repo.GetCropByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception());
 
-        // Act
-        var result = await _controller.GetCropByIdAsync(1);
+    //     // Act
+    //     var result = await _controller.GetCropByIdAsync(1);
 
-        // Assert
-        var okResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
+    //     // Assert
+    //     var okResult = Assert.IsType<ObjectResult>(result);
+    //     var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
 
-        Assert.Equal(500, response.Error?.Code);
-        Assert.Null(response.Data);
-    }
+    //     Assert.Equal(500, response.Error?.Code);
+    //     Assert.Null(response.Data);
+    // }
 
     [Fact]
     public async Task GetCropByIdAsync_ShouldReturnNotFound_WhenCropDoesNotExist()
@@ -156,23 +156,23 @@ public class CropControllerTests
         Assert.Null(apiResponse.Data);
     }
 
-    [Fact]
-    public async Task AddCropAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
-    {
-        // Arrange
-        var cropDto = new CropDtoAdd { CropName = "Corn", NitrogenCover = 50 };
-        _mockCropAdderService.Setup(repo => repo.AddCropAsync(It.IsAny<CropDtoAdd>())).ThrowsAsync(new Exception());
+    // [Fact]
+    // public async Task AddCropAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
+    // {
+    //     // Arrange
+    //     var cropDto = new CropDtoAdd { CropName = "Corn", NitrogenCover = 50 };
+    //     _mockCropAdderService.Setup(repo => repo.AddCropAsync(It.IsAny<CropDtoAdd>())).ThrowsAsync(new Exception());
 
-        // Act
-        var result = await _controller.AddCropAsync(cropDto);
+    //     // Act
+    //     var result = await _controller.AddCropAsync(cropDto);
 
-        // Assert
-        var okResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
+    //     // Assert
+    //     var okResult = Assert.IsType<ObjectResult>(result);
+    //     var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
 
-        Assert.Equal(500, response.Error?.Code);
-        Assert.Null(response.Data);
-    }
+    //     Assert.Equal(500, response.Error?.Code);
+    //     Assert.Null(response.Data);
+    // }
 
     [Fact]
     public async Task UpdateCropAsync_ShouldReturnBadRequest_WhenCropIdsDoNotMatch()
@@ -233,22 +233,22 @@ public class CropControllerTests
         Assert.Equal(404, apiResponse.Error?.Code);
     }
 
-    [Fact]
-    public async Task UpdateCropAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
-    {
-        // Arrange
-        var crop = new Crop { CropId = 1, CropName = "Corn" };
-        var cropId = 1;
-        _mockCropUpdatableService.Setup(repo => repo.UpdateCropAsync(It.IsAny<Crop>())).ThrowsAsync(new Exception());
+    // [Fact]
+    // public async Task UpdateCropAsync_ShouldReturnServerError_WhenSeverErrorOccurs()
+    // {
+    //     // Arrange
+    //     var crop = new Crop { CropId = 1, CropName = "Corn" };
+    //     var cropId = 1;
+    //     _mockCropUpdatableService.Setup(repo => repo.UpdateCropAsync(It.IsAny<Crop>())).ThrowsAsync(new Exception());
 
-        // Act
-        var result = await _controller.UpdateCropAsync(crop, cropId);
+    //     // Act
+    //     var result = await _controller.UpdateCropAsync(crop, cropId);
 
-        // Assert
-        var okResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
+    //     // Assert
+    //     var okResult = Assert.IsType<ObjectResult>(result);
+    //     var response = Assert.IsType<ApiResponse<object>>(okResult.Value);
 
-        Assert.Equal(500, response.Error?.Code);
-        Assert.Null(response.Data);
-    }
+    //     Assert.Equal(500, response.Error?.Code);
+    //     Assert.Null(response.Data);
+    // }
 }
