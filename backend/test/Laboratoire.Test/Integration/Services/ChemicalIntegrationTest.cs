@@ -1,5 +1,4 @@
 using Laboratoire.Application.DTO;
-using Laboratoire.Application.Mapper;
 using Laboratoire.Application.Services.ChemicalServices;
 using Laboratoire.Domain.Entity;
 using Laboratoire.Infrastructure.DbContext;
@@ -7,7 +6,7 @@ using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Laboratoire.Test.Services.Integration;
+namespace Laboratoire.Test.Integration.Services;
 
 public class ChemicalIntegrationTest
 {

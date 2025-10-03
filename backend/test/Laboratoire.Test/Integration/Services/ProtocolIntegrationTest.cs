@@ -1,4 +1,3 @@
-using System;
 using Laboratoire.Application.DTO;
 using Laboratoire.Application.Services.CashFlowServices;
 using Laboratoire.Application.Services.CropServices;
@@ -10,10 +9,8 @@ using Laboratoire.Infrastructure.DbContext;
 using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
-using Npgsql;
-using NuGet.Frameworks;
 
-namespace Laboratoire.Test.Services.Integration;
+namespace Laboratoire.Test.Integration.Services;
 
 public class ProtocolIntegrationTest
 {

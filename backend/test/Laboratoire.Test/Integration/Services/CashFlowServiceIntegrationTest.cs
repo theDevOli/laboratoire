@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 
-namespace Laboratoire.Test.Services.Integration;
+namespace Laboratoire.Test.Integration.Services;
 
 public class CashFlowServiceIntegrationTest
 {

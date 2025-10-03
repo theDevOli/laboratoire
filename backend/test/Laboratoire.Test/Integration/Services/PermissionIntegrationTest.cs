@@ -1,13 +1,12 @@
 using Dapper;
 using Laboratoire.Application.Services.PermissionServices;
-using Laboratoire.Domain.Entity;
 using Laboratoire.Infrastructure.DbContext;
 using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 
-namespace Laboratoire.Test.Services.Integration;
+namespace Laboratoire.Test.Integration.Services;
 
 public class PermissionIntegrationTest
 {

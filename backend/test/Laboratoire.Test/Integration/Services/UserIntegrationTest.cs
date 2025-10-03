@@ -5,7 +5,7 @@ using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Laboratoire.Test.Services.Integration;
+namespace Laboratoire.Test.Integration.Services;
 
 public class UserIntegrationTest
 {
