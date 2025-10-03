@@ -7,7 +7,7 @@ using Laboratoire.Application.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace Laboratoire.Test.Controllers;
+namespace Laboratoire.Test.Unit.Controllers;
 
 public class HazardControllerTests
 {

@@ -7,7 +7,7 @@ using Laboratoire.UI.Controllers;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.DTO;
 
-namespace Laboratoire.Test.Controllers
+namespace Laboratoire.Test.Unit.Controllers
 {
     public class CashFlowControllerTests
     {

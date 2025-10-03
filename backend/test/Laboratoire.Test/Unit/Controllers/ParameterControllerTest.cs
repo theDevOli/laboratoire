@@ -7,7 +7,7 @@ using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
 using Laboratoire.UI.Controllers;
 
-namespace Laboratoire.Test.Controllers;
+namespace Laboratoire.Test.Unit.Controllers;
 
 public class ParameterControllerTests
 {
