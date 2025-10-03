@@ -4,8 +4,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.ChemicalServices
-{
+namespace Laboratoire.Test.Unit.Services.ChemicalServices;
     public class ChemicalGetterServiceTest
     {
         private readonly Mock<IChemicalRepository> _chemicalRepositoryMock;
@@ -59,14 +58,13 @@ namespace Laboratoire.Test.Services.ChemicalServices
             Assert.Equal(2, result.Count());
 
             var water = result.First(c => c.ChemicalId == 1);
-            Assert.Contains(1, water.Hazards);
-            Assert.Contains(2, water.Hazards);
+            Assert.Contains(1, water.Hazards!);
+            Assert.Contains(2, water.Hazards!);
 
             var ethanol = result.First(c => c.ChemicalId == 2);
-            Assert.Contains(3, ethanol.Hazards);
+            Assert.Contains(3, ethanol.Hazards!);
 
             _chemicalRepositoryMock.Verify(r => r.GetAllChemicalsAsync(), Times.Once);
             _chemicalsNormalizationRepositoryMock.Verify(r => r.GetAllHazardsAsync(), Times.Once);
         }
     }
-}

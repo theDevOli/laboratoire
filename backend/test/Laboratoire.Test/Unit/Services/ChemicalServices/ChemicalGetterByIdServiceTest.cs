@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Laboratoire.Application.ServicesContracts;
 
-namespace Laboratoire.Test.Services.ChemicalServices;
+namespace Laboratoire.Test.Unit.Services.ChemicalServices;
 
 public class ChemicalGetterByIdServiceTest
 {

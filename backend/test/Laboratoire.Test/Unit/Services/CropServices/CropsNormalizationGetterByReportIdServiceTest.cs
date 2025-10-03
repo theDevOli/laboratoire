@@ -4,61 +4,60 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.CropServices
+namespace Laboratoire.Test.Unit.Services.CropServices;
+
+public class CropsNormalizationGetterByReportIdServiceTest
 {
-    public class CropsNormalizationGetterByReportIdServiceTest
+    private readonly Mock<ICropsNormalizationRepository> _repositoryMock;
+    private readonly Mock<ILogger<CropsNormalizationGetterByReportIdService>> _loggerMock;
+    private readonly CropsNormalizationGetterByReportIdService _service;
+
+    public CropsNormalizationGetterByReportIdServiceTest()
     {
-        private readonly Mock<ICropsNormalizationRepository> _repositoryMock;
-        private readonly Mock<ILogger<CropsNormalizationGetterByReportIdService>> _loggerMock;
-        private readonly CropsNormalizationGetterByReportIdService _service;
+        _repositoryMock = new Mock<ICropsNormalizationRepository>();
+        _loggerMock = new Mock<ILogger<CropsNormalizationGetterByReportIdService>>();
+        _service = new CropsNormalizationGetterByReportIdService(
+            _repositoryMock.Object, _loggerMock.Object
+        );
+    }
 
-        public CropsNormalizationGetterByReportIdServiceTest()
-        {
-            _repositoryMock = new Mock<ICropsNormalizationRepository>();
-            _loggerMock = new Mock<ILogger<CropsNormalizationGetterByReportIdService>>();
-            _service = new CropsNormalizationGetterByReportIdService(
-                _repositoryMock.Object, _loggerMock.Object
-            );
-        }
+    [Fact]
+    public async Task GetCropByReportIdAsync_ShouldReturnNull_WhenReportIdIsNull()
+    {
+        // Act
+        var result = await _service.GetCropByReportIdAsync(null);
 
-        [Fact]
-        public async Task GetCropByReportIdAsync_ShouldReturnNull_WhenReportIdIsNull()
-        {
-            // Act
-            var result = await _service.GetCropByReportIdAsync(null);
+        // Assert
+        Assert.Null(result);
+        _repositoryMock.Verify(r => r.GetCropByReportIdAsync(It.IsAny<Guid>()), Times.Never);
+    }
 
-            // Assert
-            Assert.Null(result);
-            _repositoryMock.Verify(r => r.GetCropByReportIdAsync(It.IsAny<Guid>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task GetCropByReportIdAsync_ShouldReturnCrops_WhenReportIdIsValid()
-        {
-            // Arrange
-            var reportId = Guid.NewGuid();
-            var crops = new List<CropsNormalization>
+    [Fact]
+    public async Task GetCropByReportIdAsync_ShouldReturnCrops_WhenReportIdIsValid()
+    {
+        // Arrange
+        var reportId = Guid.NewGuid();
+        var crops = new List<CropsNormalization>
             {
                 new CropsNormalization { ProtocolId = "P1" },
                 new CropsNormalization { ProtocolId = "P2" }
             };
 
-            _repositoryMock
-                .Setup(r => r.GetCropByReportIdAsync(reportId))
-                .ReturnsAsync(crops);
+        _repositoryMock
+            .Setup(r => r.GetCropByReportIdAsync(reportId))
+            .ReturnsAsync(crops);
 
-            // Act
-            var result = await _service.GetCropByReportIdAsync(reportId);
+        // Act
+        var result = await _service.GetCropByReportIdAsync(reportId);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Collection
-            (
-                result,
-                item => Assert.Equal(item.ProtocolId, crops[0].ProtocolId),
-                item=>Assert.Equal(item.ProtocolId,crops[1].ProtocolId)
-            );
-            _repositoryMock.Verify(r => r.GetCropByReportIdAsync(It.IsAny<Guid>()), Times.Once);
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.Collection
+        (
+            result,
+            item => Assert.Equal(item.ProtocolId, crops[0].ProtocolId),
+            item => Assert.Equal(item.ProtocolId, crops[1].ProtocolId)
+        );
+        _repositoryMock.Verify(r => r.GetCropByReportIdAsync(It.IsAny<Guid>()), Times.Once);
     }
 }

@@ -7,7 +7,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.ChemicalServices;
+namespace Laboratoire.Test.Unit.Services.ChemicalServices;
 
 public class ChemicalAdderServiceTest
 {

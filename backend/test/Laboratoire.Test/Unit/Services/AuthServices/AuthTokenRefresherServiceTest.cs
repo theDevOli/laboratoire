@@ -6,8 +6,7 @@ using Laboratoire.Application.Services.AuthServices;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.AuthServices;
-
+namespace Laboratoire.Test.Unit.Services.AuthServices;
 public class AuthTokenRefresherServiceTest
 {
     private readonly Mock<ILogger<AuthTokenRefresherService>> _loggerMock;

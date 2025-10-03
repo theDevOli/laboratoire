@@ -5,91 +5,90 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.AuthServices
+namespace Laboratoire.Test.Unit.Services.AuthServices;
+
+public class AuthenticationGetterServiceTest
 {
-    public class AuthenticationGetterServiceTest
+    private readonly Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<ILogger<AuthenticationGetterService>> _loggerMock;
+    private readonly IAuthenticationGetterService _service;
+
+    public AuthenticationGetterServiceTest()
     {
-        private readonly Mock<IUserRepository> _userRepositoryMock;
-        private readonly Mock<ILogger<AuthenticationGetterService>> _loggerMock;
-        private readonly IAuthenticationGetterService _service;
+        _userRepositoryMock = new Mock<IUserRepository>();
+        _loggerMock = new Mock<ILogger<AuthenticationGetterService>>();
 
-        public AuthenticationGetterServiceTest()
+        _service = new AuthenticationGetterService(
+            _userRepositoryMock.Object,
+            _loggerMock.Object
+        );
+    }
+
+    [Fact]
+    public async Task GetAuthenticationByUserId_ShouldReturnAuthentication_WhenUserExists()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var expectedAuth = new Authentication
         {
-            _userRepositoryMock = new Mock<IUserRepository>();
-            _loggerMock = new Mock<ILogger<AuthenticationGetterService>>();
+            Username = "testuser",
+            Name = "Test User",
+            IsActive = true
+        };
 
-            _service = new AuthenticationGetterService(
-                _userRepositoryMock.Object,
-                _loggerMock.Object
-            );
-        }
+        _userRepositoryMock
+            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .ReturnsAsync(expectedAuth);
 
-        [Fact]
-        public async Task GetAuthenticationByUserId_ShouldReturnAuthentication_WhenUserExists()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var expectedAuth = new Authentication
-            {
-                Username = "testuser",
-                Name = "Test User",
-                IsActive = true
-            };
+        // Act
+        var result = await _service.GetAuthenticationByUserId(userId);
 
-            _userRepositoryMock
-                .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
-                .ReturnsAsync(expectedAuth);
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedAuth, result);
+        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
+    }
 
-            // Act
-            var result = await _service.GetAuthenticationByUserId(userId);
+    [Fact]
+    public async Task GetAuthenticationByUserId_ShouldReturnNull_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedAuth, result);
-            _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
-        }
+        _userRepositoryMock
+            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .ReturnsAsync((Authentication?)null);
 
-        [Fact]
-        public async Task GetAuthenticationByUserId_ShouldReturnNull_WhenUserDoesNotExist()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
+        // Act
+        var result = await _service.GetAuthenticationByUserId(userId);
 
-            _userRepositoryMock
-                .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
-                .ReturnsAsync((Authentication?)null);
+        // Assert
+        Assert.Null(result);
+        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
+    }
 
-            // Act
-            var result = await _service.GetAuthenticationByUserId(userId);
+    [Fact]
+    public async Task GetAuthenticationByUserId_ShouldLogInformation_WhenCalled()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        _userRepositoryMock
+            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .ReturnsAsync((Authentication?)null);
 
-            // Assert
-            Assert.Null(result);
-            _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
-        }
+        // Act
+        await _service.GetAuthenticationByUserId(userId);
 
-        [Fact]
-        public async Task GetAuthenticationByUserId_ShouldLogInformation_WhenCalled()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            _userRepositoryMock
-                .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
-                .ReturnsAsync((Authentication?)null);
-
-            // Act
-            await _service.GetAuthenticationByUserId(userId);
-
-            // Assert
-            _loggerMock.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains(userId.ToString())),
-                    null,
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()
-                ),
-                Times.Once
-            );
-        }
+        // Assert
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains(userId.ToString())),
+                null,
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()
+            ),
+            Times.Once
+        );
     }
 }

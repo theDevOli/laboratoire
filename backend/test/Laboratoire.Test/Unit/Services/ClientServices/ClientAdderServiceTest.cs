@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Laboratoire.Application.Utils;
 
-namespace Laboratoire.Test.Services.ClientServices;
+namespace Laboratoire.Test.Unit.Services.ClientServices;
 
 public class ClientAdderServiceTest
 {

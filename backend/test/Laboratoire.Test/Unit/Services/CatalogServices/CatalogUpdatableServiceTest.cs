@@ -5,7 +5,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.CatalogServices;
+namespace Laboratoire.Test.Unit.Services.CatalogServices;
 
 public class CatalogUpdatableServiceTest
 {

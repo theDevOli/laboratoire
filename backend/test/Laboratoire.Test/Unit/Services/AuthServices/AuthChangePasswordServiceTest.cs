@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.AuthServices;
+namespace Laboratoire.Test.Unit.Services.AuthServices;
 
 public class AuthChangePasswordServiceTest
 {

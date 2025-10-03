@@ -4,63 +4,62 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.CatalogServices
+namespace Laboratoire.Test.Unit.Services.CatalogServices;
+
+public class CatalogGetterByIdServiceTest
 {
-    public class CatalogGetterByIdServiceTest
+    private readonly Mock<ICatalogRepository> _mockRepo;
+    private readonly Mock<ILogger<CatalogGetterByIdService>> _mockLogger;
+    private readonly CatalogGetterByIdService _service;
+
+    public CatalogGetterByIdServiceTest()
     {
-        private readonly Mock<ICatalogRepository> _mockRepo;
-        private readonly Mock<ILogger<CatalogGetterByIdService>> _mockLogger;
-        private readonly CatalogGetterByIdService _service;
+        _mockRepo = new Mock<ICatalogRepository>();
+        _mockLogger = new Mock<ILogger<CatalogGetterByIdService>>();
+        _service = new CatalogGetterByIdService(_mockRepo.Object, _mockLogger.Object);
+    }
 
-        public CatalogGetterByIdServiceTest()
-        {
-            _mockRepo = new Mock<ICatalogRepository>();
-            _mockLogger = new Mock<ILogger<CatalogGetterByIdService>>();
-            _service = new CatalogGetterByIdService(_mockRepo.Object, _mockLogger.Object);
-        }
+    [Fact]
+    public async Task GetCatalogByIdAsync_ShouldReturnNull_WhenCatalogIdIsNull()
+    {
+        // Act
+        var result = await _service.GetCatalogByIdAsync(null);
 
-        [Fact]
-        public async Task GetCatalogByIdAsync_ShouldReturnNull_WhenCatalogIdIsNull()
-        {
-            // Act
-            var result = await _service.GetCatalogByIdAsync(null);
+        // Assert
+        Assert.Null(result);
+        _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Never);
+    }
 
-            // Assert
-            Assert.Null(result);
-            _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Never);
-        }
+    [Fact]
+    public async Task GetCatalogByIdAsync_ShouldReturnCatalog_WhenCatalogExists()
+    {
+        // Arrange
+        var catalog = new Catalog { CatalogId = 1, LabelName = "Test Catalog" };
+        _mockRepo.Setup(r => r.GetCatalogByIdAsync(1))
+                 .ReturnsAsync(catalog);
 
-        [Fact]
-        public async Task GetCatalogByIdAsync_ShouldReturnCatalog_WhenCatalogExists()
-        {
-            // Arrange
-            var catalog = new Catalog { CatalogId = 1, LabelName = "Test Catalog" };
-            _mockRepo.Setup(r => r.GetCatalogByIdAsync(1))
-                     .ReturnsAsync(catalog);
+        // Act
+        var result = await _service.GetCatalogByIdAsync(1);
 
-            // Act
-            var result = await _service.GetCatalogByIdAsync(1);
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(1, result.CatalogId);
+        Assert.Equal("Test Catalog", result.LabelName);
+        _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Once);
+    }
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(1, result.CatalogId);
-            Assert.Equal("Test Catalog", result.LabelName);
-            _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Once);
-        }
+    [Fact]
+    public async Task GetCatalogByIdAsync_ShouldReturnNull_WhenCatalogNotFound()
+    {
+        // Arrange
+        _mockRepo.Setup(r => r.GetCatalogByIdAsync(99))
+                 .ReturnsAsync((Catalog?)null);
 
-        [Fact]
-        public async Task GetCatalogByIdAsync_ShouldReturnNull_WhenCatalogNotFound()
-        {
-            // Arrange
-            _mockRepo.Setup(r => r.GetCatalogByIdAsync(99))
-                     .ReturnsAsync((Catalog?)null);
+        // Act
+        var result = await _service.GetCatalogByIdAsync(99);
 
-            // Act
-            var result = await _service.GetCatalogByIdAsync(99);
-
-            // Assert
-            Assert.Null(result);
-            _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Once);
-        }
+        // Assert
+        Assert.Null(result);
+        _mockRepo.Verify(r => r.GetCatalogByIdAsync(It.IsAny<int>()), Times.Once);
     }
 }

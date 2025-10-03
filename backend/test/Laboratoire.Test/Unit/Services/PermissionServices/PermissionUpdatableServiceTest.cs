@@ -5,7 +5,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.PermissionServices;
+namespace Laboratoire.Test.Unit.Services.PermissionServices;
     public class PermissionUpdatableServiceTest
     {
         private readonly Mock<IPermissionRepository> _repositoryMock;

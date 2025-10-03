@@ -4,7 +4,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Laboratoire.Test.Services.PartnerServices;
+namespace Laboratoire.Test.Unit.Services.PartnerServices;
 
 public class PartnerGetterByIdServiceTest
 {
