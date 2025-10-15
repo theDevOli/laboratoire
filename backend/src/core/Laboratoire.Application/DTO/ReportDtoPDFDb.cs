@@ -39,6 +39,8 @@ public sealed class ReportDtoPDFDb
     [Required]
     public string? SampleType { get; set; }
     [Required]
+    public string? LabelName { get; set; }
+    [Required]
     public DateTime? EntryDate { get; set; }
     [Required]
     public DateTime? ReportDate { get; set; }

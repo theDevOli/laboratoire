@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Laboratoire.Domain.Entity;
 
 public class ReportPDF
 {
-    private string _emptyData = string.Concat(Enumerable.Repeat("*", 6));
+    readonly string _emptyData = string.Concat(Enumerable.Repeat("*", 6));
     [Required]
     public string? ProtocolId { get; set; }
     [Required]
@@ -31,6 +33,8 @@ public class ReportPDF
     public string? ReportType { get; set; }
     [Required]
     public string? SampleType { get; set; }
+    [Required]
+    public string? LabelName { get; set; }
     [Required]
     public IEnumerable<TableOutput>? Outputs { get; set; }
     [Required]
@@ -86,6 +90,24 @@ public class ReportPDF
     {
         if (ItrNirf is null)
             return _emptyData;
+        
         return Regex.Replace(ItrNirf, @"(\d{1})(\d{3})(\d{3})(\d{1})", "$1.$2.$3-$4");
+    }
+
+    public string GetLabelName()
+    {
+        if (LabelName.Contains("Efluente", StringComparison.InvariantCultureIgnoreCase))
+            return "efluente";
+        
+        var text = new string(LabelName
+            .Normalize(NormalizationForm.FormD)
+            .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+            .ToArray());
+
+        text = Regex.Replace(text, @"\b\w{1,2}\b", "");
+        text = Regex.Replace(text, @"\s+", " ").Trim();
+        text = text.Replace(" ", "_").ToLower();
+
+        return text;
     }
 }

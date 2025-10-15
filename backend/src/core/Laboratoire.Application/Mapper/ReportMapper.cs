@@ -58,6 +58,7 @@ public static class ReportMapper
             CatalogId = dto?.CatalogId,
             ReportType = dto?.ReportType,
             SampleType = dto?.SampleType,
+            LabelName=dto?.LabelName,
             Outputs = default,
             EntryDate = dto?.EntryDate,
             ReportDate = dto?.ReportDate,

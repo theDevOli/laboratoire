@@ -29,7 +29,7 @@ public class TableOutput
             if (result is not null && !isEfficiency)
                 resultVal = double.Parse(parameter.Equation is null ? result.GetResult().ToString() : GetCalculus(result)!);
 
-            if (result is null || isEfficiency) resultVal = SetCalculus(parameter?.ParameterName, results, parameters, out resultStr);
+            if (result is null || isEfficiency) resultVal = SetCalculus(parameter, results, parameters, out resultStr);
 
             var tableOutput = new TableOutput()
             {
@@ -106,11 +106,11 @@ public class TableOutput
         return res?.ToString();
     }
 
-    private static double SetCalculus(string? parameterName, IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters, out string resultStr)
+    private static double SetCalculus(Parameter parameter, IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters, out string resultStr)
     {
         resultStr = String.Empty;
         double resultVal = 0;
-        switch (parameterName?.ToLower())
+        switch (parameter.ParameterName?.ToLower())
         {
             case "salinidade":
                 resultStr = GetSalinidade(results, parameters);
@@ -248,7 +248,7 @@ public class TableOutput
     }
     private static string GetSalinidade(IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters)
     {
-        var ce = GetResult("condutividade", results, parameters);
+        var ce = GetResult("Condutividade Elétrica", results, parameters);
         if (ce < 250)
             return "C1";
         if (ce < 750)
@@ -260,7 +260,7 @@ public class TableOutput
 
     private static string GetSodicidade(IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters)
     {
-        var ce = GetResult("condutividade", results, parameters) ?? 0;
+        var ce = GetResult("Condutividade Elétrica", results, parameters) ?? 0;
         var ras = GetRAS(results, parameters);
         var firstLog = 18.87 - 4.44 * Math.Log10(ce);
 
@@ -278,8 +278,8 @@ public class TableOutput
         const double SODIUM_FACTOR = 22.99;
         const double HARDNESS_FACTOR = 16.09;
 
-        var sodium = GetResult("sódio", results, parameters);
-        var hardness = GetResult("dureza", results, parameters);
+        var sodium = GetResult("Sódio", results, parameters);
+        var hardness = GetResult("Dureza Total", results, parameters);
         var elSodium = sodium / SODIUM_FACTOR ?? 0;
         var elHardness = hardness / HARDNESS_FACTOR ?? 0;
 
@@ -299,7 +299,8 @@ public class TableOutput
 
     private static double? GetResult(string parameterName, IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters)
     {
-        var parameter = parameters?.FirstOrDefault(parameter => parameter!.ParameterName!.ToLower() == parameterName);
+        Console.WriteLine(parameterName);
+        var parameter = parameters?.FirstOrDefault(p => p!.ParameterName!.Equals(parameterName, StringComparison.CurrentCultureIgnoreCase));
         var result = results?.FirstOrDefault(result => result.ParameterId == parameter?.ParameterId);
         return double.Parse(GetCalculus(result)!);
     }

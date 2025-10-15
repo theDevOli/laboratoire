@@ -92,7 +92,7 @@ public class ReportController
             string base64Image = Convert.ToBase64String(qrCodeImage);
             pdf.QRCode = "data:image/png;base64," + base64Image;
         }
-        return new ViewAsPdf("Report", pdf)
+        return new ViewAsPdf($"Report_{pdf.GetLabelName()}", pdf)
         {
             FileName = $"Relatorio_LabSolo_{pdf?.ProtocolId}.pdf",
             PageSize = Rotativa.AspNetCore.Options.Size.A4,

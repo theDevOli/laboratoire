@@ -71,6 +71,7 @@ public sealed class ReportRepository(DataContext dapper) : IReportRepository
 
         ca.report_type AS {nameof(Catalog.ReportType)},
         ca.sample_type AS {nameof(Catalog.SampleType)},
+        ca.label_name AS {nameof(Catalog.LabelName)},
         ca.catalog_id AS {nameof(Catalog.CatalogId)},
         ca.legends AS {nameof(Catalog.Legends)},
 

@@ -40,6 +40,7 @@ public class ReportGetterPDFService
         }
 
         logger.LogInformation("Parsing outputs for report ID: {ReportId}", reportId);
+ 
         reportPdf!.Outputs = TableOutput.Parse(reportPdf.Results, parameters);
 
         if (cropsNormalization?.Count() > 0)

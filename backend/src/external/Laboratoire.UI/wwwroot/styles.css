@@ -47,12 +47,12 @@ body {
 .identification {
     text-align: center;
     font-weight: bold;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
 }
 
 table {
     border-collapse: collapse;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
     margin: 0 auto;
     width: 100%;
 }
@@ -84,14 +84,15 @@ tbody tr:nth-child(even) {
 .underline {
     font-weight: bold;
     text-decoration: underline;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
 }
 .center {
     text-align: center;
 }
 
 .md {
-    width: 85% !important;
+    width: 95% !important;
+    font-size: 0.8rem;
 }
 
 .flex-justify {
@@ -110,7 +111,7 @@ tbody tr:nth-child(even) {
 .legend,
 .observation {
     line-height: 16px;
-    margin-bottom: 16px;
+    /*margin-bottom: 60px;*/
 }
 
 .result .references {
@@ -126,7 +127,7 @@ tbody tr:nth-child(even) {
 }
 
 .suggestion {
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
 }
 
 .qr-code {

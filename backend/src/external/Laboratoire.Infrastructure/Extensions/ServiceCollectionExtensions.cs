@@ -175,6 +175,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserPatchService, UserPatchService>();
         services.AddScoped<IUserRenameService, UserRenameService>();
         services.AddScoped<IUserUpdatableService, UserUpdatableService>();
+        services.AddScoped<IUserDeletionService, UserDeletionService>();
 
         services.AddScoped<IStateGetterService, StateGetterService>();
 
