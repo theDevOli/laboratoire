@@ -1,0 +1,122 @@
+﻿@using System.Globalization;
+@using System.Text
+@model Laboratoire.Domain.Entity.ReportPDF;
+
+@{
+    Layout = "_layout";
+    var outputs = Model.Outputs;
+    var suggestions = Model?.Suggestions?.ToArray();
+    var culture = new CultureInfo("pt-BR");
+    var emptyData = string.Concat(Enumerable.Repeat("*",6));
+}
+<table>
+    <thead>
+    <tr>
+        <th>Cliente</th>
+        <td>@Model?.ClientName</td>
+        <th colspan="2">CNPJ/CPF</th>
+        <td>@Model?.ToTaxId()</td>
+    </tr>
+    <tr>
+        <th>Endereço</th>
+        <td >@Model?.Location</td>
+        <th colspan="2">Contatos(s)</th>
+        <td>@Model?.ToPhone()</td>
+    </tr>
+    <tr>
+        <th>CCIR</th>
+        <td >
+            @(Model.ToCcir())
+        </td>
+        <th colspan="2">ITR / NIRF</th>
+        <td>
+            @(Model.ToItrNirf())
+        </td>
+    </tr>
+    <tr>
+        <th>Area</th>
+        <td>
+            @(Model?.Area ?? emptyData)
+        </td>
+        <th colspan="2">Matrícula</th>
+        <td>
+            @(Model?.Registration ?? emptyData)
+        </td>
+    </tr>
+    <tr>
+        <th>Amostra(s)</th>
+        <td>@Model.LabelName</td>
+        <th colspan="2">Data de Ensaio</th>
+        <td>
+            @(Model!.EntryDate.HasValue ? Model.EntryDate.Value.ToString("dd/MM/yyyy", culture) : emptyData)
+        </td>
+    </tr>
+    @if (suggestions?.Count() > 0)
+    {
+        <tr>
+            <th>Culturas</th>
+            <td colspan="4">
+                @for (var i = 0; i < suggestions.Length; i++)
+                {
+                    var cropName = suggestions[i].CropName;
+                    @cropName
+                    if (i < suggestions.Length - 1)
+                    {
+                        <span>, </span>
+                    }
+                }
+            </td>
+        </tr>
+    }
+    </thead>
+</table>
+<table>
+    <thead>
+    <tr>
+        <th>Ensaio</th>
+        <th>Resultado</th>
+        <th>Unidade</th>
+        <th>Método</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var output in outputs!)
+    {
+        <tr>
+            <td>@output?.ParameterName</td>
+            <td>@output?.GetResult() </td>
+            <td>@Html.Raw(output?.GetUnit())</td>
+            <td>@output?.GetOfficialDoc()</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div class="legend">
+    <p class="center underline">Legenda</p>
+    <table class="md">
+        <tbody>
+        <tr>
+            <td><strong>dag/kg</strong>: Decagrama por kilo</td>
+            <td><strong>cmol<sub>c</sub>/kg</strong>: Centimol por kilo</td>
+        </tr>
+        <tr>
+            <td><strong>mg/L</strong>: Miligrama por litro</td>
+            <td><strong>%</strong>: Porcentagem</td>
+        </tr>
+        <tr>
+            <td><strong>cmol<sub>c</sub>/L</strong>: Centimol por litro</td>
+            <td><strong>ND</strong>: Não detectado</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="references">
+    
+    <p class="underline">Bibliografia de Consulta:</p>
+    <ol>
+        <li>EMBRAPA, S. Manual de métodos de análise de solo 3<sup> a</sup> edn. Centro Nacional de Pesquisa de Solos, 2017.</li>
+        <li>MAPA-IN Nº. 02, de 09/10/2008.</li>
+        <li>Recomendações para o uso de corretivos e fertilizantes no Estado de Sergipe. Embrapa tabuleiros Costeiros, Aracaju/SE, 2007.</li>
+        <li>MALAVOLTA, E. Manual de Química Agrícola: Adubos e Adubação. Ed. Agronômica Ceres, 1981, São Paulo, Brasil.</li>
+    </ol>
+</div>

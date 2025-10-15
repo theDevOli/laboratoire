@@ -1,0 +1,137 @@
+﻿
+@using System.Globalization;
+@using System.Text
+@model Laboratoire.Domain.Entity.ReportPDF;
+
+@{
+    Layout = "_layout";
+    var outputs = Model.Outputs;
+    var culture = new CultureInfo("pt-BR");
+    var emptyData = string.Concat(Enumerable.Repeat("*",6));
+    var resultBuilder = new StringBuilder();
+}
+<table>
+    <thead>
+    <tr>
+        <th>Cliente</th>
+        <td>@Model?.ClientName</td>
+        <th colspan="2">CNPJ/CPF</th>
+        <td>@Model?.ToTaxId()</td>
+    </tr>
+    <tr>
+        <th>Endereço</th>
+        <td >@Model?.Location</td>
+        <th colspan="2">Contatos(s)</th>
+        <td>@Model?.ToPhone()</td>
+    </tr>
+    <tr>
+        <th>Amostra(s)</th>
+        <td>@Model?.LabelName</td>
+        <th colspan="2">Data de Ensaio</th>
+        <td>
+            @(Model!.EntryDate.HasValue ?
+                                Model.EntryDate.Value.ToString("dd/MM/yyyy", culture) : emptyData)
+        </td>
+    </tr>
+    </thead>
+</table>
+<table>
+    <thead>
+    <tr>
+        <th>Ensaio</th>
+        <th>Resultado</th>
+        <th>Unidade</th>
+        <th>VMP</th>
+        <th>Portaria</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var output in outputs!)
+    {
+        <tr>
+            <td>@output?.ParameterName</td>
+            <td>@output?.GetResult() </td>
+            <td>@Html.Raw(output?.GetUnit())</td>
+            <td>@output?.GetVmp()</td>
+            <td>@output?.GetOfficialDoc()</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div class="legend">
+    <p class="center underline">Legenda</p>
+    <table class="md">
+        <tbody>
+        <tr>
+            <td><strong>ND</strong>: Não detectado</td>
+            <td><strong>(meq/L)<sup>1/2</sup></strong>: Raiz quadrada de miliequivalente</td>
+        </tr>
+        <tr>
+            <td><strong>UFC/100mL</strong>: Unidades Formadoras de Colonias em 100 mililitros</td>
+            <td><strong>mg/L</strong>: Miligrama por litro</td>
+        </tr>
+        <tr>
+                <td><strong>µS/cm</strong>: MicroSiemens por centimetro</td>
+                <td><strong>uH</strong>: Unidade Hazen (mg Pt-Co/L)</td>
+        </tr>        
+        </tbody>
+    </table>
+</div>
+@{
+    var condutividade = outputs?
+                                        .FirstOrDefault(result => result!.ParameterName!.ToLower()
+                                        .Equals("condutividade elétrica"))?.Result; 
+    var officialDoc = string.Empty; 
+    var isOk = true; 
+    var outOfRange = new List<string>();
+
+    foreach(var output in outputs) 
+    { 
+        if(output?.OfficialDoc is not null && output.OfficialDoc !="-")
+        {
+            officialDoc = output.OfficialDoc;
+        }
+        if(output!.IsParameterOutVmp())
+        {
+            isOk = false;
+            outOfRange.Add(output?.ParameterName!);
+        } 
+    }
+
+    var isSingular = outOfRange.Count()==1;
+    var areAllParametersOutOfRange = outOfRange.Count()==outputs.Count();
+
+    if(isOk)
+        resultBuilder.Append($@"Os valores apresentados estão de acordo com o padrão da {officialDoc}.");
+
+    if(!isOk && areAllParametersOutOfRange)
+        resultBuilder.Append($@"Todos os valores apresentados ({String.Join(", ",outOfRange)}) não estão de acordo com o padrão da {officialDoc}.");
+
+    if(!isOk && !areAllParametersOutOfRange)
+        resultBuilder.Append($@"Os valores apresentados estão de acordo com o padrão da {officialDoc}, com exceção para {(isSingular?"o":"os")} {(isSingular?"parâmetro":"parâmetros")} ({String.Join(", ",outOfRange)}) em relação aos padrões permitidos.");
+
+    resultBuilder.Append($@" Os demais valores não detectados são devido à ausência destes elementos na amostragem ou a baixa concentração dos mesmos, de maneira que não possam ser detectados pela metodologia analítica. ");
+                        
+    if(condutividade.Value<10)
+        resultBuilder.Append($@"Como o valor da condutividade elétrica é  menor que 10 µS/cm, afirma-se que a água é dionizada. ");
+    <div class="references">
+    
+        <p class="underline">Bibliografia de Consulta:</p>
+        <ol>
+            <li>CHAMBERS, Phoenix. Standard methods for the examination of water and wastewater. Scientific e-Resources, 2019.</li>
+            <li>MDE ÁGUA, Manual Prático de Análise. Fundação Nacional de Saúde. Ministério da Saúde, 2006.</li>
+
+            @if (officialDoc != string.Empty)
+            {
+                <li>@officialDoc<span>.</span></li>
+            }
+        </ol>
+    </div>
+    <div class="page-break"></div>
+    <div class="result">
+        <p class="center underline">Resultado</p>
+        <p>
+            @resultBuilder.ToString()
+        </p>
+    </div>
+}
