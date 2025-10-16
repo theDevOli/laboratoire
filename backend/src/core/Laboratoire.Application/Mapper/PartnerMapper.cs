@@ -14,11 +14,14 @@ public static class PartnerMapper
         PartnerPhone = dto.PartnerPhone?.Trim(),
         PartnerEmail = dto.PartnerEmail?.Trim(),
     };
+    // FIXME:Edit while working o
     public static UserDtoAdd ToUser(this PartnerDtoAdd dto)
-    => new UserDtoAdd()
+    => new()
     {
         RoleId = 4,
         Username = dto.Username?.Trim(),
         IsActive = dto.IsActive,
+        Client = default,
+        Partner = dto.ToPartner(),
     };
 }

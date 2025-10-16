@@ -136,6 +136,25 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     FROM new_user
     RETURNING user_id
     """;
+    private readonly string _addUserAndPartnerSql =
+    $"""
+    WITH new_user AS(
+        INSERT INTO users."user"
+        (role_id,username,is_active)
+        VALUES(@RoleIdParameter,@UsernameParameter,@IsActiveParameter)
+        RETURNING user_id
+    )
+    INSERT INTO customers.partner
+    (partner_name,office_name,partner_phone,partner_email,user_id)
+    SELECT 
+        @PartnerNameParameter,
+        @OfficeNameParameter,
+        @PartnerPhoneParameter,
+        @PartnerEmailParameter,
+        new_user.user_id
+    FROM new_user
+    RETURNING user_id
+    """;
     private readonly string _updateUserSql =
     $"""
     UPDATE users.user
@@ -273,5 +292,19 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         parameters.Add("@ClientPhoneParameter", client.ClientPhone, DbType.String);
 
         return await dapper.ExecuteScalarSqlAsync<Guid?>(_addUserAndClientSql, parameters);
+    }
+
+    public async Task<Guid?> AddUserAndPartnerAsync(User user, Partner partner)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@RoleIdParameter", user.RoleId, DbType.Int32);
+        parameters.Add("@UsernameParameter", user.Username, DbType.String);
+        parameters.Add("@IsActiveParameter", user.IsActive, DbType.Boolean);
+        parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
+        parameters.Add("@OfficeNameParameter", partner.OfficeName, DbType.String);
+        parameters.Add("@PartnerEmailParameter", partner.PartnerEmail, DbType.String);
+        parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
+
+        return await dapper.ExecuteScalarSqlAsync<Guid?>(_addUserAndPartnerSql, parameters);
     }
 }

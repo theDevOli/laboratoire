@@ -20,23 +20,38 @@ public class UserAdderService
     {
         logger.LogInformation("Starting user creation process for: {Username}", userDto.Username);
         Guid? userId = null;
+        string? customer = null;
         var user = userDto.ToUser();
 
-        if (user.RoleId == 4)
+        if (userDto.Partner is not null)
         {
+            logger.LogInformation("Adding user and partner to the database.");
+
             var username = await userRepository.SetUserNameAsync(user.Username);
             user.Username = username;
+            
+            var partner = userDto.Partner;
+
+            userId = await userRepository.AddUserAndPartnerAsync(user, partner);
+            customer = "partner";
         }
 
-        if(userDto.Client is not null)
+        if (userDto.Client is not null)
         {
-        logger.LogInformation("Adding user and client to the database.");
+            logger.LogInformation("Adding user and client to the database.");
             var client = userDto.Client;
             userId = await userRepository.AddUserAndClientAsync(user, client);
+            customer = "client";
         }
 
         // logger.LogInformation("Adding user to the database.");
         // var userId = await userRepository.AddUserAsync(user);
+
+        if (userId is null)
+        {
+            logger.LogError("Add user and {Customer} failed.", customer);
+            return null;
+        }
 
         var userRegistration = new UserRegistration()
         {

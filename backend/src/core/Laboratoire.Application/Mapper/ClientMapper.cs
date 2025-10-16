@@ -17,14 +17,15 @@ public static class ClientMapper
 
         };
     }
-
+    // FIXME:Edit while working on it
     public static UserDtoAdd ToUser(this ClientDtoAdd dto)
-=> new UserDtoAdd()
-{
-    RoleId = 5,
-    Username = dto.ClientTaxId?.Trim(),
-    IsActive = true,
-    Client = dto.ToClient(),
-};
+    => new()
+    {
+        RoleId = 5,
+        Username = dto.ClientTaxId?.Trim(),
+        IsActive = true,
+        Client = dto.ToClient(),
+        Partner = default,
+    };
 
 }

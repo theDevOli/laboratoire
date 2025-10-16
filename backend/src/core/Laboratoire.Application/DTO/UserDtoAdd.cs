@@ -12,5 +12,6 @@ public sealed class UserDtoAdd
     [Required]
     public bool? IsActive { get; set; } = true;
     // FIXME: Maybe an error
-    public Client? Client{ get; set; }
+    public Client? Client { get; set; }
+    public Partner? Partner { get; set; }
 }
