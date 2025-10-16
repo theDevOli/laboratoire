@@ -13,7 +13,6 @@ public class ClientAdderServiceTest
 {
     private readonly Mock<IClientRepository> _clientRepositoryMock = new();
     private readonly Mock<IUserAdderService> _userAdderServiceMock = new();
-    private readonly Mock<IUserDeletionService> _userDeletionServiceMock = new();
     private readonly Mock<ILogger<ClientAdderService>> _loggerMock = new();
     private readonly ClientAdderService _service;
 
@@ -22,7 +21,6 @@ public class ClientAdderServiceTest
         _service = new ClientAdderService(
             _clientRepositoryMock.Object,
             _userAdderServiceMock.Object,
-            _userDeletionServiceMock.Object,
             _loggerMock.Object
         );
     }
@@ -45,7 +43,6 @@ public class ClientAdderServiceTest
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Never);
         _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Never);
-        _userDeletionServiceMock.Verify(r => r.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
 
     [Fact]
@@ -69,7 +66,6 @@ public class ClientAdderServiceTest
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
         _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Never);
-        _userDeletionServiceMock.Verify(r => r.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
 
     [Fact]
@@ -96,7 +92,6 @@ public class ClientAdderServiceTest
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
         _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Once);
-        _userDeletionServiceMock.Verify(r => r.DeletionUserAsync(It.IsAny<User>()), Times.Once);
     }
 
     [Fact]
@@ -123,6 +118,5 @@ public class ClientAdderServiceTest
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
         _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Once);
-        _userDeletionServiceMock.Verify(r => r.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
 }
