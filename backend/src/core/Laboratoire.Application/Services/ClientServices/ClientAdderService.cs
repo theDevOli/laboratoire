@@ -13,7 +13,6 @@ public class ClientAdderService
 (
     IClientRepository clientRepository,
     IUserAdderService userAdderService,
-    IUserDeletionService userDeletionService,
     ILogger<ClientAdderService> logger
 )
 : IClientAdderService
@@ -33,21 +32,13 @@ public class ClientAdderService
 
 
         logger.LogInformation("Client with ClientTaxId {ClientTaxId} added successfully. Starting addition of associated user.", clientDto.ClientTaxId);
-        // TODO:Atomicity
+
         var userId = await userAdderService.AddUserAsync(userDto);
         if (userId is null)
         {
             logger.LogError("Failed to add user associated with client ClientTaxId {ClientTaxId}.", clientDto.ClientTaxId);
             return Error.SetError(ErrorMessage.DbError, 500);
         }
-
-        // var ok = await clientRepository.AddClientAsync(client, userId);
-        // if (!ok)
-        // {
-        //     logger.LogError("Failed to add client with ClientTaxId {ClientTaxId} to the database.", clientDto.ClientTaxId);
-        //     await userDeletionService.DeletionUserAsync(userDto.ToUser(userId));
-        //     return Error.SetError(ErrorMessage.DbError, 500);
-        // }
         return Error.SetSuccess();
     }
 }
