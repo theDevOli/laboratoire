@@ -41,13 +41,13 @@ public class ClientAdderService
             return Error.SetError(ErrorMessage.DbError, 500);
         }
 
-        var ok = await clientRepository.AddClientAsync(client, userId);
-        if (!ok)
-        {
-            logger.LogError("Failed to add client with ClientTaxId {ClientTaxId} to the database.", clientDto.ClientTaxId);
-            await userDeletionService.DeletionUserAsync(userDto.ToUser(userId));
-            return Error.SetError(ErrorMessage.DbError, 500);
-        }
+        // var ok = await clientRepository.AddClientAsync(client, userId);
+        // if (!ok)
+        // {
+        //     logger.LogError("Failed to add client with ClientTaxId {ClientTaxId} to the database.", clientDto.ClientTaxId);
+        //     await userDeletionService.DeletionUserAsync(userDto.ToUser(userId));
+        //     return Error.SetError(ErrorMessage.DbError, 500);
+        // }
         return Error.SetSuccess();
     }
 }

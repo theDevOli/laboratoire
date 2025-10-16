@@ -11,6 +11,7 @@ public interface IUserRepository
     Task<bool> DoesUserExistByIdAsync(User user);
     Task<bool> DoesUserExistByUsernameAsync(User user);
     Task<Guid?> AddUserAsync(User user);
+    Task<Guid?> AddUserAndClientAsync(User user,Client client);
     Task<bool> UpdateUserAsync(User user);
     Task<bool> UpdateUserStatusAsync(User user);
     Task<bool> UserRenameAsync(User user);

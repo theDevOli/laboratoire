@@ -24,6 +24,7 @@ public static class ClientMapper
     RoleId = 5,
     Username = dto.ClientTaxId?.Trim(),
     IsActive = true,
+    Client = dto.ToClient(),
 };
 
 }

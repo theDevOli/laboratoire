@@ -19,6 +19,7 @@ public class UserAdderService
     public async Task<Guid?> AddUserAsync(UserDtoAdd userDto)
     {
         logger.LogInformation("Starting user creation process for: {Username}", userDto.Username);
+        Guid? userId = null;
         var user = userDto.ToUser();
 
         if (user.RoleId == 4)
@@ -27,8 +28,15 @@ public class UserAdderService
             user.Username = username;
         }
 
-        logger.LogInformation("Adding user to the database.");
-        var userId = await userRepository.AddUserAsync(user);
+        if(userDto.Client is not null)
+        {
+        logger.LogInformation("Adding user and client to the database.");
+            var client = userDto.Client;
+            userId = await userRepository.AddUserAndClientAsync(user, client);
+        }
+
+        // logger.LogInformation("Adding user to the database.");
+        // var userId = await userRepository.AddUserAsync(user);
 
         var userRegistration = new UserRegistration()
         {
