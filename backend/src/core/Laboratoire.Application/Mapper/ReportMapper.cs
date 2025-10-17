@@ -17,7 +17,8 @@ public static class ReportMapper
     {
         ReportId = reportId,
         ProtocolId = dto?.ProtocolId,
-        Results = dto?.Results
+        Results = dto?.Results,
+        // Description = dto.De
     };
 
     public static Report FromDb(this ReportDtoDb dto)

@@ -7,7 +7,7 @@ public interface IProtocolRepository
     Task<IEnumerable<Protocol>> GetAllProtocolsAsync();
     //FIXME:Remove the filter
     // Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year);
-    Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year,bool isEmployee);
+    Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year, bool isEmployee);
     Task<IEnumerable<T>> GetProtocolYearsAsync<T>();
     Task<Protocol?> GetProtocolByProtocolIdAsync(string? protocolId);
     Task<bool> DoesProtocolExistByReportIdAsync(Guid? reportId);
@@ -24,4 +24,5 @@ public interface IProtocolRepository
     Task<bool> UpdateCatalogAsync(Protocol protocol);
     Task<bool> UpdateCashFlowIdAsync(Protocol protocol);
     Task<bool> PatchReportIdAsync(ReportPatch reportPatch);
+    Task<bool> PatchReportAsync(Protocol? protocol, string? description);
 }

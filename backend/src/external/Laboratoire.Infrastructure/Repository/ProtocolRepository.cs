@@ -233,6 +233,21 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     WHERE 
         protocol_id = @ProtocolIdParameter;
     """;
+    private readonly string _patchReportSql =
+    $"""
+    WITH update_protocol AS(
+    UPDATE document.protocol
+    SET 
+        cash_flow_id = @CashFlowIdParameter
+    WHERE 
+        protocol_id = @ProtocolIdParameter;
+    )
+    UPDATE cash_flow.cash_flow
+    SET
+        description = @DescriptionParameter
+    WHERE 
+        cash_flow_id = @CashFlowIdParameter;
+    """;
     private readonly string _deleteProtocolSql =
     $"""
     DELETE FROM 
@@ -318,9 +333,18 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     }
     public async Task<bool> PatchReportIdAsync(ReportPatch reportPatch)
     {
-        DynamicParameters parameters = new DynamicParameters();
+        DynamicParameters parameters = new();
         parameters.Add("@ReportIdParameter", reportPatch?.ReportId, DbType.Guid);
         parameters.Add("@ProtocolIdParameter", reportPatch?.ProtocolId, DbType.String);
+
+        return await dapper.ExecuteSqlAsync(_patchReportIdSql, parameters);
+    }
+    public async Task<bool> PatchReportAsync(Protocol? protocol, string? description)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@ReportIdParameter", protocol?.ReportId, DbType.Guid);
+        parameters.Add("@ProtocolIdParameter", protocol?.ProtocolId, DbType.String);
+        parameters.Add("@DescriptionParameter", description, DbType.String);
 
         return await dapper.ExecuteSqlAsync(_patchReportIdSql, parameters);
     }
