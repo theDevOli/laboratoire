@@ -282,21 +282,12 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     public async Task<IEnumerable<Protocol>> GetAllProtocolsAsync()
     => await dapper.LoadDataAsync<Protocol>(_getAllProtocolsSql);
 
-    //FIXME:Remove the year 
-    // public async Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year)
-    // {
-    //     DynamicParameters parameters = new DynamicParameters();
-    //     parameters.Add("@YearParameter", year, DbType.Int32);
-
-    //     return await dapper.LoadDataAsync<T>(_getDisplayProtocolsSql, parameters);
-    // }
-    public async Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year, bool isEmployee)
+    public async Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year)
     {
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@YearParameter", isEmployee ? year : 2025, DbType.Int32);
+        parameters.Add("@YearParameter", year, DbType.Int32);
 
         return await dapper.LoadDataAsync<T>(_getDisplayProtocolsSql, parameters);
-
     }
     public async Task<Protocol?> GetProtocolByProtocolIdAsync(string? protocolId)
     {

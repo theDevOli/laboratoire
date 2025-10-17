@@ -20,9 +20,8 @@ public class ProtocolGetterToDisplayService
         logger.LogInformation("Starting to fetch protocols to display for year {Year}.", year);
 
         var cropsNormalizationsTask = cropsNormalizationGetterService.GetAllCropsAsync();
-        //FIXME:Remove filter
-        // var protocolsTask = protocolRepository.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year);
-        var protocolsTask = protocolRepository.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year, !isPartner ?? true);
+
+        var protocolsTask = protocolRepository.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year);
     
         var cropsTask = cropGetterService.GetAllCropsAsync();
 

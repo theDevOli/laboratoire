@@ -5,9 +5,7 @@ namespace Laboratoire.Domain.RepositoryContracts;
 public interface IProtocolRepository
 {
     Task<IEnumerable<Protocol>> GetAllProtocolsAsync();
-    //FIXME:Remove the filter
-    // Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year);
-    Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year, bool isEmployee);
+    Task<IEnumerable<T>> GetDisplayProtocolsAsync<T>(int year);
     Task<IEnumerable<T>> GetProtocolYearsAsync<T>();
     Task<Protocol?> GetProtocolByProtocolIdAsync(string? protocolId);
     Task<bool> DoesProtocolExistByReportIdAsync(Guid? reportId);
