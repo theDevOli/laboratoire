@@ -52,7 +52,7 @@ public class ProtocolGetterToDisplayServiceTest
                 new Crop { CropId=2},
             };
 
-        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year, true))
+        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year))
                          .ReturnsAsync(protocols);
         _cropsNormalizationMock.Setup(c => c.GetAllCropsAsync())
                                .ReturnsAsync(cropsNormalizations);
@@ -65,7 +65,7 @@ public class ProtocolGetterToDisplayServiceTest
         // Assert
         Assert.NotNull(result);
         Assert.Collection(result, item => Assert.Equal(item.ProtocolId, protocols[0].ProtocolId));
-        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year, true), Times.Once);
+        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year), Times.Once);
         _cropsNormalizationMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
         _cropGetterMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
 
@@ -102,7 +102,7 @@ public class ProtocolGetterToDisplayServiceTest
                 new Crop { CropId=2},
             };
 
-        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year, false))
+        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year))
                          .ReturnsAsync(protocols);
         _cropsNormalizationMock.Setup(c => c.GetAllCropsAsync())
                                .ReturnsAsync(cropsNormalizations);
@@ -123,7 +123,7 @@ public class ProtocolGetterToDisplayServiceTest
             item => Assert.Equal(item.ProtocolId, protocols[1].ProtocolId),
             item => Assert.Equal(item.ProtocolId, protocols[2].ProtocolId)
         );
-        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
+        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(It.IsAny<int>()), Times.Once);
         _cropsNormalizationMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
         _cropGetterMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
     }
@@ -159,7 +159,7 @@ public class ProtocolGetterToDisplayServiceTest
                 new Crop { CropId=2},
             };
 
-        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year, true))
+        _protocolRepoMock.Setup(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(year))
                          .ReturnsAsync(protocols);
         _cropsNormalizationMock.Setup(c => c.GetAllCropsAsync())
                                .ReturnsAsync(cropsNormalizations);
@@ -179,7 +179,7 @@ public class ProtocolGetterToDisplayServiceTest
             item => Assert.Equal(item.ProtocolId, protocols[1].ProtocolId),
             item => Assert.Equal(item.ProtocolId, protocols[2].ProtocolId)
         );
-        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
+        _protocolRepoMock.Verify(r => r.GetDisplayProtocolsAsync<ProtocolDtoDisplayDb>(It.IsAny<int>()), Times.Once);
         _cropsNormalizationMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
         _cropGetterMock.Verify(c => c.GetAllCropsAsync(), Times.Once);
     }

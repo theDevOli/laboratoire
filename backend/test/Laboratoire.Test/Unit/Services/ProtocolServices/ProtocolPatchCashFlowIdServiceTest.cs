@@ -11,19 +11,16 @@ namespace Laboratoire.Test.Unit.Services.ProtocolServices;
 public class ProtocolPatchCashFlowIdServiceTest
 {
     private readonly Mock<IProtocolRepository> _protocolRepoMock;
-    private readonly Mock<ICashFlowRepository> _cashFlowRepoMock;
     private readonly Mock<ILogger<ProtocolPatchCashFlowIdService>> _loggerMock;
     private readonly ProtocolPatchCashFlowIdService _service;
 
     public ProtocolPatchCashFlowIdServiceTest()
     {
         _protocolRepoMock = new Mock<IProtocolRepository>();
-        _cashFlowRepoMock = new Mock<ICashFlowRepository>();
         _loggerMock = new Mock<ILogger<ProtocolPatchCashFlowIdService>>();
 
         _service = new ProtocolPatchCashFlowIdService(
             _protocolRepoMock.Object,
-            _cashFlowRepoMock.Object,
             _loggerMock.Object
         );
     }
@@ -43,7 +40,6 @@ public class ProtocolPatchCashFlowIdServiceTest
         Assert.Equal(ErrorMessage.NotFound, result.Message);
         _protocolRepoMock.Verify(r => r.DoesProtocolExistByProtocolIdAsync(It.IsAny<Protocol>()), Times.Once);
         _protocolRepoMock.Verify(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()), Times.Never);
-        _cashFlowRepoMock.Verify(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()), Times.Never);
     }
 
     [Fact]
@@ -63,7 +59,6 @@ public class ProtocolPatchCashFlowIdServiceTest
         Assert.Equal(ErrorMessage.DbError, result.Message);
         _protocolRepoMock.Verify(r => r.DoesProtocolExistByProtocolIdAsync(It.IsAny<Protocol>()), Times.Once);
         _protocolRepoMock.Verify(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()), Times.Once);
-        _cashFlowRepoMock.Verify(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()), Times.Never);
     }
 
     [Fact]
@@ -75,8 +70,6 @@ public class ProtocolPatchCashFlowIdServiceTest
                          .ReturnsAsync(true);
         _protocolRepoMock.Setup(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()))
                          .ReturnsAsync(true);
-        _cashFlowRepoMock.Setup(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()))
-                         .ReturnsAsync(false);
 
         var result = await _service.PatchCashFlowIdAsync(dto);
 
@@ -85,7 +78,6 @@ public class ProtocolPatchCashFlowIdServiceTest
         Assert.Equal(ErrorMessage.DbError, result.Message);
         _protocolRepoMock.Verify(r => r.DoesProtocolExistByProtocolIdAsync(It.IsAny<Protocol>()), Times.Once);
         _protocolRepoMock.Verify(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()), Times.Once);
-        _cashFlowRepoMock.Verify(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()), Times.Once);
     }
 
     [Fact]
@@ -97,8 +89,6 @@ public class ProtocolPatchCashFlowIdServiceTest
                          .ReturnsAsync(true);
         _protocolRepoMock.Setup(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()))
                          .ReturnsAsync(true);
-        _cashFlowRepoMock.Setup(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()))
-                         .ReturnsAsync(true);
 
         var result = await _service.PatchCashFlowIdAsync(dto);
 
@@ -107,6 +97,5 @@ public class ProtocolPatchCashFlowIdServiceTest
         Assert.Null(result.Message);
         _protocolRepoMock.Verify(r => r.DoesProtocolExistByProtocolIdAsync(It.IsAny<Protocol>()), Times.Once);
         _protocolRepoMock.Verify(r => r.UpdateCashFlowIdAsync(It.IsAny<Protocol>()), Times.Once);
-        _cashFlowRepoMock.Verify(r => r.PatchDescriptionAsync(It.IsAny<CashFlow>()), Times.Once);
     }
 }

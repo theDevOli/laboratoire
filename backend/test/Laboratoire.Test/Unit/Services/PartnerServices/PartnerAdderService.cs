@@ -26,7 +26,6 @@ public class PartnerAdderServiceTest
         _service = new PartnerAdderService(
             _repositoryMock.Object,
             _userAdderMock.Object,
-            _userDeletionMock.Object,
             _loggerMock.Object
         );
     }
