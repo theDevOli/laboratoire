@@ -136,6 +136,21 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     FROM new_user
     RETURNING user_id
     """;
+    private readonly string _addUserAndEmployeeSql =
+    $"""
+    WITH new_user AS(
+        INSERT INTO users."user"
+        (role_id,username,is_active)
+        VALUES(@RoleIdParameter,@UserNameParameter,@IsActiveParameter)
+        RETURNING user_id
+    )
+    INSERT INTO employee.employee
+    (user_id,name)
+    SELECT 
+        user_id, @EmployeeNameParameter
+    FROM new_user
+    RETURNING user_id;
+    """;
     private readonly string _addUserAndPartnerSql =
     $"""
     WITH new_user AS(
@@ -306,5 +321,16 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
 
         return await dapper.ExecuteScalarSqlAsync<Guid?>(_addUserAndPartnerSql, parameters);
+    }
+
+    public async Task<Guid?> AddUserAndEmployeeAsync(User user, string? employeeName)
+    {
+        DynamicParameters parameters = new();
+        parameters.Add("@RoleIdParameter", user.RoleId, DbType.Int32);
+        parameters.Add("@UserNameParameter", user.Username, DbType.String);
+        parameters.Add("@IsActiveParameter", user.IsActive, DbType.Boolean);
+        parameters.Add("@EmployeeNameParameter", employeeName, DbType.String);
+
+        return await dapper.ExecuteScalarSqlAsync<Guid?>(_addUserAndEmployeeSql, parameters);
     }
 }

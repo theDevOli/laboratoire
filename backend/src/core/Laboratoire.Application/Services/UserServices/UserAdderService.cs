@@ -44,6 +44,9 @@ public class UserAdderService
             customer = "client";
         }
 
+        if(userDto.Client is null && userDto.Partner is  null)
+            userId = await userRepository.AddUserAndEmployeeAsync(user, userDto.Name);
+        
         // logger.LogInformation("Adding user to the database.");
         // var userId = await userRepository.AddUserAsync(user);
 

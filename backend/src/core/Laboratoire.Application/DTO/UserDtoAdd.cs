@@ -8,6 +8,7 @@ public sealed class UserDtoAdd
     [Required]
     public int? RoleId { get; set; }
     public string? Username { get; set; }
+    public string? Name { get; set; }
 
     [Required]
     public bool? IsActive { get; set; } = true;
