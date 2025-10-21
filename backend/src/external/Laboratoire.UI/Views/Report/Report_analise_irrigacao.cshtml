@@ -40,8 +40,6 @@
         <th>Ensaio</th>
         <th>Resultado</th>
         <th>Unidade</th>
-        <th>VMP</th>
-        <th>Portaria</th>
     </tr>
     </thead>
     <tbody>
@@ -51,8 +49,6 @@
             <td>@output?.ParameterName</td>
             <td>@output?.GetResult() </td>
             <td>@Html.Raw(output?.GetUnit())</td>
-            <td>@output?.GetVmp()</td>
-            <td>@output?.GetOfficialDoc()</td>
         </tr>
     }
     </tbody>
@@ -62,16 +58,31 @@
     <table class="md">
         <tbody>
         <tr>
-            <td><strong>ND</strong>: Não detectado</td>
-            <td><strong>(meq/L)<sup>1/2</sup></strong>: Raiz quadrada de miliequivalente</td>
+            <td colspan="2"><strong>ND</strong>: Não detectado</td>
         </tr>
         <tr>
-            <td><strong>mg/L</strong>: Miligrama por litro</td>
             <td><strong>µS/cm</strong>: MicroSiemens por centimetro</td>
+            <td><strong>mg/L</strong>: Miligrama por litro</td>
         </tr>
         <tr>
             <td><strong>°C</strong>: Graus Celsius</td>
-            <td><strong>VPM</strong>: Valor Máximo Permitido</td>
+            <td><strong>(meq/L)<sup>1/2</sup></strong>: Raiz quadrada de miliequivalente</td>
+        </tr>       
+        <tr>
+            <td><strong>S<sub>1</sub></strong>: Baixa salinidade.</td>
+            <td><strong>S<sub>2</sub></strong>: Média salinidade.</td>
+        </tr>       
+        <tr>
+            <td><strong>S<sub>3</sub></strong>: Alta salinidade.</td>
+            <td><strong>S<sub>4</sub></strong>: Muito alta salinidade.</td>
+        </tr>       
+        <tr>
+            <td><strong>C<sub>1</sub></strong>: Baixo teor de sódio.</td>
+            <td><strong>C<sub>2</sub></strong>: Teor de sódio médio.</td>
+        </tr>       
+        <tr>
+            <td><strong>C<sub>3</sub></strong>: Alto teor de sódio.</td>
+            <td><strong>C<sub>4</sub></strong>: Teor de sódio muito alto.</td>
         </tr>       
         </tbody>
     </table>

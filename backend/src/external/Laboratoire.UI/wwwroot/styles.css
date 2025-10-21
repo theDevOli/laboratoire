@@ -47,7 +47,7 @@ body {
 .identification {
     text-align: center;
     font-weight: bold;
-    /*margin-bottom: 1rem;*/
+    margin-bottom: 0.8rem;
 }
 
 table {
@@ -64,7 +64,8 @@ table {
 /* Style table headers */
 th {
     background-color: #215d33;
-    border: 1px solid #333333;
+    /* border: 1px solid #333333; */
+    border: 1px solid #b7c9a8;
     padding: 0.6rem;
     text-align: center;
     color: #b7c9a8;

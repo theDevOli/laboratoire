@@ -29,11 +29,11 @@
             <span class="underline">Observações:</span> 
             @if(Model?.IsCollectedByClient ==true)
             {
-                <span>Coleta efetuada pelocliente. A descrição do material para ensaio é de inteiraresponsabilidade do cliente.</span>
+                <span>Coleta efetuada pelo cliente. A descrição do material para ensaio é de inteira responsabilidade do cliente.</span>
             }
             @if(Model?.IsCollectedByClient ==false)
             {
-                <span>Coleta efetuada peloLaboratorio no dia @Model.EntryDate.</span>
+                <span>Coleta efetuada pelo Laboratorio no dia @Model.EntryDate.</span>
             }
         </p>
         </div>
