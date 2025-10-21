@@ -287,14 +287,16 @@ public class TableOutput
     }
     private static double GetDBOEfficiency(IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters)
     {
-        var dbo = GetResult("dbo", results, parameters);
+        var f = GetResult("dbo", results, parameters) ?? 0;
         var efficiencyId = parameters?
         .FirstOrDefault(parameter => string.Equals(parameter?.ParameterName, "Eficiência da DBO", StringComparison.OrdinalIgnoreCase))?
         .ParameterId;
-        var efficiency = results?.FirstOrDefault(result => result.ParameterId == efficiencyId);
-        efficiency!.ValueB = dbo;
+        // var efficiency = results?.FirstOrDefault(result => result.ParameterId == efficiencyId);
+        // efficiency!.ValueB = dbo;
+        var i = results?.FirstOrDefault(result => result.ParameterId == efficiencyId)?.ValueA ?? 0;
+        // efficiency!.ValueB = dbo;
 
-        return double.Parse(GetCalculus(efficiency)!);
+        return (i - f) * 100 / i;
     }
 
     private static double? GetResult(string parameterName, IEnumerable<ReportResult>? results, IEnumerable<Parameter?>? parameters)
@@ -325,6 +327,12 @@ public class TableOutput
         if (Vmp is null)
             return "-";
 
+        if (Vmp.Contains('e'))
+        {
+            var tempVpm = Vmp.Split('e');
+            return $"{tempVpm[0]} {Unit}\ne\n{tempVpm[1]} {Unit}";
+        }
+
         return $"{Vmp} {Unit}";
     }
 
@@ -344,7 +352,19 @@ public class TableOutput
 
     public bool IsParameterOutVmp()
     {
-        if (Vmp is not null && Vmp.Contains('>'))
+        if (Vmp is null)
+            return false;
+
+        if (Vmp.Contains('e'))
+        {
+
+            var tempVpm = Vmp.Trim().Split('e');
+            var min = double.Parse(tempVpm[0].Split('>')[1]);
+            var max = double.Parse(tempVpm[1].Split('<')[1]);
+            return Result < min || Result > max;
+        }
+
+        if (Vmp.Contains('>'))
         {
             var vmp = double.Parse(Vmp.Trim().Split('>')[1]);
             return Result < vmp;
