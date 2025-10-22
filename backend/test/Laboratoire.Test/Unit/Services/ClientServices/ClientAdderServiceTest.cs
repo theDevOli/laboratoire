@@ -42,7 +42,6 @@ public class ClientAdderServiceTest
         Assert.Equal(ErrorMessage.ConflictPost, result.Message);
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Never);
-        _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Never);
     }
 
     [Fact]
@@ -65,11 +64,10 @@ public class ClientAdderServiceTest
         Assert.Equal(ErrorMessage.DbError, result.Message);
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Never);
     }
 
     [Fact]
-    public async Task AddClientAsync_ShouldReturnDbError_WhenClientInsertFails()
+    public async Task AddClientAsync_ShouldReturnDbError_WhenUserInsertionFromClientFails()
     {
         // Arrange
         var dto = new ClientDtoAdd { ClientTaxId = "123" };
@@ -77,10 +75,7 @@ public class ClientAdderServiceTest
             .ReturnsAsync(false);
 
         _userAdderServiceMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
-            .ReturnsAsync(It.IsAny<Guid>());
-
-        _clientRepositoryMock.Setup(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid>()))
-            .ReturnsAsync(false);
+            .ReturnsAsync((Guid?)null);
 
         // Act
         var result = await _service.AddClientAsync(dto);
@@ -91,7 +86,6 @@ public class ClientAdderServiceTest
         Assert.Equal(ErrorMessage.DbError, result.Message);
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Once);
     }
 
     [Fact]
@@ -105,9 +99,6 @@ public class ClientAdderServiceTest
         _userAdderServiceMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
             .ReturnsAsync(It.IsAny<Guid>());
 
-        _clientRepositoryMock.Setup(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid>()))
-            .ReturnsAsync(true);
-
         // Act
         var result = await _service.AddClientAsync(dto);
 
@@ -117,6 +108,5 @@ public class ClientAdderServiceTest
         Assert.Null(result.Message);
         _clientRepositoryMock.Verify(r => r.DoesClientExistByTaxIdAsync(It.IsAny<Client>()), Times.Once);
         _userAdderServiceMock.Verify(r => r.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _clientRepositoryMock.Verify(r => r.AddClientAsync(It.IsAny<Client>(), It.IsAny<Guid?>()), Times.Once);
     }
 }

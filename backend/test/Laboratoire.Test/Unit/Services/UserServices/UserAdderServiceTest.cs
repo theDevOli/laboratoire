@@ -25,14 +25,15 @@ public class UserAdderServiceTest
     }
 
     [Fact]
-    public async Task AddUserAsync_ShouldSetUsername_WhenRoleIdIs4()
+    public async Task AddUserAsync_ShouldUserId_WhenUserAndPartnerInsertionSucceeds()
     {
         // Arrange
-        var dto = new UserDtoAdd { Username = "originalUser", RoleId = 4 };
+        var partner = new Partner() { PartnerId = Guid.NewGuid() };
+        var dto = new UserDtoAdd { Username = "originalUser", RoleId = 4, Name = "Test", Client = null, Partner = partner };
         var userId = Guid.NewGuid();
         _userRepoMock.Setup(r => r.SetUserNameAsync(dto.Username))
                      .ReturnsAsync("modifiedUser01");
-        _userRepoMock.Setup(r => r.AddUserAsync(It.IsAny<User>()))
+        _userRepoMock.Setup(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()))
                      .ReturnsAsync(userId);
         _authRegMock.Setup(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()))
                     .ReturnsAsync(Error.SetSuccess());
@@ -43,17 +44,43 @@ public class UserAdderServiceTest
         // Assert
         Assert.Equal(userId, result);
         _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Once);
-        _userRepoMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
         _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Once);
+    }
+    [Fact]
+    public async Task AddUserAsync_ShouldReturnNull_WhenUserAndPartnerInsertionFails()
+    {
+        // Arrange
+        var partner = new Partner() { PartnerId = Guid.NewGuid() };
+        var dto = new UserDtoAdd { Username = "originalUser", RoleId = 4, Name = "Test", Client = null, Partner = partner };
+        var userId = Guid.NewGuid();
+        _userRepoMock.Setup(r => r.SetUserNameAsync(dto.Username))
+                     .ReturnsAsync("modifiedUser01");
+        _userRepoMock.Setup(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()))
+                     .ReturnsAsync((Guid?)null);
+
+        // Act
+        var result = await _service.AddUserAsync(dto);
+
+        // Assert
+        Assert.Null(result);
+        _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+        _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Never);
     }
 
     [Fact]
-    public async Task AddUserAsync_ShouldReturnUserId_WhenRegistrationSucceeds()
+    public async Task AddUserAsync_ShouldReturnUserId_WhenUserAndClientInsertionSucceeds()
     {
         // Arrange
-        var dto = new UserDtoAdd { Username = "testUser", RoleId = 1 };
+        var client = new Client() { ClientId = Guid.NewGuid() };
+        var dto = new UserDtoAdd { Username = "testUser", RoleId = 5, Name = "Test", Client = client, Partner = null };
         var userId = Guid.NewGuid();
-        _userRepoMock.Setup(r => r.AddUserAsync(It.IsAny<User>()))
+        _userRepoMock.Setup(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()))
                      .ReturnsAsync(userId);
         _authRegMock.Setup(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()))
                     .ReturnsAsync(Error.SetSuccess());
@@ -64,21 +91,20 @@ public class UserAdderServiceTest
         // Assert
         Assert.Equal(userId, result);
         _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Never);
-        _userRepoMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
         _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Once);
     }
 
     [Fact]
-    public async Task AddUserAsync_ShouldReturnNull_WhenRegistrationFails()
+    public async Task AddUserAsync_ShouldReturnNull_WhenUserAndClientInsertionFails()
     {
         // Arrange
-        var dto = new UserDtoAdd { Username = "testUser", RoleId = 1 };
-        var userId = Guid.NewGuid();
-        _userRepoMock.Setup(r => r.AddUserAsync(It.IsAny<User>()))
-                     .ReturnsAsync(userId);
-        _authRegMock.Setup(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()))
-                    .ReturnsAsync(Error.SetError(ErrorMessage.DbError, 500));
-
+        var client = new Client() { ClientId = Guid.NewGuid() };
+        var dto = new UserDtoAdd { Username = "testUser", RoleId = 5, Name = "Test", Client = client, Partner = null };
+        _userRepoMock.Setup(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()))
+                     .ReturnsAsync((Guid?)null);
         // Act
         var result = await _service.AddUserAsync(dto);
 
@@ -86,7 +112,51 @@ public class UserAdderServiceTest
         Assert.Null(result);
 
         _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Never);
-        _userRepoMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Once);
-        _authRegMock.Verify(r => r.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Once);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+        _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task AddUserAsync_ShouldReturnUserId_WhenUserInsertionSucceeds()
+    {
+        // Arrange
+        var dto = new UserDtoAdd { Username = "testUser", RoleId = 1, Name = "Test", Client = null, Partner = null };
+        var userId = Guid.NewGuid();
+        _userRepoMock.Setup(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()))
+                     .ReturnsAsync(userId);
+        _authRegMock.Setup(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()))
+                    .ReturnsAsync(Error.SetSuccess());
+
+        // Act
+        var result = await _service.AddUserAsync(dto);
+
+        // Assert
+        Assert.Equal(userId, result);
+        _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
+        _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddUserAsync_ShouldReturnNull_WhenUserInsertionFails()
+    {
+        // Arrange
+        var dto = new UserDtoAdd { Username = "testUser", RoleId = 1, Name = "Test", Client = null, Partner = null };
+        _userRepoMock.Setup(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(),It.IsAny<string>()))
+                     .ReturnsAsync((Guid?)null);
+        // Act
+        var result = await _service.AddUserAsync(dto);
+
+        // Assert
+        Assert.Null(result);
+        _userRepoMock.Verify(r => r.SetUserNameAsync(It.IsAny<string?>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndPartnerAsync(It.IsAny<User>(), It.IsAny<Partner>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndClientAsync(It.IsAny<User>(), It.IsAny<Client>()), Times.Never);
+        _userRepoMock.Verify(r => r.AddUserAndEmployeeAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
+        _authRegMock.Verify(a => a.RegisterUserAsync(It.IsAny<UserRegistration>()), Times.Never);
     }
 }

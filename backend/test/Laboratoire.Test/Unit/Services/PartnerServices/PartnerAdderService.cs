@@ -52,44 +52,15 @@ public class PartnerAdderServiceTest
     }
 
     [Fact]
-    public async Task AddPartnerAsync_ShouldReturnNotFound_WhenUserAdditionFails()
+    public async Task AddPartnerAsync_ShouldReturnDbError_WhenUserInsertionFromPartnerFails()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerEmail = "userfail@example.com", PartnerName = "User Fail" };
+        var partnerDto = new PartnerDtoAdd { PartnerEmail = "rollback@example.com", PartnerName = "Rollback Partner" };
 
         _repositoryMock.Setup(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(false);
         _userAdderMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
                       .ReturnsAsync((Guid?)null);
-
-        // Act
-        var result = await _service.AddPartnerAsync(partnerDto);
-
-        // Assert
-        Assert.True(result.IsNotSuccess());
-        Assert.Equal(404, result.StatusCode);
-        Assert.Equal(ErrorMessage.NotFound, result.Message);
-        _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), It.IsAny<Guid>()), Times.Never);
-        _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _userDeletionMock.Verify(u => u.DeletionUserAsync(It.IsAny<User>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task AddPartnerAsync_ShouldReturnDbError_AndRollbackUser_WhenPartnerInsertionFails()
-    {
-        // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerEmail = "rollback@example.com", PartnerName = "Rollback Partner" };
-        var fakeUserId = Guid.NewGuid();
-
-        _repositoryMock.Setup(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()))
-                       .ReturnsAsync(false);
-        _userAdderMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
-                      .ReturnsAsync(fakeUserId);
-        _repositoryMock.Setup(r => r.AddPartnerAsync(It.IsAny<Partner>(), fakeUserId))
-                       .ReturnsAsync(false);
-        _userDeletionMock.Setup(u => u.DeletionUserAsync(It.IsAny<User>()))
-        .ReturnsAsync(Error.SetSuccess());
-
         // Act
         var result = await _service.AddPartnerAsync(partnerDto);
 
@@ -97,9 +68,8 @@ public class PartnerAdderServiceTest
         Assert.True(result.IsNotSuccess());
         Assert.Equal(500, result.StatusCode);
         Assert.Equal(ErrorMessage.DbError, result.Message);
-        _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), fakeUserId), Times.Once);
+        _repositoryMock.Verify(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()), Times.Once);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _userDeletionMock.Verify(u => u.DeletionUserAsync(It.Is<User>(usr => usr.UserId == fakeUserId)), Times.Once);
     }
 
     [Fact]
@@ -113,9 +83,6 @@ public class PartnerAdderServiceTest
                        .ReturnsAsync(false);
         _userAdderMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
                       .ReturnsAsync(fakeUserId);
-        _repositoryMock.Setup(r => r.AddPartnerAsync(It.IsAny<Partner>(), fakeUserId))
-                       .ReturnsAsync(true);
-
         // Act
         var result = await _service.AddPartnerAsync(partnerDto);
 
@@ -123,8 +90,7 @@ public class PartnerAdderServiceTest
         Assert.False(result.IsNotSuccess());
         Assert.Equal(0, result.StatusCode);
         Assert.Null(result.Message);
-        _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), fakeUserId), Times.Once);
+        _repositoryMock.Verify(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()), Times.Once);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
-        _userDeletionMock.Verify(u => u.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
 }
