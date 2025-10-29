@@ -8,6 +8,8 @@ public class Office
     public Guid? OfficeId { get; set; }
     [Required]
     public string? OfficeName { get; set; }
+    public string? OfficeEmail { get; set; }
+    public string? City { get; set; }
 
     public override bool Equals(object? obj)
     {
@@ -16,8 +18,8 @@ public class Office
 
         Office other = (Office)obj;
 
-        return this.OfficeId == other.OfficeId
-            && this.OfficeName == other.OfficeName;
+        return this.OfficeName == other.OfficeName
+            && this.City == other.City;
     }
 
     public override int GetHashCode()
