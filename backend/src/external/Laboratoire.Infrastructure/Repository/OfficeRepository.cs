@@ -31,6 +31,19 @@ public class OfficeRepository(DataContext dapper) : IOfficeRepository
     WHERE
         office_id = @OfficeIdParameter;
     """;
+    private readonly string _getByCityAndNameSql =
+    $"""
+        SELECT
+        office_id AS {nameof(Office.OfficeId)},
+        office_name AS {nameof(Office.OfficeName)},
+        office_email AS {nameof(Office.OfficeEmail)},
+        city AS {nameof(Office.City)}
+    FROM
+        customers.office
+    WHERE
+        city = @CityParameter
+        AND office_name = @OfficeNameParameter;
+    """;
 
     private readonly string _addSql =
     $"""
@@ -60,8 +73,17 @@ public class OfficeRepository(DataContext dapper) : IOfficeRepository
         return await dapper.ExecuteSqlAsync(_addSql, parameters);
     }
 
-    public async Task<bool> DoesOfficeExistAsync(Office office)
+    public async Task<bool> DoesOfficeExistByIdAsync(Office office)
     => await GetOfficeByIdAsync(office.OfficeId) is not null;
+    public async Task<bool> DoesOfficeExistByCityAndNameAsync(Office office)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("@CityParameter", office.City, DbType.String);
+        parameters.Add("@OfficeNameParameter", office.OfficeName, DbType.String);
+
+        return await dapper.LoadDataSingleAsync<Office>(_getByCityAndNameSql, parameters) is not null;
+
+    }
 
     public async Task<IEnumerable<Office>> GetAllOfficesAsync()
     => await dapper.LoadDataAsync<Office>(_getAllSql);
@@ -83,6 +105,6 @@ public class OfficeRepository(DataContext dapper) : IOfficeRepository
         parameters.Add("@CityParameter", office.City, DbType.String);
         parameters.Add("@OfficeIdParameter", office.OfficeId, DbType.Guid);
 
-        return await dapper.ExecuteSqlAsync(_updateSql,parameters);
+        return await dapper.ExecuteSqlAsync(_updateSql, parameters);
     }
 }

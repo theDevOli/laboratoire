@@ -6,7 +6,8 @@ public interface IOfficeRepository
 {
     Task<IEnumerable<Office>> GetAllOfficesAsync();
     Task<Office?> GetOfficeByIdAsync(Guid? officeId);
-    Task<bool> DoesOfficeExistAsync(Office office);
+    Task<bool> DoesOfficeExistByIdAsync(Office office);
+    Task<bool> DoesOfficeExistByCityAndNameAsync(Office office);
     Task<bool> AddOfficeAsync(Office office);
     Task<bool> UpdateOfficeAsync(Office office);
 }
