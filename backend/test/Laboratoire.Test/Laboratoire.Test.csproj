@@ -31,8 +31,4 @@
     <ProjectReference Include="../../src/external/Laboratoire.UI/Laboratoire.UI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Integration/" />
-  </ItemGroup>
-
 </Project>
