@@ -24,6 +24,7 @@ using Laboratoire.Domain.RepositoryContracts;
 using Laboratoire.Application.IUtils;
 using Laboratoire.Application.Utils;
 using Laboratoire.Application.Services.UtilServices;
+using Laboratoire.Application.Services.OfficeServices;
 
 namespace Laboratoire.Infrastructure.Extensions;
 
@@ -47,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<ICashFlowRepository, CashFlowRepository>();
+        services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<ICatalogRepository, CatalogRepository>();
         services.AddScoped<IParameterRepository, ParameterRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
@@ -114,6 +116,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHazardGetterByIdService, HazardGetterByIdService>();
         services.AddScoped<IHazardGetterService, HazardGetterService>();
         services.AddScoped<IHazardUpdatableService, HazardUpdatableService>();
+
+        services.AddScoped<IOfficeAdderService, OfficeAdderService>();
+        services.AddScoped<IOfficeGetterByIdService, OfficeGetterByIdService>();
+        services.AddScoped<IOfficeGetterService, OfficeGetterService>();
+        services.AddScoped<IOfficeUpdatableService, OfficeUpdatableService>();
 
         services.AddScoped<IParameterAdderService, ParameterAdderService>();
         services.AddScoped<IParameterGetterByIdService, ParameterGetterByIdService>();
