@@ -22,8 +22,6 @@ public class CashFlow
 
     }
     public Guid? PartnerId { get; set; }
-
-    [Range(-999.99, 999.99)]
     public decimal? TotalPaid { get; set; }
     public DateTime? PaymentDate { get; set; }
 
