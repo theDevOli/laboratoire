@@ -34,9 +34,9 @@ public class PartnerAdderServiceTest
     public async Task AddPartnerAsync_ShouldReturnConflict_WhenPartnerAlreadyExists()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerEmail = "conflict@example.com", PartnerName = "Conflict Partner" };
+        var partnerDto = new PartnerDtoAdd { OfficeId=Guid.NewGuid(), PartnerName = "Conflict Partner" };
 
-        _repositoryMock.Setup(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()))
+        _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(true);
 
         // Act
@@ -55,9 +55,9 @@ public class PartnerAdderServiceTest
     public async Task AddPartnerAsync_ShouldReturnDbError_WhenUserInsertionFromPartnerFails()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerEmail = "rollback@example.com", PartnerName = "Rollback Partner" };
+        var partnerDto = new PartnerDtoAdd { OfficeId=Guid.NewGuid(), PartnerName = "Rollback Partner" };
 
-        _repositoryMock.Setup(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()))
+        _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(false);
         _userAdderMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
                       .ReturnsAsync((Guid?)null);
@@ -68,7 +68,7 @@ public class PartnerAdderServiceTest
         Assert.True(result.IsNotSuccess());
         Assert.Equal(500, result.StatusCode);
         Assert.Equal(ErrorMessage.DbError, result.Message);
-        _repositoryMock.Verify(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()), Times.Once);
+        _repositoryMock.Verify(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()), Times.Once);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
     }
 
@@ -76,10 +76,11 @@ public class PartnerAdderServiceTest
     public async Task AddPartnerAsync_ShouldReturnSuccess_WhenPartnerAndUserAddedSuccessfully()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerEmail = "success@example.com", PartnerName = "Success Partner" };
         var fakeUserId = Guid.NewGuid();
+        var fakeOfficeId = Guid.NewGuid();
+        var partnerDto = new PartnerDtoAdd { OfficeId=fakeOfficeId, PartnerName = "Success Partner" };
 
-        _repositoryMock.Setup(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()))
+        _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(false);
         _userAdderMock.Setup(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()))
                       .ReturnsAsync(fakeUserId);
@@ -90,7 +91,7 @@ public class PartnerAdderServiceTest
         Assert.False(result.IsNotSuccess());
         Assert.Equal(0, result.StatusCode);
         Assert.Null(result.Message);
-        _repositoryMock.Verify(r => r.DoesPartnerExistByEmailAndNameAsync(It.IsAny<Partner>()), Times.Once);
+        _repositoryMock.Verify(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()), Times.Once);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Once);
     }
 }

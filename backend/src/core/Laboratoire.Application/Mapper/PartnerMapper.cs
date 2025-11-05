@@ -9,12 +9,11 @@ public static class PartnerMapper
     => new Partner()
     {
         PartnerId = default,
+        OfficeId = dto.OfficeId,
         PartnerName = dto.PartnerName?.Trim(),
-        OfficeName = dto.OfficeName?.Trim(),
         PartnerPhone = dto.PartnerPhone?.Trim(),
-        PartnerEmail = dto.PartnerEmail?.Trim(),
     };
-    // FIXME:Edit while working o
+
     public static UserDtoAdd ToUser(this PartnerDtoAdd dto)
     => new()
     {

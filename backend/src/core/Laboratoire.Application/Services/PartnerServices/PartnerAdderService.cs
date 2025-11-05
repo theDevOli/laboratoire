@@ -17,15 +17,15 @@ public class PartnerAdderService
 {
     public async Task<Error> AddPartnerAsync(PartnerDtoAdd partnerDto)
     {
-        logger.LogInformation("Starting to add a new partner with email: {PartnerEmail} and name: {PartnerName}", partnerDto.PartnerEmail, partnerDto.PartnerName);
+        logger.LogInformation("Starting to add a new partner with officeId: {OfficeId} and name: {PartnerName}", partnerDto.OfficeId, partnerDto.PartnerName);
 
         var partner = partnerDto.ToPartner();
         var userDto = partnerDto.ToUser();
 
-        var exists = await partnerRepository.DoesPartnerExistByEmailAndNameAsync(partner);
+        var exists = await partnerRepository.DoesPartnerExistByOfficeAndNameAsync(partner);
         if (exists)
         {
-            logger.LogWarning("Partner with email {PartnerEmail} and name {PartnerName} already exists.", partner.PartnerEmail, partner.PartnerName);
+            logger.LogWarning("Partner with name {PartnerName} already exists.", partner.PartnerName);
             return Error.SetError(ErrorMessage.ConflictPost, 409);
         }
 

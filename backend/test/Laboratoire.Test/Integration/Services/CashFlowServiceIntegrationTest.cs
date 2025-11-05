@@ -24,6 +24,7 @@ public class CashFlowServiceIntegrationTest
 
         _dbContext = new DataContext(_config);
     }
+    
 
     [Fact]
     public async Task UpdateCashFlow_ShouldSucceed()

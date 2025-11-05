@@ -160,12 +160,11 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         RETURNING user_id
     )
     INSERT INTO customers.partner
-    (partner_name,office_name,partner_phone,partner_email,user_id)
+    (partner_name,office_id,partner_phone,user_id)
     SELECT 
         @PartnerNameParameter,
-        @OfficeNameParameter,
+        @OfficeIdParameter,
         @PartnerPhoneParameter,
-        @PartnerEmailParameter,
         new_user.user_id
     FROM new_user
     RETURNING user_id
@@ -316,8 +315,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
         parameters.Add("@UsernameParameter", user.Username, DbType.String);
         parameters.Add("@IsActiveParameter", user.IsActive, DbType.Boolean);
         parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
-        parameters.Add("@OfficeNameParameter", partner.OfficeName, DbType.String);
-        parameters.Add("@PartnerEmailParameter", partner.PartnerEmail, DbType.String);
+        parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
         parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
 
         return await dapper.ExecuteScalarSqlAsync<Guid?>(_addUserAndPartnerSql, parameters);

@@ -40,6 +40,14 @@ public class PartnerIntegrationTest
 
         var service = new PartnerUpdatableService(repository, NullLogger<PartnerUpdatableService>.Instance);
 
+        var office = await connection.QueryFirstOrDefaultAsync<Office>(
+            """
+            SELECT 
+                *
+            FROM customers.office;
+            """
+         );
+
         Guid partnerId = await connection.ExecuteScalarAsync<Guid>
         (
             """
@@ -50,16 +58,14 @@ public class PartnerIntegrationTest
             )
             INSERT INTO customers.partner(
                 partner_name,
-                office_name,
+                office_id,
                 partner_phone,
-                partner_email,
                 user_id
             )
             SELECT
                 @PartnerName,
-                @OfficeName,
+                @OfficeId,
                 @PartnerPhone,
-                @PartnerEmail,
                 user_id
             FROM
                 new_user
@@ -71,8 +77,7 @@ public class PartnerIntegrationTest
                  username = "Test",
                  isActive = true,
                  PartnerName = "Test",
-                 OfficeName = "Test Office",
-                 PartnerEmail = "test@email.com",
+                 OfficeId = office?.OfficeId,
                  PartnerPhone = "99000000000"
              }
         );
@@ -81,8 +86,7 @@ public class PartnerIntegrationTest
         {
             PartnerId = partnerId,
             PartnerName = "Updated",
-            OfficeName = "Test Office",
-            PartnerEmail = "test@email.com",
+            OfficeId = office?.OfficeId,
             PartnerPhone = "99000000000"
         };
 
@@ -96,8 +100,8 @@ public class PartnerIntegrationTest
         Assert.NotNull(updated);
         Assert.Equal(updated.PartnerName, toUpdate.PartnerName);
 
-        await connection.ExecuteAsync("DELETE FROM customers.partner WHERE partner_id = @partnerId",new{partnerId=updated.PartnerId});
-        await connection.ExecuteAsync("DELETE FROM users.\"user\" WHERE user_id = @userId",new{userId=updated.UserId});
+        await connection.ExecuteAsync("DELETE FROM customers.partner WHERE partner_id = @partnerId", new { partnerId = updated.PartnerId });
+        await connection.ExecuteAsync("DELETE FROM users.\"user\" WHERE user_id = @userId", new { userId = updated.UserId });
     }
 
 }

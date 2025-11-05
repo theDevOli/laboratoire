@@ -14,11 +14,10 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT
         partner_id AS {nameof(Partner.PartnerId)},
+        office_id AS {nameof(Partner.OfficeId)},
         user_id AS {nameof(Partner.UserId)},
         partner_name AS {nameof(Partner.PartnerName)},
-        office_name AS {nameof(Partner.OfficeName)},
-        partner_phone AS {nameof(Partner.PartnerPhone)},
-        partner_email AS {nameof(Partner.PartnerEmail)}
+        partner_phone AS {nameof(Partner.PartnerPhone)}
     FROM 
         customers.partner
     ORDER BY
@@ -30,9 +29,8 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
         cp.partner_id AS {nameof(Partner.PartnerId)},
         user_id AS {nameof(Partner.UserId)},
         cp.partner_name AS {nameof(Partner.PartnerName)},
-        cp.office_name AS {nameof(Partner.OfficeName)},
-        cp.partner_phone AS {nameof(Partner.PartnerPhone)},
-        cp.partner_email AS {nameof(Partner.PartnerEmail)}
+        cp.office_id AS {nameof(Partner.OfficeId)},
+        cp.partner_phone AS {nameof(Partner.PartnerPhone)}
     FROM 
         customers.partner AS cp
     INNER JOIN
@@ -49,23 +47,21 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
         partner_id AS {nameof(Partner.PartnerId)},
         user_id AS {nameof(Partner.UserId)},
         partner_name AS {nameof(Partner.PartnerName)},
-        office_name AS {nameof(Partner.OfficeName)},
-        partner_phone AS {nameof(Partner.PartnerPhone)},
-        partner_email AS {nameof(Partner.PartnerEmail)}
+        office_id AS {nameof(Partner.OfficeId)},
+        partner_phone AS {nameof(Partner.PartnerPhone)}
     FROM 
         customers.partner
     WHERE 
         partner_id = @PartnerIdParameter;
     """;
-    private readonly string _getPartnerByEmailAndName =
+    private readonly string _getPartnerByOfficeAndName =
     $"""
     SELECT 
         partner_id AS {nameof(Partner.PartnerId)},
         user_id AS {nameof(Partner.UserId)},
+        office_id AS {nameof(Partner.OfficeId)},
         partner_name AS {nameof(Partner.PartnerName)},
-        office_name AS {nameof(Partner.OfficeName)},
-        partner_phone AS {nameof(Partner.PartnerPhone)},
-        partner_email AS {nameof(Partner.PartnerEmail)}
+        partner_phone AS {nameof(Partner.PartnerPhone)}
     FROM 
         customers.partner
     WHERE 
@@ -76,16 +72,14 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     INSERT INTO customers.partner(
         partner_name,
-        office_name,
+        office_id,
         partner_phone,
-        partner_email,
         user_id
     )
     VALUES(
         @PartnerNameParameter,
-        @OfficeNameParameter,
+        @OfficeIdParameter,
         @PartnerPhoneParameter,
-        @PartnerEmailParameter,
         @UserIdParameter
     );
     """;
@@ -94,7 +88,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     UPDATE customers.partner
     SET
         partner_name = @PartnerNameParameter,
-        office_name = @OfficeNameParameter,
+        office_id= @OfficeIdParameter,
         partner_phone = @PartnerPhoneParameter,
         partner_email = @PartnerEmailParameter
     WHERE 
@@ -105,26 +99,25 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     {
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
-        parameters.Add("@OfficeNameParameter", partner.OfficeName, DbType.String);
+        parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
         parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
-        parameters.Add("@PartnerEmailParameter", partner.PartnerEmail, DbType.String);
         parameters.Add("@UserIdParameter", userId, DbType.Guid);
 
         return await dapper.ExecuteSqlAsync(_addPartner, parameters);
     }
     public async Task<bool> DoesPartnerExistByIdAsync(Partner partner)
     => await GetPartnerByIdAsync(partner.PartnerId) is not null;
-    public async Task<bool> DoesPartnerExistByEmailAndNameAsync(Partner partner)
-    => await GetPartnerByEmailAndNameAsync(partner) is not null;
+    public async Task<bool> DoesPartnerExistByOfficeAndNameAsync(Partner partner)
+    => await GetPartnerByOfficeAndNameAsync(partner) is not null;
     public async Task<IEnumerable<Partner>> GetAllPartnersAsync()
     => await dapper.LoadDataAsync<Partner>(_getAllPartners);
-    public async Task<Partner?> GetPartnerByEmailAndNameAsync(Partner partner)
+    public async Task<Partner?> GetPartnerByOfficeAndNameAsync(Partner partner)
     {
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
-        parameters.Add("@PartnerEmailParameter", partner.PartnerEmail, DbType.String);
+        parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
 
-        return await dapper.LoadDataSingleAsync<Partner>(_getPartnerByEmailAndName, parameters);
+        return await dapper.LoadDataSingleAsync<Partner>(_getPartnerByOfficeAndName, parameters);
     }
     public async Task<Partner?> GetPartnerByIdAsync(Guid? partnerId)
     {
@@ -137,9 +130,8 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     {
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
-        parameters.Add("@OfficeNameParameter", partner.OfficeName, DbType.String);
+        parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
         parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
-        parameters.Add("@PartnerEmailParameter", partner.PartnerEmail, DbType.String);
         parameters.Add("@PartnerIdParameter", partner.PartnerId, DbType.Guid);
 
         return await dapper.ExecuteSqlAsync(_updatePartner, parameters);

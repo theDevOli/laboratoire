@@ -44,8 +44,8 @@ public class PartnerGetterServiceTest
         // Arrange
         var partners = new List<Partner>
             {
-                new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Partner A", PartnerEmail = "a@test.com" },
-                new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Partner B", PartnerEmail = "b@test.com" }
+                new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Partner A", OfficeId=Guid.NewGuid() },
+                new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Partner B", OfficeId=Guid.NewGuid() }
             };
 
         _repositoryMock.Setup(r => r.GetAllPartnersAsync())
@@ -57,8 +57,12 @@ public class PartnerGetterServiceTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count());
-        Assert.Contains(result, p => p.PartnerName == "Partner A");
-        Assert.Contains(result, p => p.PartnerEmail == "b@test.com");
+        Assert.Collection(
+            result,
+            item => Assert.Equal(item.PartnerName, partners[0].PartnerName),
+            item => Assert.Equal(item.PartnerName, partners[1].PartnerName)
+       );
+       
         _repositoryMock.Verify(r => r.GetAllPartnersAsync(), Times.Once);
     }
 }

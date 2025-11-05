@@ -7,15 +7,13 @@ public class Partner
     [Required]
     public Guid? PartnerId { get; set; }
     [Required]
+    public Guid? OfficeId { get; set; }
+    [Required]
     public Guid? UserId { get; set; }
     [Required]
     public string? PartnerName { get; set; }
     [Required]
-    public string? OfficeName { get; set; }
-    [Required]
     public string? PartnerPhone { get; set; }
-    [EmailAddress]
-    public string? PartnerEmail { get; set; }
     public override bool Equals(object? obj)
     {
         if (obj is null || obj.GetType() != this.GetType())
@@ -24,13 +22,13 @@ public class Partner
         Partner other = (Partner)obj;
 
         return other.PartnerId == this.PartnerId
-        && other.PartnerName == this.PartnerName
-        && other.PartnerEmail == this.PartnerEmail;
+        && other.OfficeId == this.OfficeId
+        && other.PartnerName == this.PartnerName;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(PartnerName, PartnerId, PartnerEmail);
+        return HashCode.Combine(PartnerName,OfficeId, PartnerId);
     }
 
 }

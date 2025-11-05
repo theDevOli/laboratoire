@@ -27,7 +27,7 @@ public class PartnerUpdatableServiceTest
     public async Task UpdatePartnerAsync_ShouldReturnNotFound_WhenPartnerDoesNotExist()
     {
         // Arrange
-        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", PartnerEmail = "test@test.com" };
+        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", OfficeId=Guid.NewGuid() };
         _repositoryMock.Setup(r => r.DoesPartnerExistByIdAsync(partner))
                        .ReturnsAsync(false);
 
@@ -46,7 +46,7 @@ public class PartnerUpdatableServiceTest
     public async Task UpdatePartnerAsync_ShouldReturnDbError_WhenUpdateFails()
     {
         // Arrange
-        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", PartnerEmail = "test@test.com" };
+        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", OfficeId=Guid.NewGuid()  };
         _repositoryMock.Setup(r => r.DoesPartnerExistByIdAsync(partner))
                        .ReturnsAsync(true);
         _repositoryMock.Setup(r => r.UpdatePartnerAsync(partner))
@@ -67,7 +67,7 @@ public class PartnerUpdatableServiceTest
     public async Task UpdatePartnerAsync_ShouldReturnSuccess_WhenUpdateSucceeds()
     {
         // Arrange
-        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", PartnerEmail = "test@test.com" };
+        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Test", OfficeId=Guid.NewGuid()  };
         _repositoryMock.Setup(r => r.DoesPartnerExistByIdAsync(partner))
                        .ReturnsAsync(true);
         _repositoryMock.Setup(r => r.UpdatePartnerAsync(partner))
