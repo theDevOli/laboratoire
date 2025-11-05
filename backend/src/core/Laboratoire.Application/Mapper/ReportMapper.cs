@@ -56,6 +56,7 @@ public static class ReportMapper
             Area = dto?.Area,
             Ccir = dto?.Ccir,
             ItrNirf = dto?.ItrNirf,
+            Cei = dto?.Cei,
             CatalogId = dto?.CatalogId,
             ReportType = dto?.ReportType,
             SampleType = dto?.SampleType,

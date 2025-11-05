@@ -22,7 +22,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         postal_code AS {nameof(Property.PostalCode)},
         area AS {nameof(Property.Area)},
         ccir AS {nameof(Property.Ccir)},
-        itr_nirf AS {nameof(Property.ItrNirf)}
+        itr_nirf AS {nameof(Property.ItrNirf)},
+        cei AS {nameof(Property.Cei)}
     FROM
         customers.property;
     """;
@@ -38,7 +39,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         postal_code AS {nameof(Property.PostalCode)},
         area AS {nameof(Property.Area)},
         ccir AS {nameof(Property.Ccir)},
-        itr_nirf AS {nameof(Property.ItrNirf)}
+        itr_nirf AS {nameof(Property.ItrNirf)},
+        cei AS {nameof(Property.Cei)}
     FROM 
         customers.property
     WHERE 
@@ -87,7 +89,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         postal_code AS {nameof(Property.PostalCode)},
         area AS {nameof(Property.Area)},
         ccir AS {nameof(Property.Ccir)},
-        itr_nirf AS {nameof(Property.ItrNirf)}
+        itr_nirf AS {nameof(Property.ItrNirf)},
+        cei AS {nameof(Property.Cei)}
     FROM
         customers.property
     WHERE
@@ -104,7 +107,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         registration,
         area,
         ccir,
-        itr_nirf
+        itr_nirf,
+        cei
     )
     VALUES 
     (
@@ -116,7 +120,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         @RegistrationParameter,
         @AreaParameter,
         @CcirParameter,
-        @ItrNirfParameter
+        @ItrNirfParameter,
+        @CeiParameter
     );
     """;
     private readonly string _updateProperty =
@@ -131,7 +136,8 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         area = @AreaParameter,
         registration = @RegistrationParameter,
         ccir = @CcirParameter,
-        itr_nirf = @ItrNirfParameter
+        itr_nirf = @ItrNirfParameter,
+        cei = @CeiParameter
     WHERE
         property_id = @PropertyIdParameter;
     """;
@@ -148,6 +154,7 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         parameters.Add("@AreaParameter", property.Area, DbType.String);
         parameters.Add("@CcirParameter", property.Ccir, DbType.String);
         parameters.Add("@ItrNirfParameter", property.ItrNirf, DbType.String);
+        parameters.Add("@CeiParameter", property.Cei, DbType.String);
 
         return await dapper.ExecuteSqlAsync(_addPropertySql, parameters);
     }
@@ -184,6 +191,7 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         parameters.Add("@AreaParameter", property.Area, DbType.String);
         parameters.Add("@CcirParameter", property.Ccir, DbType.String);
         parameters.Add("@ItrNirfParameter", property.ItrNirf, DbType.String);
+        parameters.Add("@CeiParameter", property.Cei, DbType.String);
         parameters.Add("@PropertyIdParameter", property.PropertyId, DbType.Int32);
 
         return await dapper.ExecuteSqlAsync(_updateProperty, parameters);

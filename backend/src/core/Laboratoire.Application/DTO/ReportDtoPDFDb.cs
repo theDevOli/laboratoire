@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Laboratoire.Application.DTO;
+
 public sealed class ReportDtoPDFDb
 {
     [Required]
@@ -32,6 +33,8 @@ public sealed class ReportDtoPDFDb
     public string? Area { get; set; }
     public string? Ccir { get; set; }
     public string? ItrNirf { get; set; }
+    [Length(12, 12)]
+    public string? Cei { get; set; }
     [Required]
     public int? CatalogId { get; set; }
     [Required]

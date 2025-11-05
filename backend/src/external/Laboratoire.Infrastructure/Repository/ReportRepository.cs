@@ -68,6 +68,7 @@ public sealed class ReportRepository(DataContext dapper) : IReportRepository
         p.ccir AS {nameof(Property.Ccir)},
         p.itr_nirf AS {nameof(Property.ItrNirf)},
         p.registration AS {nameof(Property.Registration)},
+        p.cei AS {nameof(Property.Cei)},
 
         ca.report_type AS {nameof(Catalog.ReportType)},
         ca.sample_type AS {nameof(Catalog.SampleType)},

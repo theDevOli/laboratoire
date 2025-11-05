@@ -27,6 +27,8 @@ public class ReportPDF
     public string? Area { get; set; }
     public string? Ccir { get; set; }
     public string? ItrNirf { get; set; }
+    [Length(12, 12)]
+    public string? Cei { get; set; }
     [Required]
     public int? CatalogId { get; set; }
     [Required]
@@ -90,16 +92,16 @@ public class ReportPDF
     {
         if (ItrNirf is null)
             return _emptyData;
-        
+
         return Regex.Replace(ItrNirf, @"(\d{1})(\d{3})(\d{3})(\d{1})", "$1.$2.$3-$4");
     }
 
     public string GetLabelName()
     {
-        if (LabelName.Contains("Efluente", StringComparison.InvariantCultureIgnoreCase))
+        if (LabelName?.Contains("Efluente", StringComparison.InvariantCultureIgnoreCase) ?? false)
             return "efluente";
-        
-        var text = new string(LabelName
+
+        var text = new string(LabelName!
             .Normalize(NormalizationForm.FormD)
             .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
             .ToArray());
@@ -109,5 +111,13 @@ public class ReportPDF
         text = text.Replace(" ", "_").ToLower();
 
         return text;
+    }
+
+    public string ToCei()
+    {
+        if (Cei is null)
+            return _emptyData;
+
+        return Regex.Replace(Cei, @"(\d{2})(\d{3})(\d{5})(\d{2})", "$1.$2.$3/$4");
     }
 }

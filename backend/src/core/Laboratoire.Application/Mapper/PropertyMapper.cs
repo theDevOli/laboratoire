@@ -17,6 +17,7 @@ public static class PropertyMapper
         PostalCode = dto.PostalCode?.Trim(),
         Area = dto.Area?.Trim(),
         Ccir = dto.Ccir?.Trim(),
-        ItrNirf = dto.ItrNirf?.Trim()
+        ItrNirf = dto.ItrNirf?.Trim(),
+        Cei = dto.Cei?.Trim()
     };
 }

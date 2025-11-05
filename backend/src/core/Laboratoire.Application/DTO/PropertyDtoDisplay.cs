@@ -23,5 +23,7 @@ public sealed class PropertyDtoDisplay
     public string? Area { get; set; }
     public string? Ccir { get; set; }
     public string? ItrNirf { get; set; }
+    [Length(12, 12)]
+    public string? Cei { get; set; }
 
 }
