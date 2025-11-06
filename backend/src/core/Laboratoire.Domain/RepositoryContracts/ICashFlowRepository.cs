@@ -12,5 +12,5 @@ public interface ICashFlowRepository
     Task<bool> UpdateCashFlowAsync(CashFlow cashFlow);
     Task<bool> DeleteCashFlowAsync(CashFlow cashFlow);
     Task<bool> PatchDescriptionAsync(CashFlow cashFlow);
-    Task<decimal?> GetAmountAsync(int? year, int? month, string? cashFlow, int? transaction);
+    Task<decimal?> GetAmountAsync(int? year, int? month, string? cashFlowFilter, int? transaction);
 }

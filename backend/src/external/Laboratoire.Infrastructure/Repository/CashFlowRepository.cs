@@ -145,12 +145,12 @@ public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
         return await dapper.LoadDataAsync<CashFlow>(_getCashFlowByYearAndMonth, parameter);
     }
 
-    public async Task<decimal?> GetAmountAsync(int? year, int? month, string? cashFlow, int? transaction)
+    public async Task<decimal?> GetAmountAsync(int? year, int? month, string? cashFlowFilter, int? transaction)
     {
         DynamicParameters parameter = new DynamicParameters();
         parameter.Add("@YearParameter", year, DbType.Int32);
         parameter.Add("@MonthParameter", month, DbType.Int32);
-        parameter.Add("@CashFlowFilter", cashFlow, DbType.String);
+        parameter.Add("@CashFlowFilter", cashFlowFilter, DbType.String);
         parameter.Add("@TransactionFilter", transaction, DbType.Int32);
 
         return await dapper.LoadDataSingleAsync<decimal>(_getAmountByYearAndMonth, parameter);
