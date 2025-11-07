@@ -66,7 +66,7 @@ public sealed class ChemicalsNormalizationRepository(DataContext dapper) : IChem
     }
     public async Task<IEnumerable<ChemicalsNormalization>> GetAllHazardsAsync()
     => await dapper.LoadDataAsync<ChemicalsNormalization>(_getAllChemicalsSql);
-    public async Task<IEnumerable<ChemicalsNormalization>?> GetHazardsByIdAsync(int? chemicalId)
+    public async Task<IEnumerable<ChemicalsNormalization>?> GetHazardsByChemicalIdAsync(int? chemicalId)
     {
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@ChemicalIdParameter", chemicalId, DbType.Int32);

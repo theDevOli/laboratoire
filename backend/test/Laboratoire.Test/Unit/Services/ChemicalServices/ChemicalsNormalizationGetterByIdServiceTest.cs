@@ -30,7 +30,7 @@ public class ChemicalsNormalizationGetterByIdServiceTest
 
         // Assert
         Assert.Null(result);
-        _repositoryMock.Verify(r => r.GetHazardsByIdAsync(It.IsAny<int>()), Times.Never);
+        _repositoryMock.Verify(r => r.GetHazardsByChemicalIdAsync(It.IsAny<int>()), Times.Never);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class ChemicalsNormalizationGetterByIdServiceTest
     {
         // Arrange
         var chemicalId = 1;
-        _repositoryMock.Setup(r => r.GetHazardsByIdAsync(chemicalId))
+        _repositoryMock.Setup(r => r.GetHazardsByChemicalIdAsync(chemicalId))
                        .ReturnsAsync(Array.Empty<ChemicalsNormalization>());
 
         // Act
@@ -47,7 +47,7 @@ public class ChemicalsNormalizationGetterByIdServiceTest
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result);
-        _repositoryMock.Verify(r => r.GetHazardsByIdAsync(chemicalId), Times.Once);
+        _repositoryMock.Verify(r => r.GetHazardsByChemicalIdAsync(chemicalId), Times.Once);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class ChemicalsNormalizationGetterByIdServiceTest
                 new ChemicalsNormalization { ChemicalId = chemicalId, HazardId = 1 },
                 new ChemicalsNormalization { ChemicalId = chemicalId, HazardId = 2 }
             };
-        _repositoryMock.Setup(r => r.GetHazardsByIdAsync(chemicalId))
+        _repositoryMock.Setup(r => r.GetHazardsByChemicalIdAsync(chemicalId))
                        .ReturnsAsync(hazards);
 
         // Act
@@ -69,6 +69,6 @@ public class ChemicalsNormalizationGetterByIdServiceTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count());
-        _repositoryMock.Verify(r => r.GetHazardsByIdAsync(chemicalId), Times.Once);
+        _repositoryMock.Verify(r => r.GetHazardsByChemicalIdAsync(chemicalId), Times.Once);
     }
 }

@@ -20,6 +20,6 @@ public class ChemicalsNormalizationGetterByIdService
             return null;
         }
         
-        return await chemicalsNormalizationRepository.GetHazardsByIdAsync(chemicalId);
+        return await chemicalsNormalizationRepository.GetHazardsByChemicalIdAsync(chemicalId);
     }
 }
