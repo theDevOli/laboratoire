@@ -13,6 +13,23 @@ public class CropParameter
     [JsonPropertyName("max")]
     public int Max { get; set; }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is null || obj.GetType() != this.GetType())
+            return false;
+
+        CropParameter other = (CropParameter)obj!;
+
+        return other.Min == this.Min
+            && other.Med == this.Med
+            && other.Max == this.Max;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Min, Med, Max);
+    }
+
     // TODO:Implement latter
     // public void GetValue(this CropParameter parameter, double? result)
     // {
