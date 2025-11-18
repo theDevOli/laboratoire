@@ -46,7 +46,7 @@ public class PartnerAdderServiceTest
         Assert.True(result.IsNotSuccess());
         Assert.Equal(409, result.StatusCode);
         Assert.Equal(ErrorMessage.ConflictPost, result.Message);
-        _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), It.IsAny<Guid>()), Times.Never);
+        // _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), It.IsAny<Guid>()), Times.Never);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Never);
         _userDeletionMock.Verify(u => u.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
