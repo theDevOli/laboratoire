@@ -27,7 +27,7 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
     $"""
     SELECT
         cp.partner_id AS {nameof(Partner.PartnerId)},
-        user_id AS {nameof(Partner.UserId)},
+        cp.user_id AS {nameof(Partner.UserId)},
         cp.partner_name AS {nameof(Partner.PartnerName)},
         cp.office_id AS {nameof(Partner.OfficeId)},
         cp.partner_phone AS {nameof(Partner.PartnerPhone)}
@@ -66,45 +66,45 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
         customers.partner
     WHERE 
         partner_name = @PartnerNameParameter
-        AND partner_email = @PartnerEmailParameter;
+        AND office_id = @OfficeIdParameter;
     """;
-    private readonly string _addPartner =
-    $"""
-    INSERT INTO customers.partner(
-        partner_name,
-        office_id,
-        partner_phone,
-        user_id
-    )
-    VALUES(
-        @PartnerNameParameter,
-        @OfficeIdParameter,
-        @PartnerPhoneParameter,
-        @UserIdParameter
-    );
-    """;
+    // private readonly string _addPartner =
+    // $"""
+    // INSERT INTO customers.partner(
+    //     partner_name,
+    //     office_id,
+    //     partner_phone,
+    //     user_id
+    // )
+    // VALUES(
+    //     @PartnerNameParameter,
+    //     @OfficeIdParameter,
+    //     @PartnerPhoneParameter,
+    //     @UserIdParameter
+    // );
+    // """;
     private readonly string _updatePartner =
     $"""
     UPDATE customers.partner
     SET
         partner_name = @PartnerNameParameter,
         office_id= @OfficeIdParameter,
-        partner_phone = @PartnerPhoneParameter,
-        partner_email = @PartnerEmailParameter
+        partner_phone = @PartnerPhoneParameter
     WHERE 
         partner_id = @PartnerIdParameter;
     """;
     #endregion
-    public async Task<bool> AddPartnerAsync(Partner partner, Guid? userId)
-    {
-        DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
-        parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
-        parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
-        parameters.Add("@UserIdParameter", userId, DbType.Guid);
 
-        return await dapper.ExecuteSqlAsync(_addPartner, parameters);
-    }
+    // public async Task<bool> AddPartnerAsync(Partner partner, Guid? userId)
+    // {
+    //     DynamicParameters parameters = new DynamicParameters();
+    //     parameters.Add("@PartnerNameParameter", partner.PartnerName, DbType.String);
+    //     parameters.Add("@OfficeIdParameter", partner.OfficeId, DbType.Guid);
+    //     parameters.Add("@PartnerPhoneParameter", partner.PartnerPhone, DbType.String);
+    //     parameters.Add("@UserIdParameter", userId, DbType.Guid);
+
+    //     return await dapper.ExecuteSqlAsync(_addPartner, parameters);
+    // }
     public async Task<bool> DoesPartnerExistByIdAsync(Partner partner)
     => await GetPartnerByIdAsync(partner.PartnerId) is not null;
     public async Task<bool> DoesPartnerExistByOfficeAndNameAsync(Partner partner)
