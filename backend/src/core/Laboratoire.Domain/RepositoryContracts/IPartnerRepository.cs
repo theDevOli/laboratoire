@@ -10,7 +10,7 @@ public interface IPartnerRepository
     Task<Partner?> GetPartnerByOfficeAndNameAsync(Partner partner);
     Task<bool> DoesPartnerExistByIdAsync(Partner partner);
     Task<bool> DoesPartnerExistByOfficeAndNameAsync(Partner partner);
-    Task<bool> AddPartnerAsync(Partner partner, Guid? userId);
+    // Task<bool> AddPartnerAsync(Partner partner, Guid? userId);
     Task<bool> UpdatePartnerAsync(Partner partner);
 
 }
