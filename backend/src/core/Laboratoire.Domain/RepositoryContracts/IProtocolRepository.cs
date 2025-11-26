@@ -17,10 +17,10 @@ public interface IProtocolRepository
     Task<bool> IsProtocolDoubled(string? protocolId);
     Task<string?> AddProtocolAsync(Protocol protocol);
     Task<bool> DeleteProtocolAsync(string? protocolId);
-    Task<bool> SaveProtocolSpotAsync(int? quantity, Guid? clientId, int protocolId);
+    Task<bool> SaveProtocolSpotAsync(int? quantity, Guid? clientId, int propertyId);
     Task<bool> UpdateProtocolAsync(Protocol protocol);
     Task<bool> UpdateCatalogAsync(Protocol protocol);
     Task<bool> UpdateCashFlowIdAsync(Protocol protocol);
     Task<bool> PatchReportIdAsync(ReportPatch reportPatch);
-    Task<bool> PatchReportAsync(Protocol? protocol, string? description);
+    Task<bool> PatchCashFlowIdWithDescriptionAsync(Protocol? protocol, string? description);
 }

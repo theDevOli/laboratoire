@@ -26,7 +26,7 @@ public class ProtocolPatchCashFlowIdService
             return Error.SetError(ErrorMessage.NotFound, 404);
         }
         var description = protocolDto.ToCashFlow()?.Description;
-        var ok = await protocolRepository.PatchReportAsync(protocol,description);
+        var ok = await protocolRepository.PatchCashFlowIdWithDescriptionAsync(protocol,description);
         if (!ok)
         {
             logger.LogError("Failed to update CashFlowId for protocol ID {ProtocolId}.", protocol.ProtocolId);

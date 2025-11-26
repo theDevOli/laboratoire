@@ -233,14 +233,14 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     WHERE 
         protocol_id = @ProtocolIdParameter;
     """;
-    private readonly string _patchReportSql =
+    private readonly string _patchCashFlowIdWithDescriptionSql =
     $"""
     WITH update_protocol AS(
     UPDATE document.protocol
     SET 
         cash_flow_id = @CashFlowIdParameter
     WHERE 
-        protocol_id = @ProtocolIdParameter;
+        protocol_id = @ProtocolIdParameter
     )
     UPDATE cash_flow.cash_flow
     SET
@@ -330,14 +330,15 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
 
         return await dapper.ExecuteSqlAsync(_patchReportIdSql, parameters);
     }
-    public async Task<bool> PatchReportAsync(Protocol? protocol, string? description)
+    public async Task<bool> PatchCashFlowIdWithDescriptionAsync(Protocol? protocol, string? description)
     {
         DynamicParameters parameters = new();
         parameters.Add("@ReportIdParameter", protocol?.ReportId, DbType.Guid);
         parameters.Add("@ProtocolIdParameter", protocol?.ProtocolId, DbType.String);
+        parameters.Add("@CashFlowIdParameter", protocol?.CashFlowId, DbType.Int32);
         parameters.Add("@DescriptionParameter", description, DbType.String);
 
-        return await dapper.ExecuteSqlAsync(_patchReportIdSql, parameters);
+        return await dapper.ExecuteSqlAsync(_patchCashFlowIdWithDescriptionSql, parameters);
     }
     public async Task<bool> UpdateCatalogAsync(Protocol protocol)
     {
