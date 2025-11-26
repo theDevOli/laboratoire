@@ -145,7 +145,7 @@ public class CatalogRepositoryIntegrationTest
 
         await _repository.AddCatalogAsync(newCatalog);
 
-        var catalogId = await _connection.QuerySingleAsync<int>
+        var catalogId = await _connection.QueryFirstOrDefaultAsync<int>
         (
             """
             SELECT

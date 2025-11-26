@@ -48,7 +48,9 @@ public class CashFlowRepositoryIntegrationTest
         var month = 1;
         var cashFlows = await _repository.GetAllCashFlowAsync();
         var expectedCashFlow = cashFlows
-                                .Where(c => c.PaymentDate!.Value.Year == year && c.PaymentDate.Value.Month == month)
+                                .Where(c => c.PaymentDate is not null
+                                        && c.PaymentDate.Value.Year == year
+                                        && c.PaymentDate.Value.Month == month)
                                 .OrderBy(c => c.CashFlowId);
 
         //  Act
