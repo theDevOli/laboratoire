@@ -142,31 +142,34 @@ public class ClientRepositoryIntegrationTest
         Assert.True(result);
 
         // Tear down
+         string[] ids = ["00011122289", "11111111111"];
+
+        await _connection.OpenAsync();
+        var transaction = await _connection.BeginTransactionAsync();
+
         await _connection.ExecuteAsync
         (
             """
             DELETE FROM customers.client
-            WHERE client_tax_id = @ClientTaxId
-            AND client_email = @ClientEmail;
+            WHERE client_tax_id = ANY(@ids)
             """,
-            new
-            {
-                ClientTaxId = newClient.ClientTaxId,
-                ClientEmail = newClient.ClientEmail
-            }
+            new { ids }
         );
 
         await _connection.ExecuteAsync
         (
             """
             DELETE FROM users."user"
-            WHERE user_id = @UserId;
+            WHERE user_id = @UserId
             """,
             new
             {
                 UserId = userId
             }
         );
+
+        transaction.Commit();
+        await _connection.CloseAsync();
     }
 
     [Fact]
@@ -215,7 +218,7 @@ public class ClientRepositoryIntegrationTest
             ClientId = clientId,
             UserId = userId,
             ClientName = "Updated",
-            ClientTaxId = "00000000011",
+            ClientTaxId = "11111111111",
             ClientEmail = "updated@email.com",
             ClientPhone = "Updated",
         };
@@ -233,18 +236,18 @@ public class ClientRepositoryIntegrationTest
         Assert.Equal(toUpdateClient.ClientPhone, updatedClient?.ClientPhone);
 
         // Tear down
+        string[] ids = ["00011122289", "11111111111"];
+
+        await _connection.OpenAsync();
+        var transaction = await _connection.BeginTransactionAsync();
+
         await _connection.ExecuteAsync
         (
             """
             DELETE FROM customers.client
-            WHERE client_tax_id = @ClientTaxId
-            AND client_email = @ClientEmail
+            WHERE client_tax_id = ANY(@ids)
             """,
-            new
-            {
-                ClientTaxId = toUpdateClient.ClientTaxId,
-                ClientEmail = toUpdateClient.ClientEmail
-            }
+            new { ids }
         );
 
         await _connection.ExecuteAsync
@@ -258,5 +261,8 @@ public class ClientRepositoryIntegrationTest
                 UserId = userId
             }
         );
+
+        transaction.Commit();
+        await _connection.CloseAsync();
     }
 }
