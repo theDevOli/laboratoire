@@ -184,7 +184,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     $"""
     UPDATE users.user
     SET
-        username = @UsernameParameter,
+        username = @UsernameParameter
     WHERE 
         user_id = @UserIdParameter;
     """;
@@ -194,7 +194,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     SET
         is_active = @IsActiveParameter
     WHERE 
-        UserId = @UserIdParameter;
+        user_id = @UserIdParameter;
     """;
     private readonly string _countUsernameSql =
     $"""
