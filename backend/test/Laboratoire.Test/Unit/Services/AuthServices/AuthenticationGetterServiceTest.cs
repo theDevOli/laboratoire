@@ -37,7 +37,7 @@ public class AuthenticationGetterServiceTest
         };
 
         _userRepositoryMock
-            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .Setup(repo => repo.GetAuthenticationByUserIdAsync(userId))
             .ReturnsAsync(expectedAuth);
 
         // Act
@@ -46,7 +46,7 @@ public class AuthenticationGetterServiceTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(expectedAuth, result);
-        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
+        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByUserIdAsync(userId), Times.Once);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class AuthenticationGetterServiceTest
         var userId = Guid.NewGuid();
 
         _userRepositoryMock
-            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .Setup(repo => repo.GetAuthenticationByUserIdAsync(userId))
             .ReturnsAsync((Authentication?)null);
 
         // Act
@@ -64,7 +64,7 @@ public class AuthenticationGetterServiceTest
 
         // Assert
         Assert.Null(result);
-        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByIdAsync(userId), Times.Once);
+        _userRepositoryMock.Verify(repo => repo.GetAuthenticationByUserIdAsync(userId), Times.Once);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class AuthenticationGetterServiceTest
         // Arrange
         var userId = Guid.NewGuid();
         _userRepositoryMock
-            .Setup(repo => repo.GetAuthenticationByIdAsync(userId))
+            .Setup(repo => repo.GetAuthenticationByUserIdAsync(userId))
             .ReturnsAsync((Authentication?)null);
 
         // Act

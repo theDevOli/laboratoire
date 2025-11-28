@@ -16,6 +16,6 @@ public class AuthenticationGetterService
     {
         logger.LogInformation("User Authentication initiated for user {UserId}", userId);
 
-        return  userRepository.GetAuthenticationByIdAsync(userId);
+        return userRepository.GetAuthenticationByUserIdAsync(userId);
     }
 }

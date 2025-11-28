@@ -227,7 +227,7 @@ public sealed class UserRepository(DataContext dapper) : IUserRepository
     => await GetUserByUsernameAsync(user.Username) is not null;
     public async Task<IEnumerable<DisplayUser>> GetAllUsersAsync()
     => await dapper.LoadDataAsync<DisplayUser>(_getAllUsersSql);
-    public async Task<Authentication?> GetAuthenticationByIdAsync(Guid? userId)
+    public async Task<Authentication?> GetAuthenticationByUserIdAsync(Guid? userId)
     {
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@UserIdParameter", userId, DbType.Guid);

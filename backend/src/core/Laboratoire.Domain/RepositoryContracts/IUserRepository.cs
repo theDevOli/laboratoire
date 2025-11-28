@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     Task<IEnumerable<DisplayUser>> GetAllUsersAsync();
     Task<User?> GetUserByIdAsync(Guid? userId);
-    Task<Authentication?> GetAuthenticationByIdAsync(Guid? userId);
+    Task<Authentication?> GetAuthenticationByUserIdAsync(Guid? userId);
     Task<User?> GetUserByUsernameAsync(string? username);
     Task<bool> DoesUserExistByIdAsync(User user);
     Task<bool> DoesUserExistByUsernameAsync(User user);
