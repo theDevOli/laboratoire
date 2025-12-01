@@ -19,6 +19,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         report_id AS {nameof(Protocol.ReportId)},
         client_id AS {nameof(Protocol.ClientId)},
         property_id AS {nameof(Protocol.PropertyId)},
+        office_id AS {nameof(Protocol.OfficeId)},
         partner_id AS {nameof(Protocol.PartnerId)},
         catalog_id AS {nameof(Protocol.CatalogId)},
         entry_date AS {nameof(Protocol.EntryDate)},
@@ -36,6 +37,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         report_id AS {nameof(Protocol.ReportId)},
         client_id AS {nameof(Protocol.ClientId)},
         property_id AS {nameof(Protocol.PropertyId)},
+        office_id AS {nameof(Protocol.OfficeId)},
         partner_id AS {nameof(Protocol.PartnerId)},
         catalog_id AS {nameof(Protocol.CatalogId)},
         entry_date AS {nameof(Protocol.EntryDate)},
@@ -54,6 +56,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         report_id AS {nameof(Protocol.ReportId)},
         client_id AS {nameof(Protocol.ClientId)},
         property_id AS {nameof(Protocol.PropertyId)},
+        office_id AS {nameof(Protocol.OfficeId)},
         partner_id AS {nameof(Protocol.PartnerId)},
         catalog_id AS {nameof(Protocol.CatalogId)},
         entry_date AS {nameof(Protocol.EntryDate)},
@@ -72,6 +75,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         report_id AS {nameof(Protocol.ReportId)},
         client_id AS {nameof(Protocol.ClientId)},
         property_id AS {nameof(Protocol.PropertyId)},
+        office_id AS {nameof(Protocol.OfficeId)},
         partner_id AS {nameof(Protocol.PartnerId)},
         catalog_id AS {nameof(Protocol.CatalogId)},
         entry_date AS {nameof(Protocol.EntryDate)},
@@ -124,6 +128,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
 
         pa.partner_id AS {nameof(Partner.PartnerId)},
         pa.partner_name AS {nameof(Partner.PartnerName)},
+        pa.office_id AS {nameof(Protocol.OfficeId)},
 
         ca.report_type AS {nameof(Catalog.ReportType)},
         ca.price AS {nameof(Catalog.Price)},
@@ -165,6 +170,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         report_id,
         client_id,
         property_id,
+        office_id,
         partner_id,
         catalog_id,
         entry_date,
@@ -177,6 +183,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         @ReportIdParameter,
         @ClientIdParameter,
         @PropertyIdParameter,
+        @OfficeIdParameter,
         @PartnerIdParameter,
         @CatalogIdParameter,
         @EntryDateParameter,
@@ -192,6 +199,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     SET
         client_id = @ClientIdParameter,
         property_id = @PropertyIdParameter,
+        office_id = @OfficeIdParameter,
         partner_id = @PartnerIdParameter,
         entry_date = @EntryDateParameter,
         report_date = @ReportDateParameter,
@@ -263,6 +271,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         parameters.Add("@ReportIdParameter", protocol.ReportId, DbType.Guid);
         parameters.Add("@ClientIdParameter", protocol.ClientId, DbType.Guid);
         parameters.Add("@PropertyIdParameter", protocol.PropertyId, DbType.Int32);
+        parameters.Add("@OfficeIdParameter", protocol.OfficeId, DbType.Guid);
         parameters.Add("@PartnerIdParameter", protocol.PartnerId, DbType.Guid);
         parameters.Add("@CatalogIdParameter", protocol.CatalogId, DbType.Int32);
         parameters.Add("@EntryDateParameter", protocol.EntryDate, DbType.Date);
@@ -354,6 +363,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         parameters.Add("@ReportIdParameter", protocol.ReportId, DbType.Guid);
         parameters.Add("@ClientIdParameter", protocol.ClientId, DbType.Guid);
         parameters.Add("@PropertyIdParameter", protocol.PropertyId, DbType.Int32);
+        parameters.Add("@OfficeIdParameter", protocol.OfficeId, DbType.Guid);
         parameters.Add("@PartnerIdParameter", protocol.PartnerId, DbType.Guid);
         parameters.Add("@EntryDateParameter", protocol.EntryDate, DbType.Date);
         parameters.Add("@ReportDateParameter", protocol.ReportDate, DbType.Date);
