@@ -128,7 +128,8 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
 
         pa.partner_id AS {nameof(Partner.PartnerId)},
         pa.partner_name AS {nameof(Partner.PartnerName)},
-        pa.office_id AS {nameof(Protocol.OfficeId)},
+
+        o.office_id AS {nameof(Office.OfficeId)},
 
         ca.report_type AS {nameof(Catalog.ReportType)},
         ca.price AS {nameof(Catalog.Price)},
@@ -152,6 +153,9 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     LEFT JOIN 
         customers.partner AS pa 
         ON p.partner_id = pa.partner_id
+    LEFT JOIN 
+        customers.office AS o 
+        ON p.office_id = o.office_id
     INNER JOIN 
         parameters.catalog AS ca 
         ON p.catalog_id = ca.catalog_id
@@ -163,6 +167,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
     ORDER BY 
         p.protocol_id;
     """;
+
     private readonly string _addProtocolSql =
     $"""
     INSERT INTO document.protocol(
