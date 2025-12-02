@@ -20,6 +20,7 @@ public sealed class ProtocolDtoUpdate
     public Guid? ClientId { get; set; }
     [Required]
     public int? PropertyId { get; set; }
+    public Guid? OfficeId { get; set; }
     public Guid? PartnerId { get; set; }
     [Required]
     public int? CatalogId { get; set; }

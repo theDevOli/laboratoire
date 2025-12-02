@@ -10,6 +10,7 @@ public sealed class ProtocolDtoPatch
     public DateTime? EntryDate { get; set; }
     [Required]
     public bool? IsCollectedByClient { get; set; }
+    public Guid? OfficeId { get; set; }
     public Guid? PartnerId { get; set; }
     [Required]
     public DateTime? ReportDate { get; set; }
