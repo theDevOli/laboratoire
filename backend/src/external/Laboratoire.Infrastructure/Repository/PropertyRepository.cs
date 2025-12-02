@@ -59,6 +59,7 @@ public sealed class PropertyRepository(DataContext dapper) : IPropertyRepository
         p.ccir AS {nameof(Property.Ccir)},
         p.itr_nirf AS {nameof(Property.ItrNirf)},
         p.registration AS {nameof(Property.Registration)},
+        p.cei AS {nameof(Property.Cei)},
 
         c.client_id AS {nameof(Client.ClientId)},
         c.client_name AS {nameof(Client.ClientName)},
