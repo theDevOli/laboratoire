@@ -71,6 +71,7 @@ export class PropertyService implements IService {
               postalCode: property.postalCode,
               stateId: property.stateId,
               stateCode: property.stateCode,
+              cei: property.cei
             },
           };
         }
@@ -137,6 +138,12 @@ export class PropertyService implements IService {
             label: 'ITR/NIRF',
             placeholder: '0.000.000-0',
           },
+          {
+            type: 'text',
+            nameId: 'cei',
+            label: 'CEI',
+            placeholder: '51.245.72859/59',
+          },
         ],
       },
     ];
@@ -202,6 +209,7 @@ export class PropertyService implements IService {
       propertyName: new FormControl(''),
       ccir: new FormControl(''),
       itrNirf: new FormControl(''),
+      cei: new FormControl(''),
       // Related to protocol
       toPostProtocol: new FormControl(false),
       partnerId: new FormControl(''),
@@ -257,6 +265,8 @@ export class PropertyService implements IService {
     const ccir = Utils.ccirFormatter(form.get('ccir')?.value, true) || null;
     const itrNirf =
       Utils.itrNirfFormatter(form.get('itrNirf')?.value, true) || null;
+    const cei =
+      Utils.ceiFormatter(form.get('cei')?.value, true) || null;
 
     const body: IPropertyPost | IPropertyPut =
       method === 'POST'
@@ -270,6 +280,7 @@ export class PropertyService implements IService {
             area,
             ccir,
             itrNirf,
+            cei
           }
         : {
             propertyId: data.details.propertyId,
@@ -282,6 +293,7 @@ export class PropertyService implements IService {
             area,
             ccir,
             itrNirf,
+            cei
           };
 
     return body;
@@ -308,11 +320,18 @@ export class PropertyService implements IService {
         const formatted = Utils.itrNirfFormatter(value);
         form.get('itrNirf')?.setValue(formatted, { emitEvent: false });
       });
+    const ceiSubscription = form
+      .get('cei')
+      ?.valueChanges.subscribe((value) => {
+        const formatted = Utils.ceiFormatter(value);
+        form.get('cei')?.setValue(formatted, { emitEvent: false });
+      });
 
     this._destroyRef.onDestroy(() => {
       postalCodeSubscription?.unsubscribe();
       ccirSubscription?.unsubscribe();
       itrNirfSubscription?.unsubscribe();
+      ceiSubscription?.unsubscribe();
     });
   }
 

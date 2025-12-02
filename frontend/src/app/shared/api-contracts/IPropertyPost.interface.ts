@@ -8,4 +8,5 @@ export interface IPropertyPost {
   registration: string | null;
   ccir: string | null;
   itrNirf: string | null;
+  cei: string | null;
 }

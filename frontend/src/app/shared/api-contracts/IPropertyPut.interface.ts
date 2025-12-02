@@ -9,4 +9,5 @@ export interface IPropertyPut {
   registration: string | null;
   ccir: string | null;
   itrNirf: string | null;
+  cei: string | null;
 }

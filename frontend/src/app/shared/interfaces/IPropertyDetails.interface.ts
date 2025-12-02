@@ -16,5 +16,6 @@ export interface IPropertyDetails extends IDetails {
     stateId: number;
     stateCode: string;
     propertyName: string;
+    cei: string;
   };
 }

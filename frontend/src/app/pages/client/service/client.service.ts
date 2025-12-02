@@ -159,6 +159,8 @@ export class ClientService implements IService {
       propertyName: new FormControl(''),
       ccir: new FormControl(''),
       itrNirf: new FormControl(''),
+      cei: new FormControl(''),
+
       //Related to protocol
       toPostProtocol: new FormControl(false),
       partnerId: new FormControl(''),
@@ -313,6 +315,7 @@ export class ClientService implements IService {
       'propertyName',
       'ccir',
       'itrNirf',
+      'cei'
     ];
 
     this._globalService.disabledEnableControlByFlag(

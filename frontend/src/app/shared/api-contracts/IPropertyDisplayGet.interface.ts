@@ -12,4 +12,5 @@ export interface IPropertyDisplayGet {
   stateId: number;
   stateCode: string;
   propertyName: string;
+  cei: string;
 }
