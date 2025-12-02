@@ -225,12 +225,13 @@ export class ClientService implements IService {
   public getUpsertBodyRequest(
     form: FormGroup,
     method: 'PUT' | 'POST',
-    clientId: string
+    putData: {clientId: string; userId: string | undefined;}
   ) {
     const body: IClientPut | IClientPost =
       method === 'PUT'
         ? {
-            clientId: clientId,
+            clientId: putData.clientId,
+            userId: putData.userId,
             clientName: form.get('clientName')?.value,
             clientTaxId: Utils.taxFormatter(
               form.get('clientTaxId')?.value,

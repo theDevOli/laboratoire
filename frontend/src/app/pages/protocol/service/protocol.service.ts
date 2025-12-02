@@ -468,7 +468,7 @@ export class ProtocolService implements IService {
 
   public getProtocolPostBody(
     form: FormGroup,
-    clientId: number,
+    clientId: string,
     propertyId: number
   ): IProtocolPost {
     const now = new Date(Date.now());

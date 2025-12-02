@@ -1,5 +1,5 @@
 export interface IProtocolPost {
-  clientId: number;
+  clientId: string;
   propertyId: number;
   partnerId: string | null;
   catalogId: number;

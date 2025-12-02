@@ -58,7 +58,9 @@ export class ClientComponent implements IComponent, OnInit {
   public onSubmitForm = async (submitForm: ISubmitForm): Promise<void> => {
     const { form, data } = submitForm;
     if (!form.touched) return;
-    const clientId = data?.details?.clientId;
+    const clientId:string = data?.details?.clientId;
+    const userId = this._authenticationService.auth().user?.userId;
+    const putData ={clientId,userId}
     const toPostProtocol = form.get('toPostProtocol')?.value;
     const toPostProperty = form.get('toPostProperty')?.value;
 
@@ -66,7 +68,7 @@ export class ClientComponent implements IComponent, OnInit {
       const body = this._clientService.getUpsertBodyRequest(
         form,
         this._method,
-        clientId
+        putData
       );
 
       this._clientService.makeEntityUpsertRequest(this._method, body);
