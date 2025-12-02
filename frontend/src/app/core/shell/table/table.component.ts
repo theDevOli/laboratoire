@@ -42,7 +42,7 @@ export class TableComponent implements OnChanges {
   private _letter = '';
   @ViewChild('quantity') quantity!: ElementRef;
 
-  public onSetFom = output<ISetForm>();
+  public onSetForm = output<ISetForm>();
   public month = this._globalDataService.month;
   public transactions = [
     {
@@ -107,7 +107,7 @@ export class TableComponent implements OnChanges {
 
   public onAddData(): void {
     this.form().reset();
-    this.onSetFom.emit({ method: 'POST', data: null, toUpdateData: null });
+    this.onSetForm.emit({ method: 'POST', data: null, toUpdateData: null });
   }
 
   public onSetMonth(event: Event): void {
@@ -137,7 +137,7 @@ export class TableComponent implements OnChanges {
       updatedData = { ...updatedData, ...newValue };
     }
 
-    this.onSetFom.emit({
+    this.onSetForm.emit({
       method: 'PUT',
       data,
       toUpdateData: updatedData,
