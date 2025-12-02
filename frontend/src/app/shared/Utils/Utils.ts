@@ -114,6 +114,28 @@ export class Utils {
       .substring(0, 11);
   }
 
+  public static ceiFormatter(
+    cei: string,
+     isPlain: boolean = false
+  ): string {
+    if (!cei) return '';
+
+    cei = cei.replace(/[^a-zA-Z0-9]/g, '');
+
+    if (isPlain) return cei;
+
+    const length = cei.length;
+
+    if (length <= 2) return cei;
+    if (length <= 5) return cei.replace(/^(.{2})(.{1,3})/, '$1.$2');
+    if (length <= 10)
+      return cei.replace(/^(.{2})(.{3})(.{1,5})/, '$1.$2.$3');
+
+    return cei
+      .replace(/^(.{2})(.{3})(.{5})(.{1,2})/, '$1.$2.$3/$4')
+      .substring(0, 15);
+  }
+
   static phoneFormatter(phone: string, isPlain: boolean = false): string {
     if (!phone) return '';
 
