@@ -41,6 +41,7 @@ public sealed class ProtocolDtoDisplayDb
     public string? Ccir { get; set; }
     public string? ItrNirf { get; set; }
     public string[]? Results { get; set; }
+    public Guid? OfficeId { get; set; }
     public Guid? PartnerId { get; set; }
     public string? PartnerName { get; set; }
     [Required]

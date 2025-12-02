@@ -42,6 +42,7 @@ public sealed class ProtocolDtoDisplay
     public string? ItrNirf { get; set; }
     public ReportResult[]? Results { get; set; }
     public string? PartnerName { get; set; }
+    public Guid? OfficeId { get; set; }
     public Guid? PartnerId { get; set; }
     [Required]
     public int? CatalogId { get; set; }
