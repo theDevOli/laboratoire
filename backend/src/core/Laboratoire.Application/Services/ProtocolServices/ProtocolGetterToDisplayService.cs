@@ -42,7 +42,8 @@ public class ProtocolGetterToDisplayService
         if ((bool)isPartner!)
         {
             logger.LogInformation("Filtering protocols by Partner ID: {Id}", id);
-            return displayProtocols.Where(protocol => protocol.PartnerId == id);
+            var officeId = displayProtocols.First(protocol => protocol.PartnerId == id).OfficeId;
+            return displayProtocols.Where(protocol => protocol.OfficeId == officeId);
         }
 
         logger.LogInformation("Filtering protocols by Client ID: {Id}", id);
