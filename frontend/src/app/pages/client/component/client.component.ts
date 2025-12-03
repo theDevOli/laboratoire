@@ -47,6 +47,11 @@ export class ClientComponent implements IComponent, OnInit {
   ngOnInit(): void {
     this._clientService.getEntities();
 
+    const user = this._authenticationService.auth().user;
+
+    if (user?.partnerId === null && user?.clientId === null)
+      this._globalDataService.cacheData();
+
     this._clientService.setValidatorsOnChange(this.form);
 
     this._clientService.controlFormatter(this.form);
@@ -58,9 +63,9 @@ export class ClientComponent implements IComponent, OnInit {
   public onSubmitForm = async (submitForm: ISubmitForm): Promise<void> => {
     const { form, data } = submitForm;
     if (!form.touched) return;
-    const clientId:string = data?.details?.clientId;
+    const clientId: string = data?.details?.clientId;
     const userId = this._authenticationService.auth().user?.userId;
-    const putData ={clientId,userId}
+    const putData = { clientId, userId };
     const toPostProtocol = form.get('toPostProtocol')?.value;
     const toPostProperty = form.get('toPostProperty')?.value;
 

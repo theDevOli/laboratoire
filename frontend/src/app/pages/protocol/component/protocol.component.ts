@@ -3,9 +3,7 @@ import {
   DestroyRef,
   effect,
   inject,
-  OnChanges,
   OnInit,
-  SimpleChanges,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -70,6 +68,12 @@ export class ProtocolComponent implements IComponent, OnInit {
 
   ngOnInit(): void {
     this._globalDataService.setIsChipDisabled(false);
+
+    const user = this._authenticationService.auth().user;
+
+    if (user?.partnerId === null && user?.clientId === null)
+      this._globalDataService.cacheData();
+    else this._globalDataService.setYearOptions();
   }
 
   onSubmitForm = async (submitForm: ISubmitForm): Promise<void> => {

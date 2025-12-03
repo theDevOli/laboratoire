@@ -54,6 +54,11 @@ export class PropertyComponent implements IComponent, OnInit {
   public ngOnInit(): void {
     this._propertyService.getEntities();
 
+    const user = this._authenticationService.auth().user;
+
+    if (user?.partnerId === null && user?.clientId === null)
+      this._globalDataService.cacheData();
+
     this._propertyService.setValidatorsOnChange(this.form);
 
     this._propertyService.disabledEnableControl(this.form);
