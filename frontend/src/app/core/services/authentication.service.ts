@@ -5,7 +5,6 @@ import { jwtDecode } from 'jwt-decode';
 
 import { HttpService } from './http.service';
 import { LoaderService } from './loader.service';
-import { GlobalDataService } from './global-data.service';
 import { NotificationsService } from './notifications.service';
 
 import { Utils } from '../../shared/Utils/Utils';
@@ -18,7 +17,6 @@ import { ErrorMessage } from '../../shared/Utils/ErrorMessage';
 import { AppNotification } from '../../shared/models/AppNotification.model';
 import { IAuthenticationGet } from '../../shared/api-contracts/IAuthenticationGet.interface';
 import { User } from '../../shared/models/User.model';
-import { SuccessMessage } from '../../shared/Utils/SuccessMessage';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +26,6 @@ export class AuthenticationService {
   private _httpService = inject(HttpService);
   private _notificationsService = inject(NotificationsService);
   private _loaderService = inject(LoaderService);
-  private _globalDataService = inject(GlobalDataService);
   private _auth = signal<Authentication>(Authentication.getUnauthenticated());
 
   public auth = this._auth.asReadonly();
@@ -49,7 +46,7 @@ export class AuthenticationService {
 
       this.setToken(token);
 
-      this.loginHelper(token);
+      this._router.navigate(['/protocolo']);
     } catch (error: any) {
       const message =
         error.status === 500
@@ -58,7 +55,6 @@ export class AuthenticationService {
           ? ErrorMessage.inactive
           : ErrorMessage.unauthorized;
 
-      console.log('File: authentication.service.ts', 'Line: 54', message);
       this._notificationsService.openNotification(new AppNotification(message));
     } finally {
       this._loaderService.setLoading();
@@ -76,7 +72,7 @@ export class AuthenticationService {
 
       this.setToken(token);
 
-      this.loginHelper(token);
+      this._router.navigate(['/protocolo']);
     } catch (error: any) {
       const notification = new AppNotification(
         ErrorMessage.unauthorized,
@@ -87,16 +83,6 @@ export class AuthenticationService {
     } finally {
       this._loaderService.setLoading();
     }
-  }
-
-  private async loginHelper(token: string): Promise<void> {
-    const user = await this.setUser(token);
-
-    if (user?.partnerId === null && user?.clientId === null)
-      this._globalDataService.cacheData();
-    else this._globalDataService.setYearOptions();
-
-    this._router.navigate(['/protocolo']);
   }
 
   private async setUser(token: string): Promise<User | null> {
