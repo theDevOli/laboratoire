@@ -26,7 +26,8 @@ public sealed class UtilsRepository(DataContext dapper): IUtilsRepository
         customers.property AS p 
     WHERE
         p.city=@CityParameter
-        AND p.state_id=@StateParameter;
+        AND p.state_id=@StateParameter
+        AND  p.postal_code is not NULL;
     """;
     #endregion
     public async Task<IEnumerable<State>?> GetAllStatesAsync()
