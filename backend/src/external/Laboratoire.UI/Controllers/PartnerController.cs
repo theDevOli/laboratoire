@@ -6,6 +6,7 @@ using Laboratoire.Application.DTO;
 using Laboratoire.Application.ServicesContracts;
 using Microsoft.AspNetCore.Authorization;
 using Laboratoire.Domain.Utils;
+using Laboratoire.Application.Mapper;
 
 namespace Laboratoire.UI.Controllers;
 
@@ -39,10 +40,9 @@ public class PartnerController
     }
 
     [HttpPut("{partnerId}")]
-    public async Task<IActionResult> UpdatePartnerAsync([FromRoute] Guid partnerId, [FromBody] Partner partner)
+    public async Task<IActionResult> UpdatePartnerAsync([FromRoute] Guid partnerId, [FromBody] PartnerDtoUpsert partnerDto)
     {
-        if (partnerId != partner.PartnerId)
-            return BadRequest(ApiResponse<object>.Failure(ErrorMessage.BadRequestID, 400));
+        var partner = partnerDto.ToPartner(partnerId);
 
         var updateError = await partnerUpdatableService.UpdatePartnerAsync(partner);
         if (updateError.IsNotSuccess())
@@ -52,12 +52,12 @@ public class PartnerController
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPartnerAsync([FromBody] PartnerDtoAdd partnerDto)
+    public async Task<IActionResult> AddPartnerAsync([FromBody] PartnerDtoUpsert partnerDto)
     {
         var addError = await partnerAdderService.AddPartnerAsync(partnerDto);
         if (addError.IsNotSuccess())
             return StatusCode(addError.StatusCode, ApiResponse<object>.Failure(addError.Message!, addError.StatusCode));
 
-        return Ok(ApiResponse<string>.Success(SuccessMessage.Added));
+        return StatusCode(201, ApiResponse<string>.Success(SuccessMessage.Added));
     }
 }
