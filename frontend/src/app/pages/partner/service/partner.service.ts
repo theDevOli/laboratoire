@@ -4,15 +4,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Utils } from '../../../shared/Utils/Utils';
 import { IService } from '../../../shared/interfaces/IService.interface';
 import { Constants } from '../../../shared/Utils/Constants';
+import { IModalForm } from '../../../shared/interfaces/IModalForm.interface';
+import { IOfficeGet } from '../../../shared/api-contracts/IOfficeGet.Interface';
 import { IPartnerGet } from '../../../shared/api-contracts/IPartnerGet.interface';
+import { IModalOptions } from '../../../shared/interfaces/IModalOptions.interface';
+import { IPartnerUpsert } from '../../../shared/api-contracts/IPartnerUpsert.interface';
 import { IPartnerDetails } from '../../../shared/interfaces/IPartnerDetails.interface';
 
-import { IModalForm } from '../../../shared/interfaces/IModalForm.interface';
 import { HttpService } from '../../../core/services/http.service';
-import { ISubmitForm } from '../../../shared/interfaces/ISubmitForm.interface';
-import { IPartnerPost } from '../../../shared/api-contracts/IPartnerPost.interface';
 import { LoaderService } from '../../../core/services/loader.service';
-import { GlobalService } from '../../../core/services/global.service';
 import { GlobalDataService } from '../../../core/services/global-data.service';
 import { NotificationsService } from '../../../core/services/notifications.service';
 
@@ -23,35 +23,54 @@ export class PartnerService implements IService {
   private _httpService = inject(HttpService);
   private _loaderService = inject(LoaderService);
   private _globalDataService = inject(GlobalDataService);
-  private _globalService = inject(GlobalService);
   private _notificationService = inject(NotificationsService);
   private _destroyRef = inject(DestroyRef);
 
   public entities = signal<IPartnerDetails[]>([]);
 
+  private _officeIdOptions = signal<IModalOptions[]>([]);
+
   public async getEntities(): Promise<any> {
     try {
       this._loaderService.setLoading();
-      const res = await this._httpService.makeRequestAsync<IPartnerGet[]>(
-        'GET',
-        Constants.PARTNER_END_POINT
-      );
-      if (!res) return;
+      const [partnerRes, officeRes] = await Promise.all([
+        this._httpService.makeRequestAsync<IPartnerGet[]>(
+          'GET',
+          Constants.PARTNER_END_POINT
+        ),
+        this._httpService.makeRequestAsync<IOfficeGet[]>(
+          'GET',
+          Constants.OFFICE_END_POINT
+        ),
+      ]);
+      if (!partnerRes || !officeRes) return;
 
-      const tempPartner = res.data.map(
-        (partner): IPartnerDetails => ({
-          officeName: partner.officeName,
-          partnerEmail: partner.partnerEmail,
+      const tempOption: IModalOptions[] = officeRes.data
+      .map((office) => ({
+        nameId: office.officeId,
+        label: office.officeName,
+        value: office.officeId,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+      const tempPartner = partnerRes.data.map((partner): IPartnerDetails => {
+        const officeName =
+          officeRes.data.find((office) => office.officeId === partner.officeId)
+            ?.officeName ?? '';
+        return {
+          officeName,
           partnerName: partner.partnerName,
           partnerPhone: Utils.phoneFormatter(partner.partnerPhone),
-          // active: true,
           details: {
             partnerId: partner.partnerId,
+            officeId: partner.officeId,
           },
-        })
-      );
+        };
+      });
 
       this.entities.set(tempPartner);
+
+      this._officeIdOptions.set(tempOption);
     } catch (error) {
       this._notificationService.setFetchErrorNotification();
     } finally {
@@ -66,16 +85,11 @@ export class PartnerService implements IService {
         tabId: 'partner',
         data: [
           {
-            type: 'text',
-            nameId: 'officeName',
+            type: 'dropdown',
+            nameId: 'officeId',
             label: 'Escritório',
             placeholder: 'Escritório AgrPec',
-          },
-          {
-            type: 'text',
-            nameId: 'partnerEmail',
-            label: 'Email',
-            placeholder: 'escritorio@email.com',
+            options: this._officeIdOptions(),
           },
           {
             type: 'text',
@@ -94,78 +108,32 @@ export class PartnerService implements IService {
     ];
   }
   public getPostModalForm(): IModalForm[] {
-    return [
-      ...this.getPutModalForm(),
-      {
-        tabName: 'Usuário',
-        tabId: 'user',
-        data: [
-          {
-            type: 'checkbox',
-            nameId: 'isActive',
-            label: 'Ativo?',
-          },
-          {
-            type: 'text',
-            nameId: 'username',
-            label: 'Nome do Usuário',
-            placeholder: 'gelvane',
-          },
-        ],
-      },
-    ];
+    return [...this.getPutModalForm()];
   }
 
   public getFormGroup(): FormGroup<any> {
     return new FormGroup({
-      officeName: new FormControl('', Validators.required),
-      partnerEmail: new FormControl('', [
-        Validators.required,
-        Validators.email,
-      ]),
+      officeId: new FormControl('', Validators.required),
       partnerName: new FormControl('', Validators.required),
       partnerPhone: new FormControl('', [
         Validators.required,
         Validators.minLength(16),
       ]),
-      //Related to user
-      username: new FormControl(''),
-      isActive: new FormControl(true),
     });
   }
 
   getHeader(): string[] {
-    return ['Escritório', 'Email', 'Nome do Parceiro', 'Contato'];
+    return ['Escritório', 'Nome do Parceiro', 'Contato'];
   }
 
-  public getRequestBody(
-    method: 'PUT' | 'POST',
-    submitForm: ISubmitForm
-  ): IPartnerGet | IPartnerPost {
-    const { form, data } = submitForm;
-    const officeName = form.get('officeName')?.value || '';
-    const partnerEmail = form.get('partnerEmail')?.value || '';
+  public getRequestBody(form: FormGroup<any>): IPartnerUpsert {
+    const officeId = form.get('officeId')?.value || '';
     const partnerName = form.get('partnerName')?.value || '';
     const tempPartnerPhone = form.get('partnerPhone')?.value || '';
     const partnerPhone = Utils.phoneFormatter(tempPartnerPhone, true);
-    const username = form.get('username')?.value || '';
-    const isActive = form.get('isActive')?.value || false;
-
-    if (method === 'POST')
-      return {
-        officeName,
-        partnerEmail,
-        partnerName,
-        partnerPhone,
-        roleId: 4,
-        username,
-        isActive,
-      };
 
     return {
-      officeName,
-      partnerEmail,
-      partnerId: data.details.partnerId,
+      officeId,
       partnerName,
       partnerPhone,
     };
@@ -173,14 +141,15 @@ export class PartnerService implements IService {
 
   public async makeEntityUpsertRequest(
     method: 'PUT' | 'POST',
-    data: any
+    data: IPartnerUpsert,
+    partnerId:string
   ): Promise<void> {
     try {
       this._loaderService.setLoading();
       const url =
         method === 'POST'
           ? Constants.PARTNER_END_POINT
-          : `${Constants.PARTNER_END_POINT}/${data.partnerId}`;
+          : `${Constants.PARTNER_END_POINT}/${partnerId}`;
       const res = await this._httpService.makeRequestAsync(method, url, data);
 
       if (!res || res.error) return;
@@ -192,31 +161,6 @@ export class PartnerService implements IService {
     } finally {
       this._loaderService.setLoading();
     }
-  }
-
-  public setPostValidators(form: FormGroup): void {
-    const setValidators = [
-      // 'officeName',
-      // 'partnerName',
-      // 'partnerEmail',
-      // 'partnerPhone',
-      'username',
-    ];
-
-    this._globalService.setValidator(form, setValidators);
-  }
-
-  public setPutValidators(form: FormGroup): void {
-    // const setValidators = [
-    //   'officeName',
-    //   'partnerEmail',
-    //   'partnerName',
-    //   'partnerPhone',
-    // ];
-    const removeValidators = ['username'];
-
-    this._globalService.removeValidator(form, removeValidators);
-    // this._globalService.setValidator(form, setValidators);
   }
 
   public controlFormatter(form: FormGroup): void {

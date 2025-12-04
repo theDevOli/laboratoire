@@ -15,7 +15,7 @@ public class PartnerAdderService
 )
 : IPartnerAdderService
 {
-    public async Task<Error> AddPartnerAsync(PartnerDtoAdd partnerDto)
+    public async Task<Error> AddPartnerAsync(PartnerDtoUpsert partnerDto)
     {
         logger.LogInformation("Starting to add a new partner with officeId: {OfficeId} and name: {PartnerName}", partnerDto.OfficeId, partnerDto.PartnerName);
 

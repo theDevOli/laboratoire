@@ -32,6 +32,8 @@ export class Constants {
   static readonly REPORT_END_POINT: string = `${this.URL_BASE}/v1/api/Report`;
   static readonly ROLE_END_POINT: string = `${this.URL_BASE}/v1/api/Role`;
 
+  static readonly OFFICE_END_POINT: string = `${this.URL_BASE}/v1/api/Office`;
+
   static readonly USER_END_POINT: string = `${this.URL_BASE}/v1/api/User`;
   static readonly UTILS_STATES_END_POINT: string = `${this.URL_BASE}/v1/api/Utils/States`;
 }

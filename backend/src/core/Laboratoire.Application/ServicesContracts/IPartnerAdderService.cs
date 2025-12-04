@@ -5,5 +5,5 @@ namespace Laboratoire.Application.ServicesContracts;
 
 public interface IPartnerAdderService
 {
-    Task<Error> AddPartnerAsync(PartnerDtoAdd partner);
+    Task<Error> AddPartnerAsync(PartnerDtoUpsert partner);
 }

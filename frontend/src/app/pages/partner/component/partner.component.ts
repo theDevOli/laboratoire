@@ -39,24 +39,23 @@ export class PartnerComponent implements IComponent, OnInit {
   }
 
   onSubmitForm = (submitForm: ISubmitForm): void => {
-    const body = this._partnerService.getRequestBody(this._method, submitForm);
+    const {form,data} = submitForm;
+    const body = this._partnerService.getRequestBody(form);
 
-     this._partnerService.makeEntityUpsertRequest(this._method, body);
+    this._partnerService.makeEntityUpsertRequest(this._method, body,data.details.partnerId);
   };
 
-  public onSetForm(formData: ISetForm): void{
+  public onSetForm(formData: ISetForm): void {
     const { method, toUpdateData } = formData;
     this._method = method;
     this.form.reset();
 
     if (method === 'POST') {
       this.modalForm = this._partnerService.getPostModalForm();
-      this._partnerService.setPostValidators(this.form);
       return;
     }
 
     this.modalForm = this._partnerService.getPutModalForm();
-    this._partnerService.setPutValidators(this.form);
 
     this.form.patchValue(toUpdateData);
   }
