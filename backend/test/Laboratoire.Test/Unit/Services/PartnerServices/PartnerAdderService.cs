@@ -34,7 +34,7 @@ public class PartnerAdderServiceTest
     public async Task AddPartnerAsync_ShouldReturnConflict_WhenPartnerAlreadyExists()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { OfficeId=Guid.NewGuid(), PartnerName = "Conflict Partner" };
+        var partnerDto = new PartnerDtoUpsert { OfficeId=Guid.NewGuid(), PartnerName = "Conflict Partner" };
 
         _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(true);
@@ -46,7 +46,6 @@ public class PartnerAdderServiceTest
         Assert.True(result.IsNotSuccess());
         Assert.Equal(409, result.StatusCode);
         Assert.Equal(ErrorMessage.ConflictPost, result.Message);
-        // _repositoryMock.Verify(r => r.AddPartnerAsync(It.IsAny<Partner>(), It.IsAny<Guid>()), Times.Never);
         _userAdderMock.Verify(u => u.AddUserAsync(It.IsAny<UserDtoAdd>()), Times.Never);
         _userDeletionMock.Verify(u => u.DeletionUserAsync(It.IsAny<User>()), Times.Never);
     }
@@ -55,7 +54,7 @@ public class PartnerAdderServiceTest
     public async Task AddPartnerAsync_ShouldReturnDbError_WhenUserInsertionFromPartnerFails()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { OfficeId=Guid.NewGuid(), PartnerName = "Rollback Partner" };
+        var partnerDto = new PartnerDtoUpsert { OfficeId=Guid.NewGuid(), PartnerName = "Rollback Partner" };
 
         _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(false);
@@ -78,7 +77,7 @@ public class PartnerAdderServiceTest
         // Arrange
         var fakeUserId = Guid.NewGuid();
         var fakeOfficeId = Guid.NewGuid();
-        var partnerDto = new PartnerDtoAdd { OfficeId=fakeOfficeId, PartnerName = "Success Partner" };
+        var partnerDto = new PartnerDtoUpsert { OfficeId=fakeOfficeId, PartnerName = "Success Partner" };
 
         _repositoryMock.Setup(r => r.DoesPartnerExistByOfficeAndNameAsync(It.IsAny<Partner>()))
                        .ReturnsAsync(false);

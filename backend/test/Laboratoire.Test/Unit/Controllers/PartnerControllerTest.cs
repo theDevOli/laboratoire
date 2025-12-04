@@ -118,9 +118,9 @@ public class PartnerControllerTests
     public async Task AddPartnerAsync_ReturnsOk_WhenPartnerIsAddedSuccessfully()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerName = "Partner1" };
+        var partnerDto = new PartnerDtoUpsert { PartnerName = "Partner1" };
         var addResult = Error.SetSuccess();
-        _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoAdd>())).ReturnsAsync(addResult);
+        _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoUpsert>())).ReturnsAsync(addResult);
 
         // Act
         var result = await _controller.AddPartnerAsync(partnerDto);
@@ -136,9 +136,9 @@ public class PartnerControllerTests
     public async Task AddPartnerAsync_ReturnsConflict_WhenPartnerIsAlreadyRegistered()
     {
         // Arrange
-        var partnerDto = new PartnerDtoAdd { PartnerName = "Partner1" };
+        var partnerDto = new PartnerDtoUpsert { PartnerName = "Partner1" };
         var addResult = Error.SetError(ErrorMessage.ConflictPost, 409);
-        _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoAdd>())).ReturnsAsync(addResult);
+        _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoUpsert>())).ReturnsAsync(addResult);
 
         // Act
         var result = await _controller.AddPartnerAsync(partnerDto);
@@ -155,8 +155,8 @@ public class PartnerControllerTests
     // public async Task AddPartnerAsync_ShouldReturnServerError_WhenServerErrorOccurs()
     // {
     //     // Arrange
-    //     var partnerDto = new PartnerDtoAdd { PartnerName = "Partner1" };
-    //     _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoAdd>())).ThrowsAsync(new Exception());
+    //     var partnerDto = new PartnerDtoUpsert { PartnerName = "Partner1" };
+    //     _partnerAdderServiceMock.Setup(service => service.AddPartnerAsync(It.IsAny<PartnerDtoUpsert>())).ThrowsAsync(new Exception());
 
     //     // Act
     //     var result = await _controller.AddPartnerAsync(partnerDto);
@@ -171,12 +171,12 @@ public class PartnerControllerTests
     {
         // Arrange
         var partnerId = Guid.NewGuid();
-        var partner = new Partner { PartnerId = partnerId, PartnerName = "UpdatedPartner" };
+        var partnerDto = new PartnerDtoUpsert {  PartnerName = "UpdatedPartner" };
         var updateResult = Error.SetSuccess();
         _partnerUpdatableServiceMock.Setup(service => service.UpdatePartnerAsync(It.IsAny<Partner>())).ReturnsAsync(updateResult);
 
         // Act
-        var result = await _controller.UpdatePartnerAsync(partnerId, partner);
+        var result = await _controller.UpdatePartnerAsync(partnerId, partnerDto);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -186,32 +186,16 @@ public class PartnerControllerTests
     }
 
     [Fact]
-    public async Task UpdatePartnerAsync_ReturnsBadRequest_WhenIdsDoNotMatch()
-    {
-        // Arrange
-        var partner = new Partner { PartnerId = Guid.NewGuid(), PartnerName = "Partner1" };
-
-        // Act
-        var result = await _controller.UpdatePartnerAsync(Guid.NewGuid(), partner);
-
-        // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<object>>(badRequestResult.Value);
-        Assert.Equal(ErrorMessage.BadRequestID, response.Error?.Message);
-        Assert.Equal(400, response.Error?.Code);
-    }
-
-    [Fact]
     public async Task UpdatePartnerAsync_ReturnsNotFound_WhenThereIsNoRecordInDatabase()
     {
         // Arrange
         var partnerId = Guid.NewGuid();
-        var partner = new Partner { PartnerId = partnerId, PartnerName = "UpdatedPartner" };
+           var partnerDto = new PartnerDtoUpsert {  PartnerName = "UpdatedPartner" };
         var updateResult = Error.SetError(ErrorMessage.NotFound, 404);
         _partnerUpdatableServiceMock.Setup(service => service.UpdatePartnerAsync(It.IsAny<Partner>())).ReturnsAsync(updateResult);
 
         // Act
-        var result = await _controller.UpdatePartnerAsync(partnerId, partner);
+        var result = await _controller.UpdatePartnerAsync(partnerId, partnerDto);
 
         // Assert
         var notFoundResult = Assert.IsType<ObjectResult>(result);

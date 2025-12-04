@@ -48,8 +48,8 @@ public class PartnerRepositoryIntegrationTest
 
         // Act
         var partners = await _repository.GetActivePartnersAsync();
-        var partnerRoleId = users.SingleOrDefault(x => x.UserId == partners.FirstOrDefault()!.UserId);
-        var activePartners = users.Where(u => u.IsActive == true && u.RoleId == partnerRoleId!.RoleId);
+        var partnerRoleId = users.SingleOrDefault(x => x.UserId == partners.FirstOrDefault()!.UserId)?.RoleId;
+        var activePartners = users.Where(u => u.IsActive == true && u.RoleId == partnerRoleId);
 
         //Assert
         Assert.NotEmpty(partners);
