@@ -81,6 +81,28 @@
           >
         </li>
         } @if(auth().permission?.partner!==null){
+          <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-regular fa-handshake"></i>Parceiros
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/escritorios"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i class="fa fa-building"></i>Escritórios</a
+              >
+            </li>
         <li class="nav-item">
           <a
             class="nav-link"
@@ -91,6 +113,8 @@
             aria-expanded="false"
             ><i class="fa-regular fa-handshake"></i>Parceiros</a
           >
+        </li>
+          </ul>
         </li>
         <!-- } @if(auth().permission?.chemical!== null){ -->
         } @if(false){
