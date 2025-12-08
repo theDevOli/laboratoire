@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { OfficeService } from '../service/office.service';
 
+import { TableComponent } from '../../../core/shell/table/table.component';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 
 import { IAction } from '../../../shared/interfaces/IAction.interface';
@@ -14,7 +15,7 @@ import { ISubmitForm } from '../../../shared/interfaces/ISubmitForm.interface';
 @Component({
   selector: 'app-office',
   standalone: true,
-  imports: [],
+  imports: [TableComponent],
   templateUrl: './office.component.html',
 })
 export class OfficeComponent implements IComponent, OnInit {
@@ -36,14 +37,14 @@ export class OfficeComponent implements IComponent, OnInit {
     this._officeService.getEntities();
   }
 
-  public async onSubmitForm(submitForm: ISubmitForm): Promise<void> {
-    const {form, data} = submitForm;
+  public onSubmitForm = async (submitForm: ISubmitForm): Promise<void> => {
+    const { form, data } = submitForm;
     const officeId = data?.details?.officeId || null;
 
     const body = this._officeService.getUpsertBodyRequest(form);
 
     this._officeService.makeEntityUpsertRequest(this._method, body, officeId);
-  }
+  };
 
   public onSetForm(formData: ISetForm): void {
     const { method, toUpdateData } = formData;
