@@ -62,6 +62,13 @@ export const routes: Routes = [
             (mod) => mod.PartnerComponent
           ),
       },
+      {
+        path: 'escritorios',
+        loadComponent: () =>
+          import('./pages/office/component/office.component').then(
+            (mod) => mod.OfficeComponent
+          ),
+      },
     ],
     canActivate: [authGuard],
   },
