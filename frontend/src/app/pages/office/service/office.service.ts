@@ -26,7 +26,7 @@ export class OfficeService implements IService {
       this._loaderService.setLoading();
       const res = await this._httpService.makeRequestAsync<IOfficeGet[]>(
         'GET',
-        Constants.LOGIN_END_POINT
+        Constants.OFFICE_END_POINT
       );
       if (!res) return;
 
