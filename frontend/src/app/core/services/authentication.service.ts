@@ -56,9 +56,8 @@ export class AuthenticationService {
           : ErrorMessage.unauthorized;
 
       this._notificationsService.openNotification(new AppNotification(message));
-    } finally {
       this._loaderService.setLoading();
-    }
+    } 
   }
 
   public async autoLogin(): Promise<void> {
@@ -80,9 +79,8 @@ export class AuthenticationService {
         true
       );
       this._notificationsService.openNotification(notification);
-    } finally {
       this._loaderService.setLoading();
-    }
+    } 
   }
 
   private async setUser(token: string): Promise<User | null> {

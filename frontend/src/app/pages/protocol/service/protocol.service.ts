@@ -42,7 +42,7 @@ export class ProtocolService implements IService {
 
   public async getEntities(year: number): Promise<void> {
     try {
-      this._loaderService.setLoading();
+      if (!this._loaderService.loading()) this._loaderService.setLoading();
 
       const user = this._authenticationService.auth().user;
       const partnerId = user?.partnerId;
