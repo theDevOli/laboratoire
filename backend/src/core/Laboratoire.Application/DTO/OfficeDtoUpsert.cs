@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Laboratoire.Application.DTO;
 
-public class OfficeDtoAdd
+public class OfficeDtoUpsert
 {
     [Required]
     public string? OfficeName { get; set; }
