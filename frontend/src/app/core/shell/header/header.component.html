@@ -25,7 +25,12 @@
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
             aria-expanded="false"
-            ><i class="fa-solid fa-table-list"></i>Protocolo</a
+            ><i
+              ngbTooltip="Protocolo"
+              placement="top"
+              class="fa-solid fa-table-list"
+            ></i
+            ><span class="d-xl-inline-flex">Protocolo</span></a
           >
         </li>
         } @if(auth().permission?.client !==null
@@ -38,7 +43,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="fa-regular fa-clipboard"></i>Cadastro
+            <i
+              ngbTooltip="Cadastro"
+              placement="top"
+              class="fa-regular fa-clipboard"
+            ></i
+            ><span class="d-xl-inline-flex">Cadastro</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             @if(auth().permission?.client !==null){
@@ -50,7 +60,12 @@
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-expanded="false"
-                ><i class="fa-solid fa-people-group"></i>Clientes</a
+                ><i
+                  ngbTooltip="Clientes"
+                  placement="top"
+                  class="fa-solid fa-people-group"
+                ></i
+                ><span class="d-xl-inline-flex">Clientes</span></a
               >
             </li>
             }@if(auth().permission?.property!==null){
@@ -62,7 +77,12 @@
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-expanded="false"
-                ><i class="fa-solid fa-house-chimney-window"></i>Propriedades</a
+                ><i
+                  ngbTooltip="Propriedades"
+                  placement="top"
+                  class="fa-solid fa-house-chimney-window"
+                ></i
+                ><span class="d-xl-inline-flex">Propriedades</span></a
               >
             </li>
             }
@@ -77,11 +97,16 @@
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
             aria-expanded="false"
-            ><i class="fa-solid fa-sack-dollar"></i>Caixa</a
+            ><i
+              class="fa-solid fa-sack-dollar"
+              ngbTooltip="Caixa"
+              placement="top"
+            ></i
+            ><span class="d-xl-inline-flex">Caixa</span></a
           >
         </li>
         } @if(auth().permission?.partner!==null){
-          <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
             id="navbarDropdown"
@@ -89,7 +114,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="fa-regular fa-handshake"></i>Parceiros
+            <i
+              ngbTooltip="Parceiros"
+              placement="top"
+              class="fa-regular fa-handshake"
+            ></i
+            ><span class="d-xl-inline-flex">Parceiros</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
@@ -100,20 +130,30 @@
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-expanded="false"
-                ><i class="fa fa-building"></i>Escritórios</a
+                ><i
+                  ngbTooltip="Escritórios"
+                  placement="top"
+                  class="fa fa-building"
+                ></i
+                ><span class="d-xl-inline-flex">Escritórios</span></a
               >
             </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/parceiros"
-            routerLinkActive="active"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-expanded="false"
-            ><i class="fa-regular fa-handshake"></i>Parceiros</a
-          >
-        </li>
+            <li class="nav-item">
+              <a
+                class="dropdown-item"
+                routerLink="/parceiros"
+                routerLinkActive="active"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-expanded="false"
+                ><i
+                  ngbTooltip="Parceiros"
+                  placement="top"
+                  class="fa-regular fa-handshake"
+                ></i
+                ><span class="d-xl-inline-flex">Parceiros</span></a
+              >
+            </li>
           </ul>
         </li>
         <!-- } @if(auth().permission?.chemical!== null){ -->
@@ -126,7 +166,12 @@
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
             aria-expanded="false"
-            ><i class="fa-solid fa-flask-vial"></i>Reagentes</a
+            ><i
+              class="fa-solid fa-flask-vial"
+              ngbTooltip="Reagentes"
+              placement="top"
+            ></i
+            ><span class="d-xl-inline-flex">Reagentes</span></a
           >
         </li>
         } @if(auth().permission?.users!==null){
@@ -138,7 +183,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="fa-solid fa-users-gear"></i>Gestão de Usuários
+            <i
+              class="fa-solid fa-users-gear"
+              ngbTooltip="Gestão de Usuários"
+              placement="top"
+            ></i
+            ><span class="d-xl-inline-flex">Gestão de Usuários</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             @if(auth().permission?.users !==null){
@@ -150,7 +200,12 @@
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-expanded="false"
-                ><i class="fa-solid fa-users"></i>Usuários</a
+                ><i
+                  class="fa-solid fa-users"
+                  ngbTooltip="Usuários"
+                  placement="top"
+                ></i
+                ><span class="d-xl-inline-flex">Usuários</span></a
               >
             </li>
 
@@ -162,7 +217,12 @@
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-expanded="false"
-                ><i class="fa-regular fa-id-card"></i>Permissão</a
+                ><i
+                  class="fa-regular fa-id-card"
+                  ngbTooltip="Permissão"
+                  placement="top"
+                ></i
+                ><span class="d-xl-inline-flex">Permissão</span></a
               >
             </li>
             }
@@ -174,9 +234,17 @@
       <div class="d-flex justify-content-between">
         <div class="theme mx-2" (click)="toggleTheme()">
           @if(colorTheme==='dark'){
-          <i class="fa-solid fa-sun fa-2x"></i>
+          <i
+            class="fa-solid fa-sun fa-2x"
+            ngbTooltip="Escuro"
+            placement="top"
+          ></i>
           } @if(colorTheme==='light'){
-          <i class="fa-solid fa-moon fa-2x"></i>
+          <i
+            class="fa-solid fa-moon fa-2x"
+            ngbTooltip="Claro"
+            placement="top"
+          ></i>
           }
         </div>
 
@@ -202,7 +270,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="true"
           >
-            <i class="fa-solid fa-user-tie"></i>{{ name }}
+            <i
+              class="fa-solid fa-user-tie"
+              [ngbTooltip]="name"
+              placement="top"
+            ></i>
+            <span class="d-xl-inline-flex">{{ name }}</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
@@ -210,12 +283,22 @@
                 class="dropdown-item"
                 data-bs-toggle="modal"
                 data-bs-target="#password-modal"
-                ><i class="fa-solid fa-unlock"></i>Mudar senha</a
+                ><i
+                  class="fa-solid fa-unlock"
+                  ngbTooltip="Mudar senha"
+                  placement="top"
+                ></i
+                ><span class="d-xl-inline-flex">Mudar senha</span></a
               >
             </li>
             <li (click)="onLogout()">
               <a class="dropdown-item"
-                ><i class="fa-solid fa-right-from-bracket"></i>Logout</a
+                ><i
+                  class="fa-solid fa-right-from-bracket"
+                  ngbTooltip="Logout"
+                  placement="top"
+                ></i
+                ><span class="d-xl-inline-flex">Logout</span></a
               >
             </li>
           </ul>

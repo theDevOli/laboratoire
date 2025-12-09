@@ -3,13 +3,11 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HttpService } from '../../services/http.service';
-import { ToastComponent } from '../toast/toast.component';
 import { AuthenticationService } from '../../services/authentication.service';
 
 import { Constants } from '../../../shared/Utils/Constants';
 import { GlobalDataService } from '../../services/global-data.service';
 import { IProtocolYearGet } from '../../../shared/api-contracts/IProtocolYearGet.interface';
-import { ModalComponent } from '../modal/modal.component';
 import { IModalForm } from '../../../shared/interfaces/IModalForm.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { comparePasswordValidator } from '../../../shared/validator/comparePassword.validator';
