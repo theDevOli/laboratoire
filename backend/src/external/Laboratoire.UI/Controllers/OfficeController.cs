@@ -41,7 +41,7 @@ public class OfficeController
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDtoAdd dto)
+    public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDtoUpsert dto)
     {
         var office = dto.ToOffice();
 
@@ -54,10 +54,9 @@ public class OfficeController
     }
 
     [HttpPut("{officeId}")]
-    public async Task<IActionResult> UpdateOfficeAsync([FromBody] Office office, [FromRoute] Guid officeId)
+    public async Task<IActionResult> UpdateOfficeAsync([FromBody] OfficeDtoUpsert dto, [FromRoute] Guid officeId)
     {
-        if (officeId != office.OfficeId)
-            return BadRequest(ApiResponse<object>.Failure(ErrorMessage.BadRequestID, 400));
+        var office = dto.ToOffice(officeId);
 
         var error = await officeUpdatableService.UpdateOfficeAsync(office);
 

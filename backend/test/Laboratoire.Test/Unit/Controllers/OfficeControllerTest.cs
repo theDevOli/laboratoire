@@ -2,8 +2,6 @@ using Laboratoire.Application.DTO;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
-using Laboratoire.Domain.RepositoryContracts;
-using Laboratoire.Infrastructure.Repository;
 using Laboratoire.UI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -128,7 +126,7 @@ public class OfficeControllerTest
     public async Task AddOfficeAsync_ShouldReturnConflict_WhenOfficeExistsOnDatabase()
     {
         // Arrange
-        var dto = new OfficeDtoAdd() { OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
+        var dto = new OfficeDtoUpsert() { OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
         var error = Error.SetError(ErrorMessage.ConflictPost, 409);
 
         _mockAdderService.Setup(repo => repo.AddOfficeAsync(It.IsAny<Office>())).ReturnsAsync(error);
@@ -148,7 +146,7 @@ public class OfficeControllerTest
     public async Task AddOfficeAsync_ShouldReturnCreated_WhenOperationSucceeds()
     {
         // Arrange
-        var dto = new OfficeDtoAdd() { OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
+        var dto = new OfficeDtoUpsert() { OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
         var expectedError = Error.SetSuccess();
 
         _mockAdderService.Setup(repo => repo.AddOfficeAsync(It.IsAny<Office>())).ReturnsAsync(expectedError);
@@ -163,36 +161,18 @@ public class OfficeControllerTest
         Assert.Null(response.Error);
         _mockAdderService.Verify(repo => repo.AddOfficeAsync(It.IsAny<Office>()), Times.Once);
     }
-    [Fact]
-    public async Task UpdateOfficeAsync_ShouldReturnBadRequest_WhenIdsAreDifferent()
-    {
-        // Arrange
-        Guid officeId = Guid.NewGuid();
-        var office = new Office() { OfficeId = officeId, OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
-
-        // Act
-        var result = await _controller.UpdateOfficeAsync(office, Guid.NewGuid());
-
-        // Assert
-        var objectResult = Assert.IsType<BadRequestObjectResult>(result);
-        var response = Assert.IsType<ApiResponse<Object>>(objectResult.Value);
-        Assert.Null(response.Data);
-        Assert.NotNull(response.Error);
-        Assert.Equal(ErrorMessage.BadRequestID, response.Error.Message);
-        _mockAdderService.Verify(repo => repo.AddOfficeAsync(It.IsAny<Office>()), Times.Never);
-    }
 
     [Fact]
     public async Task UpdateOfficeAsync_ShouldReturnNotFound_WhenNoOfficeExistsOnDataBase()
     {
         // Arrange
         Guid officeId = Guid.NewGuid();
-        var office = new Office() { OfficeId = officeId, OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
+        var officeDto = new OfficeDtoUpsert() {  OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
         var expectedError = Error.SetError(ErrorMessage.NotFound, 404);
 
         _mockUpdatableService.Setup(repo => repo.UpdateOfficeAsync(It.IsAny<Office>())).ReturnsAsync(expectedError);
         // Act
-        var result = await _controller.UpdateOfficeAsync(office, officeId);
+        var result = await _controller.UpdateOfficeAsync(officeDto, officeId);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -208,12 +188,12 @@ public class OfficeControllerTest
     {
         // Arrange
         Guid officeId = Guid.NewGuid();
-        var office = new Office() {OfficeId=officeId, OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
+        var officeDto = new OfficeDtoUpsert() { OfficeEmail = "test1@email.com", OfficeName = "Test1", City = "Test1" };
         var expectedError = Error.SetSuccess();
 
         _mockUpdatableService.Setup(repo => repo.UpdateOfficeAsync(It.IsAny<Office>())).ReturnsAsync(expectedError);
         // Act
-        var result = await _controller.UpdateOfficeAsync(office,officeId);
+        var result = await _controller.UpdateOfficeAsync(officeDto,officeId);
 
         // Assert
         var objectResult = Assert.IsType<OkObjectResult>(result);
