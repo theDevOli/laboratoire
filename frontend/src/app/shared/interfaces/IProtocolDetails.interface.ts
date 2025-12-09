@@ -6,7 +6,7 @@ export interface IProtocolDetails extends IDetails {
   clientTaxId: string;
   fullLocation: string;
   partnerName: string | null;
-  isPaid: 'Sim' | 'Não';
+  isPaid: 'Sim' | 'Não' | string;
   // reportType: string;
   details: {
     totalPaid: number | null;

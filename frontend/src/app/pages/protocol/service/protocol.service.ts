@@ -67,7 +67,7 @@ export class ProtocolService implements IService {
             data.propertyName
           }${data.area ? ' (' : ''}${data.area ?? ''}${data.area ? ')' : ''}`,
           isPaid:
-            data.totalPaid && data.totalPaid >= data.price ? 'Sim' : 'Não',
+            data.totalPaid ===null?'Não': data.totalPaid < data.price ?`Não (-R$${(data.price-data.totalPaid).toFixed(2)})`:'Sim',
           partnerName: data.partnerName ?? '-',
           details: {
             totalPaid: data.totalPaid,
