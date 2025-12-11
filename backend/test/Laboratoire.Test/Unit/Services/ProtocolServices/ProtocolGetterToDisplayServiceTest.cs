@@ -14,6 +14,7 @@ public class ProtocolGetterToDisplayServiceTest
     private readonly Mock<IProtocolRepository> _protocolRepoMock;
     private readonly Mock<ICropsNormalizationGetterService> _cropsNormalizationMock;
     private readonly Mock<ICropGetterService> _cropGetterMock;
+    private readonly Mock<IPartnerGetterByIdService> _partnerGetterByIdMock;
     private readonly Mock<ILogger<ProtocolGetterToDisplayService>> _loggerMock;
     private readonly ProtocolGetterToDisplayService _service;
 
@@ -22,12 +23,14 @@ public class ProtocolGetterToDisplayServiceTest
         _protocolRepoMock = new Mock<IProtocolRepository>();
         _cropsNormalizationMock = new Mock<ICropsNormalizationGetterService>();
         _cropGetterMock = new Mock<ICropGetterService>();
+        _partnerGetterByIdMock = new Mock<IPartnerGetterByIdService>();
         _loggerMock = new Mock<ILogger<ProtocolGetterToDisplayService>>();
 
         _service = new ProtocolGetterToDisplayService(
             _protocolRepoMock.Object,
             _cropsNormalizationMock.Object,
             _cropGetterMock.Object,
+            _partnerGetterByIdMock.Object,
             _loggerMock.Object
         );
     }
@@ -38,7 +41,7 @@ public class ProtocolGetterToDisplayServiceTest
         // Arrange
         int year = 2025;
         Guid? id = null;
-        bool? isPartner = null;
+        bool isPartner = false;
 
         var protocols = new List<ProtocolDtoDisplayDb> { new ProtocolDtoDisplayDb { ProtocolId = "0001/2025" } };
         var cropsNormalizations = new List<CropsNormalization>()
@@ -77,7 +80,7 @@ public class ProtocolGetterToDisplayServiceTest
         // Arrange
         int year = 2025;
         Guid partnerId = Guid.NewGuid();
-        bool? isPartner = true;
+        bool isPartner = true;
 
         var protocols = new List<ProtocolDtoDisplayDb>
             {
@@ -134,7 +137,7 @@ public class ProtocolGetterToDisplayServiceTest
         // Arrange
         int year = 2025;
         Guid clientId = Guid.NewGuid();
-        bool? isPartner = false;
+        bool isPartner = false;
 
         var protocols = new List<ProtocolDtoDisplayDb>
             {

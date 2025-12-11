@@ -45,7 +45,7 @@ public class ProtocolControllerTests
                 new ProtocolDtoDisplay { ProtocolId = "1234/2023" },
                 new ProtocolDtoDisplay { ProtocolId = "5678/2023" }
             };
-        _protocolGetterServiceMock.Setup(service => service.GetDisplayProtocolsAsync(year, null, null)).ReturnsAsync(protocols);
+        _protocolGetterServiceMock.Setup(service => service.GetDisplayProtocolsAsync(year, null, false)).ReturnsAsync(protocols);
 
         // Act
         var result = await _controller.GetDisplayProtocolsAsync(year);

@@ -126,7 +126,7 @@ public class PartnerControllerTests
         var result = await _controller.AddPartnerAsync(partnerDto);
 
         // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
+        var okResult = Assert.IsType<ObjectResult>(result);
         var response = Assert.IsType<ApiResponse<string>>(okResult.Value);
         Assert.Equal(SuccessMessage.Added, response.Data);
         Assert.Null(response.Error);
