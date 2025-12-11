@@ -27,7 +27,7 @@ public class UserAdderService
         {
             logger.LogInformation("Adding user and partner to the database.");
 
-            var username = await userRepository.SetUserNameAsync(user.Username);
+            var username = await userRepository.SetUserNameAsync(userDto.Name);
             user.Username = username;
             
             var partner = userDto.Partner;

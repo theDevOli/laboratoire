@@ -155,7 +155,7 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         ON p.partner_id = pa.partner_id
     LEFT JOIN 
         customers.office AS o 
-        ON p.office_id = o.office_id
+        ON pa.office_id = o.office_id
     INNER JOIN 
         parameters.catalog AS ca 
         ON p.catalog_id = ca.catalog_id

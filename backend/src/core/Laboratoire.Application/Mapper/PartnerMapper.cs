@@ -27,6 +27,7 @@ public static class PartnerMapper
     {
         RoleId = 4,
         Username = default,
+        Name = dto.PartnerName?.Trim(),
         IsActive = true,
         Client = default,
         Partner = dto.ToPartner(),

@@ -11,11 +11,12 @@ public class ProtocolGetterToDisplayService
     IProtocolRepository protocolRepository,
     ICropsNormalizationGetterService cropsNormalizationGetterService,
     ICropGetterService cropGetterService,
+    IPartnerGetterByIdService partnerGetterByIdService,
     ILogger<ProtocolGetterToDisplayService> logger
 )
 : IProtocolGetterToDisplayService
 {
-    public async Task<IEnumerable<ProtocolDtoDisplay>?> GetDisplayProtocolsAsync(int year, Guid? id, bool? isPartner)
+    public async Task<IEnumerable<ProtocolDtoDisplay>?> GetDisplayProtocolsAsync(int year, Guid? id, bool isPartner)
     {
         logger.LogInformation("Starting to fetch protocols to display for year {Year}.", year);
 
@@ -33,17 +34,18 @@ public class ProtocolGetterToDisplayService
         var crops = await cropsTask;
 
         var displayProtocols = protocols.ToProtocolDisplay(cropsNormalizations, crops);
-        if (id is null && isPartner is null)
+        if (id is null && isPartner == false)
         {
             logger.LogInformation("No filtering by ID or role (partner/client). Returning all display protocols.");
             return displayProtocols;
         }
 
-        if ((bool)isPartner!)
+        if (isPartner)
         {
             logger.LogInformation("Filtering protocols by Partner ID: {Id}", id);
-            var officeId = displayProtocols.First(protocol => protocol.PartnerId == id).OfficeId;
-            return displayProtocols.Where(protocol => protocol.OfficeId == officeId);
+            var partner = await partnerGetterByIdService.GetPartnerByIdAsync(id);
+            
+            return displayProtocols.Where(protocol => protocol.OfficeId == partner?.OfficeId);
         }
 
         logger.LogInformation("Filtering protocols by Client ID: {Id}", id);
