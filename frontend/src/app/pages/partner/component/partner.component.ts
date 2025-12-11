@@ -41,8 +41,9 @@ export class PartnerComponent implements IComponent, OnInit {
   onSubmitForm = (submitForm: ISubmitForm): void => {
     const {form,data} = submitForm;
     const body = this._partnerService.getRequestBody(form);
+    const partnerId = data?.details?.partnerId || null;
 
-    this._partnerService.makeEntityUpsertRequest(this._method, body,data.details.partnerId);
+    this._partnerService.makeEntityUpsertRequest(this._method, body,partnerId);
   };
 
   public onSetForm(formData: ISetForm): void {
