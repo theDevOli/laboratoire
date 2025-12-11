@@ -5,19 +5,18 @@ import { Utils } from '../../../shared/Utils/Utils';
 import { IService } from '../../../shared/interfaces/IService.interface';
 import { Constants } from '../../../shared/Utils/Constants';
 import { IModalForm } from '../../../shared/interfaces/IModalForm.interface';
-import { HttpService } from '../../../core/services/http.service';
 import { ISubmitForm } from '../../../shared/interfaces/ISubmitForm.interface';
-import { ICashFlowPut } from '../../../shared/api-contracts/ICashFlowPut.interface';
-import { ICashFlowPost } from '../../../shared/api-contracts/ICashFlowPost.interface';
+import { SuccessMessage } from '../../../shared/Utils/SuccessMessage';
+import { AppNotification } from '../../../shared/models/AppNotification.model';
+import { ICashFlowUpsert } from '../../../shared/api-contracts/ICashFlowUpsert.interface';
 import { ICashFlowDetails } from '../../../shared/interfaces/ICashFlowDetails.interface';
+import { IDisplayCashFlow } from '../../../shared/api-contracts/IDisplayCashFlow.interface';
+import { IProtocolPatchCashFlow } from '../../../shared/api-contracts/IProtocolPatchCashFlow.interface';
 
+import { HttpService } from '../../../core/services/http.service';
 import { LoaderService } from '../../../core/services/loader.service';
 import { GlobalDataService } from '../../../core/services/global-data.service';
 import { NotificationsService } from '../../../core/services/notifications.service';
-import { IProtocolPatchCashFlow } from '../../../shared/api-contracts/IProtocolPatchCashFlow.interface';
-import { AppNotification } from '../../../shared/models/AppNotification.model';
-import { SuccessMessage } from '../../../shared/Utils/SuccessMessage';
-import { IDisplayCashFlow } from '../../../shared/api-contracts/IDisplayCashFlow.interface';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 
 @Injectable({
@@ -109,6 +108,12 @@ export class CashService implements IService {
             label: 'Tipo de Transação',
             options: this._globalDataService.transactionOptions(),
           },
+          {
+            type: 'dropdown',
+            nameId: 'partnerId',
+            label: 'Parceiro',
+            options: this._globalDataService.partnerOptions(),
+          },
         ],
       },
     ];
@@ -151,6 +156,7 @@ export class CashService implements IService {
       paymentDate: new FormControl(''),
       toAddProtocol: new FormControl(false),
       protocolId: new FormControl(''),
+      partnerId: new FormControl(''),
     });
   }
 
@@ -158,12 +164,8 @@ export class CashService implements IService {
     return ['Descrição', 'Total Pago', 'Data do Pagamento'];
   }
 
-  public getRequestBody(
-    method: 'POST' | 'PUT',
-    submitForm: ISubmitForm
-  ): ICashFlowPost | ICashFlowPut {
-    const { data, form } = submitForm;
-    const details = data as ICashFlowDetails;
+  public getRequestBody(submitForm: ISubmitForm): ICashFlowUpsert {
+    const { form } = submitForm;
 
     const description = form.get('description')?.value;
     const transactionId = Number(form.get('transactionId')?.value);
@@ -172,22 +174,14 @@ export class CashService implements IService {
     const paymentDate = !tempPaymentDate
       ? Utils.dateFormatter(new Date(), true)
       : tempPaymentDate;
+    const partnerId = form.get('partnerId')?.value || null;
 
-    if (method === 'POST')
-      return {
-        description,
-        transactionId,
-        totalPaid,
-        paymentDate,
-      };
-
-    const cashFlowId = details.details.cashFlowId;
     return {
-      cashFlowId,
       description,
       transactionId,
       totalPaid,
       paymentDate,
+      partnerId,
     };
   }
 
@@ -213,28 +207,30 @@ export class CashService implements IService {
 
   public async makeEntityUpsertRequest(
     method: 'PUT' | 'POST',
-    data: any
+    data: ICashFlowUpsert,
+    cashFlowId: number | null = null
   ): Promise<void> {
     try {
       this._loaderService.setLoading();
 
-      const year = this._globalDataService.year();
-      const month = this._globalDataService.month() + 1;
-      const cashFlowFilter = this._globalDataService.cashFlowFilter();
-      const transactionFilter = this._globalDataService.transactionFilter();
-
       const url =
         method === 'POST'
           ? Constants.CASH_FLOW_END_POINT
-          : `${Constants.CASH_FLOW_END_POINT}/${data.cashFlowId}`;
+          : `${Constants.CASH_FLOW_END_POINT}/${cashFlowId}`;
       const response = await this._httpService.makeRequestAsync(
         method,
         url,
         data
       );
 
-      if (response && !response.error)
-        this.getEntities(year, month, cashFlowFilter, transactionFilter);
+      if (!response || response.error) return;
+
+      const year = this._globalDataService.year();
+      const month = this._globalDataService.month() + 1;
+      const cashFlowFilter = this._globalDataService.cashFlowFilter();
+      const transactionFilter = this._globalDataService.transactionFilter();
+
+      this.getEntities(year, month, cashFlowFilter, transactionFilter);
     } catch (error) {
       this._notificationService.setFetchErrorNotification();
     } finally {

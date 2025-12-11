@@ -79,9 +79,16 @@ export class CashComponent implements IComponent, OnInit {
       return;
     }
 
-    const body = this._cashService.getRequestBody(this._method, submitForm);
+    console.log(submitForm);
+    const cashFlowId: number | null =
+      submitForm.data?.details?.cashFlowId || null;
+    const body = this._cashService.getRequestBody(submitForm);
 
-    await this._cashService.makeEntityUpsertRequest(this._method, body);
+    await this._cashService.makeEntityUpsertRequest(
+      this._method,
+      body,
+      cashFlowId
+    );
   };
 
   public onSetForm(formData: ISetForm): void {
