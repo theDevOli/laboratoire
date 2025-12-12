@@ -6,6 +6,9 @@ public interface ICashFlowRepository
 {
     Task<IEnumerable<CashFlow>> GetAllCashFlowAsync();
     Task<IEnumerable<CashFlow>> GetCashFlowByYearAndMonthAsync(int? year, int? month);
+    Task<IEnumerable<CashFlow>> GetCashFlowByPartnerIdAndYearAsync(int? year, Guid partnerId);
+    Task<IEnumerable<CashFlow>> GetPartnerBalanceByYearAndPartnerIdAsync(int? year, Guid partnerId);
+    Task<IEnumerable<CashFlow>> GetOfficeBalanceByYearAndPartnerIdAsync(int? year, Guid partnerId);
     Task<CashFlow?> GetCashFlowByIdAsync(int? cashFlowId);
     Task<int> AddCashFlowAsync(CashFlow cashFlow);
     Task<bool> DoesCashFlowExistsAsync(CashFlow cashFlow);

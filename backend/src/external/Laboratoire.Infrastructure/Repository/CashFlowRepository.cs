@@ -6,7 +6,7 @@ using Laboratoire.Infrastructure.DbContext;
 
 namespace Laboratoire.Infrastructure.Repository;
 
-public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
+public sealed class CashFlowRepository(DataContext dapper) : ICashFlowRepository
 {
     #region SQL queries
     private readonly string _getCashFlowByYearAndMonth =
@@ -26,6 +26,77 @@ public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
         AND EXTRACT(MONTH FROM payment_date) = @MonthParameter
     ORDER BY 
         payment_date, description;
+    """;
+    private readonly string _getCashFlowByPartnerAndYear =
+    $"""
+    SELECT 
+        cash_flow_id AS {nameof(CashFlow.CashFlowId)},
+        transaction_id AS {nameof(CashFlow.TransactionId)},
+        description AS {nameof(CashFlow.Description)},
+        partner_id AS {nameof(CashFlow.PartnerId)},
+        total_paid AS {nameof(CashFlow.TotalPaid)},
+        payment_date AS {nameof(CashFlow.PaymentDate)}
+    FROM 
+        cash_flow.cash_flow
+    WHERE 
+        payment_date IS NOT NULL
+        AND EXTRACT(YEAR FROM payment_date) = @YearParameter
+        AND partner_id = @PartnerIdParameter
+    ORDER BY 
+        payment_date, description;
+    """;
+    private readonly string _getPartnerBalanceByYear =
+    $"""
+    SELECT 
+        p.protocol_id,
+        
+        cf.payment_date,
+
+        COALESCE(cf.total_paid,-c.price) AS total_paid
+    FROM 
+        document.protocol AS p
+    INNER JOIN
+        parameters.catalog AS c
+        ON p.catalog_id = c.catalog_id
+    LEFT JOIN
+        cash_flow.cash_flow AS cf
+        ON cf.cash_flow_id = p.cash_flow_id
+    WHERE
+        p.partner_id =  @PartnerIdParameter
+        AND EXTRACT(YEAR FROM p.entry_date) = @YearParameter)
+    ORDER BY 
+            payment_date;
+    """;
+    private readonly string _getOfficeBalanceByYear =
+    $"""
+    WITH office_partners AS (
+    SELECT office_id
+    FROM customers.partner
+    WHERE partner_id = @PartnerIdParameter
+    )
+    SELECT
+        p.protocol_id,
+
+        cf.payment_date,
+
+        pr.partner_name,
+
+        COALESCE(cf.total_paid, -c.price) AS total_paid
+    FROM 
+        document.protocol AS p
+    INNER JOIN
+        parameters.catalog AS c
+        ON p.catalog_id = c.catalog_id
+    LEFT JOIN
+        cash_flow.cash_flow AS cf
+        ON cf.cash_flow_id = p.cash_flow_id
+    INNER JOIN
+        customers.partner AS pr
+        ON pr.partner_id = p.partner_id
+    INNER JOIN
+        office_partners AS op
+        ON pr.office_id = op.office_id
+    WHERE EXTRACT(YEAR FROM p.entry_date) = @YearParameter;
     """;
     private readonly string _getAmountByYearAndMonth =
     """
@@ -192,5 +263,33 @@ public sealed class CashFlowRepository(DataContext dapper): ICashFlowRepository
         parameters.Add("@CashFlowIdParameter", cashFlow.CashFlowId, DbType.Int32);
 
         return await dapper.ExecuteSqlAsync(_deleteSql, parameters);
+    }
+
+    public Task<IEnumerable<CashFlow>> GetCashFlowByPartnerIdAndYearAsync(int? year, Guid partnerId)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("@YearParameter", year, DbType.Int32);
+        parameters.Add("@PartnerIdParameter", partnerId, DbType.Guid);
+
+        return dapper.LoadDataAsync<CashFlow>(_getCashFlowByPartnerAndYear, parameters);
+    }
+
+    public Task<IEnumerable<CashFlow>> GetPartnerBalanceByYearAndPartnerIdAsync(int? year, Guid partnerId)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("@YearParameter", year, DbType.Int32);
+        parameters.Add("@PartnerIdParameter", partnerId, DbType.Guid);
+
+        return dapper.LoadDataAsync<CashFlow>(_getPartnerBalanceByYear, parameters);
+    }
+
+    public Task<IEnumerable<CashFlow>> GetOfficeBalanceByYearAndPartnerIdAsync(int? year, Guid partnerId)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@YearParameter", year, DbType.Int32);
+        parameters.Add("@PartnerIdParameter", partnerId, DbType.Guid);
+
+        return dapper.LoadDataAsync<CashFlow>(_getOfficeBalanceByYear, parameters);
     }
 }
