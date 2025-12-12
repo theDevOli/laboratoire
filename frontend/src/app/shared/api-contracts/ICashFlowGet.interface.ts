@@ -4,4 +4,5 @@ export interface ICashFlowGet {
   transactionId: number;
   totalPaid: number;
   paymentDate: string;
+  partnerId: string | null;
 }

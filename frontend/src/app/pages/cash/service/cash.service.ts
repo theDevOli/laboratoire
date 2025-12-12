@@ -68,6 +68,7 @@ export class CashService implements IService {
             cashFlowId: cash.cashFlowId,
             totalPaid: cash.totalPaid,
             transactionId: cash.transactionId,
+            partnerId:cash.partnerId
           },
         })
       );

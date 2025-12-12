@@ -6,5 +6,6 @@ export interface ICashFlowDetails {
     cashFlowId: number;
     totalPaid: number;
     transactionId: number;
+    partnerId: string | null;
   };
 }
