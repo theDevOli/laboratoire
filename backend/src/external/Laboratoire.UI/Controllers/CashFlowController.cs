@@ -79,12 +79,12 @@ public class CashFlowController
 
     [HttpPut("{cashFlowId}")]
     [Authorize(Roles = "admin,recepção")]
-    public async Task<IActionResult> UpdateCashFlowAsync([FromRoute] int cashFlowId, [FromBody] CashFlow cashFlow)
+    public async Task<IActionResult> UpdateCashFlowAsync([FromRoute] int cashFlowId, [FromBody] CashFlowDtoUpsert dto)
     {
-        if (cashFlowId != cashFlow.CashFlowId)
-            return BadRequest(ApiResponse<object>.Failure(ErrorMessage.BadRequestID, 400));
+        var cashFlow = dto.ToCashFlow(cashFlowId);
 
         var updateError = await cashFlowUpdatableService.UpdateCashFlowAsync(cashFlow);
+
         if (updateError.IsNotSuccess())
             return StatusCode(updateError.StatusCode, ApiResponse<object>.Failure(updateError.Message!, updateError.StatusCode));
 
@@ -93,10 +93,12 @@ public class CashFlowController
 
     [HttpPost]
     [Authorize(Roles = "admin,recepção")]
-    public async Task<IActionResult> AddCashFlowAsync(CashFlowDtoAdd dto)
+    public async Task<IActionResult> AddCashFlowAsync(CashFlowDtoUpsert dto)
     {
         var cashFlow = dto.ToCashFlow();
+
         var error = await cashFlowAdderService.AddCashFlowAsync(cashFlow, null);
+        
         if (error.IsNotSuccess())
             return StatusCode(error.StatusCode, ApiResponse<object>.Failure(error!.Message!, error!.StatusCode));
 

@@ -216,34 +216,19 @@ namespace Laboratoire.Test.Unit.Controllers
         //     await Assert.ThrowsAsync<Exception>(() => _controller.GetAllCashFlowAsync());
         // }
 
-        [Fact]
-        public async Task UpdateCashFlowAsync_ShouldReturnBadRequest_WhenIdsDoNotMatch()
-        {
-            // Arrange
-            int cashFlowId = 1;
-            var cashFlow = new CashFlow { CashFlowId = 2, TransactionId = 1, Description = "1", PartnerId = null, TotalPaid = 100.00m, PaymentDate = new DateTime() };
-
-            // Act
-            var result = await _controller.UpdateCashFlowAsync(cashFlowId, cashFlow);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            var response = Assert.IsType<ApiResponse<object>>(badRequestResult.Value);
-            Assert.Null(response.Data);
-            Assert.Equal(ErrorMessage.BadRequestID, response?.Error?.Message);
-            Assert.Equal(400, response?.Error?.Code);
-        }
 
         [Fact]
         public async Task UpdateCashFlowAsync_ShouldReturnOkResult_WhenUpdateIsSuccessful()
         {
             // Arrange
             int cashFlowId = 1;
-            var cashFlow = new CashFlow { CashFlowId = 1, TransactionId = 1, Description = "1", PartnerId = null, TotalPaid = 100.00m, PaymentDate = new DateTime() };
+            var cashFlowDto = new CashFlowDtoUpsert { TransactionId = 1, Description = "1", PartnerId = null, TotalPaid = 100.00m, PaymentDate = new DateTime() };
+            var cashFlow = new CashFlow { CashFlowId = cashFlowId, TransactionId = 1, Description = "1", PartnerId = null, TotalPaid = 100.00m, PaymentDate = new DateTime() };
+
             _mockUpdatableService.Setup(repo => repo.UpdateCashFlowAsync(cashFlow)).ReturnsAsync(Error.SetSuccess());
 
             // Act
-            var result = await _controller.UpdateCashFlowAsync(cashFlowId, cashFlow);
+            var result = await _controller.UpdateCashFlowAsync(cashFlowId, cashFlowDto);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);

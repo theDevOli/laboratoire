@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Laboratoire.Application.DTO;
 
-public sealed class CashFlowDtoAdd
+public sealed class CashFlowDtoUpsert
 {
     [Required]
     public int? TransactionId { get; set; }
