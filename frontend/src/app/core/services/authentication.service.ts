@@ -46,7 +46,7 @@ export class AuthenticationService {
 
       this.setToken(token);
 
-      this._router.navigate(['/protocolo']);
+      this._router.navigate(['/home']);
     } catch (error: any) {
       const message =
         error.status === 500
@@ -56,8 +56,9 @@ export class AuthenticationService {
           : ErrorMessage.unauthorized;
 
       this._notificationsService.openNotification(new AppNotification(message));
+    } finally {
       this._loaderService.setLoading();
-    } 
+    }
   }
 
   public async autoLogin(): Promise<void> {
@@ -71,7 +72,7 @@ export class AuthenticationService {
 
       this.setToken(token);
 
-      this._router.navigate(['/protocolo']);
+      this._router.navigate(['/home']);
     } catch (error: any) {
       const notification = new AppNotification(
         ErrorMessage.unauthorized,
@@ -79,8 +80,9 @@ export class AuthenticationService {
         true
       );
       this._notificationsService.openNotification(notification);
+    } finally {
       this._loaderService.setLoading();
-    } 
+    }
   }
 
   private async setUser(token: string): Promise<User | null> {

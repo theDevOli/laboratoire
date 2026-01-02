@@ -42,7 +42,7 @@ export class ProtocolService implements IService {
 
   public async getEntities(year: number): Promise<void> {
     try {
-      if (!this._loaderService.loading()) this._loaderService.setLoading();
+      this._loaderService.setLoading();
 
       const user = this._authenticationService.auth().user;
       const partnerId = user?.partnerId;
@@ -67,7 +67,11 @@ export class ProtocolService implements IService {
             data.propertyName
           }${data.area ? ' (' : ''}${data.area ?? ''}${data.area ? ')' : ''}`,
           isPaid:
-            data.totalPaid ===null?'Não': data.totalPaid < data.price ?`Não (-R$${(data.price-data.totalPaid).toFixed(2)})`:'Sim',
+            data.totalPaid === null
+              ? 'Não'
+              : data.totalPaid < data.price
+              ? `Não (-R$${(data.price - data.totalPaid).toFixed(2)})`
+              : 'Sim',
           partnerName: data.partnerName ?? '-',
           details: {
             totalPaid: data.totalPaid,
