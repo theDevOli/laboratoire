@@ -17,7 +17,6 @@ import { IUserDetails } from '../../../shared/interfaces/IUserDetails.interface'
 import { SuccessMessage } from '../../../shared/Utils/SuccessMessage';
 import { AppNotification } from '../../../shared/models/AppNotification.model';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -67,7 +66,6 @@ export class UserService implements IService {
       name: new FormControl('', Validators.required),
       username: new FormControl('', Validators.required),
       roleId: new FormControl('', Validators.required),
-      partnerId: new FormControl(''),
       isActive: new FormControl(true),
     });
   }
@@ -88,13 +86,7 @@ export class UserService implements IService {
             type: 'dropdown',
             nameId: 'roleId',
             label: 'Permissão do Usuário',
-            options: this._globalDataService.roleOptions(),
-          },
-          {
-            type: 'dropdown',
-            nameId: 'partnerId',
-            label: 'Parceiro',
-            options: this._globalDataService.partnerOptions(),
+            options: this._globalDataService.roleOptions()
           },
           {
             type: 'checkbox',
@@ -129,12 +121,6 @@ export class UserService implements IService {
             nameId: 'roleId',
             label: 'Permissão do Usuário',
             options: this._globalDataService.roleOptions(),
-          },
-          {
-            type: 'dropdown',
-            nameId: 'partnerId',
-            label: 'Parceiro',
-            options: this._globalDataService.partnerOptions(),
           },
           {
             type: 'checkbox',

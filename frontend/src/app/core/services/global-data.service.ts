@@ -212,13 +212,15 @@ export class GlobalDataService {
 
       const tempYear = yearResponse.data.map((year) => year.year);
 
-      const tempRole = roleResponse.data.map(
-        (role): IModalOptions => ({
-          nameId: `${role.roleName}-${role.roleId}`,
-          label: role.roleName,
-          value: role.roleId,
-        })
-      );
+      const tempRole = roleResponse.data
+        .map(
+          (role): IModalOptions => ({
+            nameId: `${role.roleName}-${role.roleId}`,
+            label: role.roleName,
+            value: role.roleId,
+          })
+        )
+        .filter((role) => Number(role.value) <= 3);
 
       this._catalogOptions.set([...tempCatalog]);
       this._cropOptions.set([...tempCrops]);
