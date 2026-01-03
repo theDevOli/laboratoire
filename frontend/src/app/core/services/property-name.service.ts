@@ -29,6 +29,8 @@ export class PropertyNameService {
     partnerName: 'Nome do Parceiro',
     partnerPhone: 'Contato',
     username: 'Nome do Usuário',
+    // Office
+    officeEmail: 'Email do Escritório',
     //User
     roleId: 'Permissão do Usuário',
     name: 'Nome',

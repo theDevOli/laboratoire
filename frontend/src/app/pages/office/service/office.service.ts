@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, Signal } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { IService } from '../../../shared/interfaces/IService.interface';
 import { Constants } from '../../../shared/Utils/Constants';
@@ -53,9 +53,9 @@ export class OfficeService implements IService {
 
   public getFormGroup(): FormGroup<any> {
     return new FormGroup({
-      officeName: new FormControl(''),
-      city: new FormControl(''),
-      officeEmail: new FormControl(''),
+      officeName: new FormControl('', Validators.required),
+      city: new FormControl('', Validators.required),
+      officeEmail: new FormControl('', Validators.required),
     });
   }
 
