@@ -128,7 +128,7 @@ export class GlobalDataService {
       ] = await Promise.all([
         this._httpService.makeRequestAsync<IPartnerGet[]>(
           'GET',
-          Constants.PARTNER_END_POINT
+          `${Constants.PARTNER_END_POINT}/Active`
         ),
         this._httpService.makeRequestAsync<ICatalogGet[]>(
           'GET',
