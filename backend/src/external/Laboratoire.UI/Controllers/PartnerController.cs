@@ -17,6 +17,7 @@ public class PartnerController
 (
     IPartnerGetterService partnerGetterService,
     IPartnerGetterByIdService partnerGetterByIdService,
+    IPartnerActiveGetterService partnerActiveGetterService,
     IPartnerAdderService partnerAdderService,
     IPartnerUpdatableService partnerUpdatableService
 )
@@ -26,6 +27,13 @@ public class PartnerController
     public async Task<IActionResult> GetAllPartnersAsync()
     {
         var partners = await partnerGetterService.GetAllPartnersAsync();
+        return Ok(ApiResponse<IEnumerable<Partner>>.Success(partners));
+    }
+
+    [HttpGet("Active")]
+    public async Task<IActionResult> GetActivePartnersAsync()
+    {
+        var partners = await partnerActiveGetterService.GetActivePartnersAsync();
         return Ok(ApiResponse<IEnumerable<Partner>>.Success(partners));
     }
 

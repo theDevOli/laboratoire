@@ -38,14 +38,6 @@ public sealed class PartnerRepository(DataContext dapper) : IPartnerRepository
         ON cp.user_id = u.user_id
     WHERE
         u.is_active = true
-        AND u.role_id = (
-            SELECT 
-                role_id 
-            FROM 
-                users.role 
-            WHERE 
-                role_name = 'projetista'
-        )
     ORDER BY
         cp.partner_name;
     """;

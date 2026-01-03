@@ -129,6 +129,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IParameterUpdatableService, ParameterUpdatableService>();
 
         services.AddScoped<IPartnerAdderService, PartnerAdderService>();
+        services.AddScoped<IPartnerActiveGetterService, PartnerActiveGetterService>();
         services.AddScoped<IPartnerGetterByIdService, PartnerGetterByIdService>();
         services.AddScoped<IPartnerGetterService, PartnerGetterService>();
         services.AddScoped<IPartnerUpdatableService, PartnerUpdatableService>();
