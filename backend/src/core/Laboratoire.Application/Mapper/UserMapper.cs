@@ -26,6 +26,7 @@ public static class UserMapper
     => new User()
     {
         UserId = dto.UserId,
+        Username = dto.Username?.Trim(),
         RoleId = default,
         IsActive = default,
     };

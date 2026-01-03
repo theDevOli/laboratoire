@@ -27,7 +27,7 @@ public class UserRenameService
             logger.LogWarning("User with ID {UserId} not found.", user.UserId);
             return Error.SetError(ErrorMessage.NotFound, 404);
         }
-
+        Console.WriteLine("here");
         var ok = await userRepository.UserRenameAsync(user);
         if (!ok)
         {

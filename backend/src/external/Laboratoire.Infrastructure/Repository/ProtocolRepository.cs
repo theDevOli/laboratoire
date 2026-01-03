@@ -183,7 +183,6 @@ public sealed class ProtocolRepository(DataContext dapper) : IProtocolRepository
         @ReportIdParameter,
         @ClientIdParameter,
         @PropertyIdParameter,
-        @OfficeIdParameter,
         @PartnerIdParameter,
         @CatalogIdParameter,
         @EntryDateParameter,

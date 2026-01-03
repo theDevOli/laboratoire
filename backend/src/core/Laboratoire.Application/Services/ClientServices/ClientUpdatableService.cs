@@ -1,4 +1,3 @@
-using Laboratoire.Application.Mapper;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
@@ -33,7 +32,10 @@ public class ClientUpdatableService
 
             var user = await userGetterByUsernameService.GetUserByUsernameAsync(clientDb.ClientTaxId);
 
-            var dto = user?.ToUserRename()!;
+            var dto = new DTO.UserDtoRename() { UserId = user?.UserId, Username = clientDb.ClientTaxId };
+
+            dto.Username = client.ClientTaxId;
+
             var error = await userRenameService.UserRenameAsync(dto);
             if (error.IsNotSuccess()) return error;
         }

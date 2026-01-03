@@ -66,7 +66,10 @@ export class AuthenticationService {
       this._loaderService.setLoading();
 
       const response = await this.refreshToken();
-      if (Utils.isRequestFailure(response)) return;
+      if (Utils.isRequestFailure(response)) {
+        localStorage.removeItem('token');
+        return;
+      }
 
       const token: string = response?.data.token!;
 
@@ -157,6 +160,7 @@ export class AuthenticationService {
       Constants.REFRESH_END_POINT,
       data
     );
+    console.log('Refresh Token Response:', response);
     return response;
   }
 
