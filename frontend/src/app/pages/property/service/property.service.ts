@@ -71,7 +71,7 @@ export class PropertyService implements IService {
               postalCode: property.postalCode,
               stateId: property.stateId,
               stateCode: property.stateCode,
-              cei: property.cei
+              cei: property.cei,
             },
           };
         }
@@ -190,6 +190,19 @@ export class PropertyService implements IService {
   }
 
   public setPutValidators(form: FormGroup): void {
+    const setValidators = ['city', 'stateId', 'propertyName'];
+    const removeValidators = [
+      'catalogId',
+      'entryDate',
+      'transactionId',
+      'clientId',
+    ];
+
+    this._globalService.setValidator(form, setValidators);
+    this._globalService.removeValidator(form, removeValidators);
+  }
+
+  public setPostProtocolValidators(form: FormGroup): void {
     const setValidators = ['catalogId', 'entryDate', 'transactionId'];
     const removeValidators = ['clientId', 'city', 'stateId', 'propertyName'];
 
@@ -265,8 +278,7 @@ export class PropertyService implements IService {
     const ccir = Utils.ccirFormatter(form.get('ccir')?.value, true) || null;
     const itrNirf =
       Utils.itrNirfFormatter(form.get('itrNirf')?.value, true) || null;
-    const cei =
-      Utils.ceiFormatter(form.get('cei')?.value, true) || null;
+    const cei = Utils.ceiFormatter(form.get('cei')?.value, true) || null;
 
     const body: IPropertyPost | IPropertyPut =
       method === 'POST'
@@ -280,7 +292,7 @@ export class PropertyService implements IService {
             area,
             ccir,
             itrNirf,
-            cei
+            cei,
           }
         : {
             propertyId: data.details.propertyId,
@@ -293,7 +305,7 @@ export class PropertyService implements IService {
             area,
             ccir,
             itrNirf,
-            cei
+            cei,
           };
 
     return body;
@@ -320,12 +332,10 @@ export class PropertyService implements IService {
         const formatted = Utils.itrNirfFormatter(value);
         form.get('itrNirf')?.setValue(formatted, { emitEvent: false });
       });
-    const ceiSubscription = form
-      .get('cei')
-      ?.valueChanges.subscribe((value) => {
-        const formatted = Utils.ceiFormatter(value);
-        form.get('cei')?.setValue(formatted, { emitEvent: false });
-      });
+    const ceiSubscription = form.get('cei')?.valueChanges.subscribe((value) => {
+      const formatted = Utils.ceiFormatter(value);
+      form.get('cei')?.setValue(formatted, { emitEvent: false });
+    });
 
     this._destroyRef.onDestroy(() => {
       postalCodeSubscription?.unsubscribe();
@@ -359,9 +369,8 @@ export class PropertyService implements IService {
     const protocolSubscription = form
       .get('toPostProtocol')
       ?.valueChanges.subscribe((value) => {
-        if (value) {
-          this.setPutValidators(form);
-        }
+        if (value) this.setPostProtocolValidators(form);
+        else this.setPutValidators(form);
       });
 
     this._destroyRef.onDestroy(() => {
