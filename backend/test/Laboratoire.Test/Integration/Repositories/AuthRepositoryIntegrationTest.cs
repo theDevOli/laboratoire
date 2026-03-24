@@ -1,6 +1,7 @@
 
 using Dapper;
 using Laboratoire.Domain.Entity;
+using Laboratoire.Domain.ObjectValues;
 using Laboratoire.Infrastructure.DbContext;
 using Laboratoire.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
@@ -72,21 +73,12 @@ public class AuthRepositoryIntegrationTest
 
         var newUserId = await _userRepository.AddUserAsync(newUser);
 
-        var newAuth = new Auth()
-        {
-            UserId = newUserId,
-            PasswordSalt = [],
-            PasswordHash = []
-        };
+        var newAuth = new Auth(newUserId, new Password([], []));
 
         await _repository.AddAuthAsync(newAuth);
 
-        var toUpdateAuth = new Auth()
-        {
-            UserId = newUserId,
-            PasswordSalt = [010],
-            PasswordHash = [110]
-        };
+        var toUpdateAuth = new Auth(newUserId, new Password([010], [110]));
+
         // Act
         var result = await _repository.UpdateAuthAsync(toUpdateAuth);
         var updatedAuth = await _repository.GetAuthByUserIdAsync(newUserId);
@@ -94,8 +86,8 @@ public class AuthRepositoryIntegrationTest
         // Assert
         Assert.True(result);
         Assert.Equal(toUpdateAuth.UserId, updatedAuth?.UserId);
-        Assert.Equal(toUpdateAuth.PasswordSalt, updatedAuth?.PasswordSalt);
-        Assert.Equal(toUpdateAuth.PasswordHash, updatedAuth?.PasswordHash);
+        Assert.Equal(toUpdateAuth.Password.PasswordSalt, updatedAuth?.Password.PasswordSalt);
+        Assert.Equal(toUpdateAuth.Password.PasswordHash, updatedAuth?.Password.PasswordHash);
 
         // Tear down
         await _connection.ExecuteAsync
@@ -136,12 +128,8 @@ public class AuthRepositoryIntegrationTest
 
         var newUserId = await _userRepository.AddUserAsync(newUser);
 
-        var newAuth = new Auth()
-        {
-            UserId = newUserId,
-            PasswordSalt = [],
-            PasswordHash = []
-        };
+        var newAuth = new Auth(newUserId, new Password([], []));
+
 
         // Act
         var result = await _repository.AddAuthAsync(newAuth);

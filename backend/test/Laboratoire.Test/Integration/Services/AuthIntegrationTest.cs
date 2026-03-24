@@ -91,6 +91,6 @@ public class AuthIntegrationTest
         await connection.ExecuteAsync("DELETE FROM users.auth WHERE user_id = @userId", new { userId });
         await connection.ExecuteAsync("DELETE FROM users.\"user\" WHERE user_id = @userId", new { userId });
 
-        Assert.NotEqual(hash, updated.PasswordHash);
+        Assert.NotEqual(hash, updated.Password.PasswordHash);
     }
 }

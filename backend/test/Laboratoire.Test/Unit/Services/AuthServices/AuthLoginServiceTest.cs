@@ -3,6 +3,7 @@ using Laboratoire.Application.Services.AuthServices;
 using Laboratoire.Application.ServicesContracts;
 using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
+using Laboratoire.Domain.ObjectValues;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -103,7 +104,7 @@ public class AuthLoginServiceTest
         var salt = new byte[16];
         RandomNumberGenerator.Fill(salt);
         var correctHash = _passwordHasher.HashPassword("correct-pass", salt);
-        var auth = new Auth { UserId = user.UserId, PasswordSalt = salt, PasswordHash = correctHash };
+        var auth = new Auth(user.UserId, new Password(salt, correctHash));
 
         _authRepositoryMock.Setup(a => a.GetAuthByUserIdAsync(user.UserId)).ReturnsAsync(auth);
 
@@ -127,7 +128,7 @@ public class AuthLoginServiceTest
         var salt = new byte[16];
         RandomNumberGenerator.Fill(salt);
         var hash = _passwordHasher.HashPassword(login.UserPassword, salt);
-        var auth = new Auth { UserId = user.UserId, PasswordSalt = salt, PasswordHash = hash };
+        var auth = new Auth(user.UserId, new Password(salt, hash));
 
         _authRepositoryMock.Setup(a => a.GetAuthByUserIdAsync(user.UserId)).ReturnsAsync(auth);
 

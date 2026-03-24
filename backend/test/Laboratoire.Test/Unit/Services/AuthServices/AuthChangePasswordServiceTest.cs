@@ -3,6 +3,7 @@ using Laboratoire.Application.DTO;
 using Laboratoire.Application.Services.AuthServices;
 using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
+using Laboratoire.Domain.ObjectValues;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -75,12 +76,7 @@ public class AuthChangePasswordServiceTest
         RandomNumberGenerator.Fill(salt);
         var correctHash = _passwordHasher.HashPassword("correct-old", salt);
 
-        var auth = new Auth
-        {
-            UserId = userDto.UserId,
-            PasswordSalt = salt,
-            PasswordHash = correctHash
-        };
+        var auth = new Auth(userDto.UserId, new Password(salt, correctHash));
 
         _authRepositoryMock
             .Setup(r => r.GetAuthByUserIdAsync(userDto.UserId))
@@ -110,12 +106,7 @@ public class AuthChangePasswordServiceTest
         RandomNumberGenerator.Fill(salt);
         var hash = _passwordHasher.HashPassword(userDto.OldPassword, salt);
 
-        var auth = new Auth
-        {
-            UserId = userDto.UserId,
-            PasswordSalt = salt,
-            PasswordHash = hash
-        };
+        var auth = new Auth(userDto.UserId, new Password(salt, hash));
 
         _authRepositoryMock
             .Setup(r => r.GetAuthByUserIdAsync(userDto.UserId))
@@ -149,12 +140,7 @@ public class AuthChangePasswordServiceTest
         RandomNumberGenerator.Fill(salt);
         var hash = _passwordHasher.HashPassword(userDto.OldPassword, salt);
 
-        var auth = new Auth
-        {
-            UserId = userDto.UserId,
-            PasswordSalt = salt,
-            PasswordHash = hash
-        };
+        var auth = new Auth(userDto.UserId, new Password(salt, hash));
 
         _authRepositoryMock
             .Setup(r => r.GetAuthByUserIdAsync(userDto.UserId))

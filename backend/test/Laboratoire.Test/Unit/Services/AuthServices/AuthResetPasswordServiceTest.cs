@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Laboratoire.Application.Services.AuthServices;
 using Laboratoire.Application.Utils;
 using Laboratoire.Domain.Entity;
+using Laboratoire.Domain.ObjectValues;
 using Laboratoire.Domain.RepositoryContracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -61,8 +62,8 @@ public class AuthResetPasswordServiceTest
         var userId = Guid.NewGuid();
         var salt = new byte[16];
         RandomNumberGenerator.Fill(salt);
-        var auth = new Auth { UserId = userId, PasswordSalt = salt, PasswordHash = salt };
-
+        var auth = new Auth(userId, new Password(salt, salt)); 
+        
         _authRepositoryMock.Setup(a => a.GetAuthByUserIdAsync(userId)).ReturnsAsync(auth);
         _authRepositoryMock.Setup(a => a.UpdateAuthAsync(It.IsAny<Auth>())).ReturnsAsync(false);
 
@@ -82,7 +83,7 @@ public class AuthResetPasswordServiceTest
         var userId = Guid.NewGuid();
         var salt = new byte[16];
         RandomNumberGenerator.Fill(salt);
-        var auth = new Auth { UserId = userId, PasswordSalt = salt, PasswordHash = salt };
+        var auth = new Auth(userId, new Password(salt, salt));
 
         _authRepositoryMock.Setup(a => a.GetAuthByUserIdAsync(userId)).ReturnsAsync(auth);
         _authRepositoryMock.Setup(a => a.UpdateAuthAsync(It.IsAny<Auth>())).ReturnsAsync(true);

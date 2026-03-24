@@ -13,6 +13,7 @@ public class PartnerControllerTests
 {
     private readonly Mock<IPartnerGetterService> _partnerGetterServiceMock;
     private readonly Mock<IPartnerGetterByIdService> _partnerGetterByIdServiceMock;
+    private readonly Mock<IPartnerActiveGetterService> _partnerActiveGetterServiceMock;
     private readonly Mock<IPartnerAdderService> _partnerAdderServiceMock;
     private readonly Mock<IPartnerUpdatableService> _partnerUpdatableServiceMock;
     private readonly PartnerController _controller;
@@ -21,11 +22,14 @@ public class PartnerControllerTests
     {
         _partnerGetterServiceMock = new Mock<IPartnerGetterService>();
         _partnerGetterByIdServiceMock = new Mock<IPartnerGetterByIdService>();
+        _partnerGetterByIdServiceMock = new Mock<IPartnerGetterByIdService>();
+        _partnerActiveGetterServiceMock = new Mock<IPartnerActiveGetterService>();
         _partnerAdderServiceMock = new Mock<IPartnerAdderService>();
         _partnerUpdatableServiceMock = new Mock<IPartnerUpdatableService>();
         _controller = new PartnerController(
             _partnerGetterServiceMock.Object,
             _partnerGetterByIdServiceMock.Object,
+            _partnerActiveGetterServiceMock.Object,
             _partnerAdderServiceMock.Object,
             _partnerUpdatableServiceMock.Object
         );
@@ -171,7 +175,7 @@ public class PartnerControllerTests
     {
         // Arrange
         var partnerId = Guid.NewGuid();
-        var partnerDto = new PartnerDtoUpsert {  PartnerName = "UpdatedPartner" };
+        var partnerDto = new PartnerDtoUpsert { PartnerName = "UpdatedPartner" };
         var updateResult = Error.SetSuccess();
         _partnerUpdatableServiceMock.Setup(service => service.UpdatePartnerAsync(It.IsAny<Partner>())).ReturnsAsync(updateResult);
 
@@ -190,7 +194,7 @@ public class PartnerControllerTests
     {
         // Arrange
         var partnerId = Guid.NewGuid();
-           var partnerDto = new PartnerDtoUpsert {  PartnerName = "UpdatedPartner" };
+        var partnerDto = new PartnerDtoUpsert { PartnerName = "UpdatedPartner" };
         var updateResult = Error.SetError(ErrorMessage.NotFound, 404);
         _partnerUpdatableServiceMock.Setup(service => service.UpdatePartnerAsync(It.IsAny<Partner>())).ReturnsAsync(updateResult);
 
